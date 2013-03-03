@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container">
+
+  <div class="sign-up well">
+    <h2>Start Tracking Your Health Now</h2>
+    <form action="/subscribe" method="post" class="form">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+      <label>Enter your email below:</label>
+      <input type="text" placeholder="jane.doe@example.com" name="email"/>
+
+      <input type="submit" name="submit" 
+             value="Start" class="btn btn-primary btn-block"/>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

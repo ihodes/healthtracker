@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+
+    <title>{% block title %}Give us an update{% endblock %}</title>
+
+    <style type="text/css" media="screen">
+      body { padding: 0 !important; margin: 0 !important; display: block !important; background: #f3f3f3; -webkit-text-size-adjust: none; }
+      div { padding: 0 !important; margin: 0 !important;}
+      p { padding: 0 !important; margin: 0 !important; }
+      a { color: #F2E318 !importsnt; text-decoration: none !important; }
+    </style>
+  </head>
+
+  <body>
+    <div style="text-align:center;background:#F2F2F2;width:350px;margin:10px auto 20px;padding: 20px;border:2px solid #303030;">
+      <h1 style="font-size:25px;font-family:palatino,serif;color:#1C1C1C;font-weight:800;">
+        Track Your Health
+      </h1>
+      <p style="font-size:18px;font-family:serif;color:#303030;padding:20px;margin-bottom:23px;">
+        Good morning! I hope you're doing well today. Please let me know how you're doing, with 1 being the worst, and 5 being the best.
+      </p>
+      <div style="background:#808080;">
+        <table style="text-align:center;">
+          {% for value, link in val_links -%}
+            <tr style="text-align:center;padding:33px;color:#F2E318;font-weight:800;font-size:44px;"><a href="{{ link  }}" style="text-decoration:none;margin-left:72px;">{{ value }} out of 5</a></tr>
+          {%- endfor %}
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

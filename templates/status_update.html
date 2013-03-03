@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+
+    <title>{% block title %}Give us an update{% endblock %}</title>
+
+    <style type="text/css" media="screen">
+      body { padding: 0 !important; margin: 0 !important; display: block !important; background: #f3f3f3; -webkit-text-size-adjust: none; }
+      div { padding: 0 !important; margin: 0 !important;}
+      p { padding: 0 !important; margin: 0 !important; }
+      a { color: #9CBCD9; text-decoration: none; }
+    </style>
+  </head>
+
+  <body>
+    <div style="text-align:center;background:#F2F2F2;">
+      <h1 style="font-size:20px;font-family:palatino, serif;color:#5F6F83;">
+        Track Your Health
+      </h1>
+      <p style="font-size:16px;font-family:serif;color:#A6A04E;">
+        Good morning! I hope you're doing well today. Please let me know how you're doing, with 1 being the worst, and 5 being the best.
+      </p>
+      <div style="background:#766749;">
+        <table>
+          {{ for value, link in val_links }}
+            <tr><a href="{{ link  }}">{{ value }} out of 5</a></tr>
+          {{ endfor  }}
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

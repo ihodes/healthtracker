@@ -1,0 +1,6 @@
+body { background: url("/static/img/bg.png"); }
+
+.sign-up { width: 500px; margin: 40px auto 0; text-align: center; padding: 55px; }
+
+.sign-up form { width: 300px; margin: 23px auto 0; }
+.sign-up form input { width: 285px; } 

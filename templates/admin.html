@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container">
+
+  <div class="well">
+    <h2>Here are all of the users!</h2>
+    <div class="users" style="margin-top: 50px;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Authentication Token</th>
+            <th>Approve</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>
+              {{ user.id }} 
+            </td>
+            <td>
+              <a href="mailto:{{user.email}}">{{ user.email }}</a>
+              {% if user.is_admin %}<span class="label label-important">admin</span>{% endif %}
+            </td>
+            <td>
+              {{ user.auth_token }}
+            </td>
+            <td>
+              {% if user.is_approved %}<span class="label label-info">approved</span>{% endif %}
+              {% if not user.is_approved %}<form style="display:inline-block;" action="/approve" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input class="btn btn-primary" value="Approve" type="submit"></form>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

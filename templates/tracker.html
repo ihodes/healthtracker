@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container">
+
+  <div class="well">
+    <h2>You've recorded your well-being! <small>wasn't that easy?</small></h2>
+    <p class="lead">We'll keep track of your health for you, so you can see how you feel over time.</p>
+    <p class="alert alert-info">You've reported a <strong>{{ value }} out of 5</strong></p>
+    <div class="status-report">
+      <h3>Historical Wellbeing Report <small>{{ total_statuses }} total updates</small></h3>
+      <ul>
+      {% for value, timestamp in statuses %}
+        <li>{{ value }} @ {{ timestamp }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+    <p>Features are being added all the time, and we'll be sure to keep you updated! We want HealthTracker to be a pain-free way to keep yourself pain-free, knowledgeable, and in control.</p>
+  </div>
+</div>
+
+{% endblock %}
