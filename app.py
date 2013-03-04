@@ -24,13 +24,13 @@ app.secret_key = SECRET_KEY
 app.debug = DEBUG
 
 db = SQLAlchemy(app)
-
+HOST = os.environ.get("HOST_NAME", "healthtracker.herokuapp.com")
 
 
 ## Models
 class User(db.Model):
     id = db.Column(db.Integer, db.Sequence('user_id_seq'), primary_key=True)
-    email = db.Column(db.String, unique=True)
+    email = db.Column(db.String(255), unique=True)
     auth_token = db.Column(db.String, unique=True)
     statuses = db.relationship("Status", backref="user", lazy="dynamic")
     is_approved = db.Column(db.Boolean)
@@ -45,7 +45,7 @@ class User(db.Model):
         return "<User('%s')>" % (self.email)
 
     def reset_auth_token(self):
-        self._auth_token = random_string(36)
+        self.auth_token = random_string(36)
         db.session.add(self)
         db.session.commit()
 
@@ -121,11 +121,11 @@ def tracker():
     auth_token = request.args.get('auth_token', None)
     value = int(request.args.get('value', -100))
     user = User.query.filter_by(auth_token=auth_token).first_or_404()
-    if auth_token is None or value is None or user is None or value < 1 or value > 5:
+    if auth_token is None or value is None or user is None or value < 0 or value > 5:
         return abort(404)
 
     user.add_status(value)
-    #user.reset_auth_token()
+    user.reset_auth_token()
     statuses = []
     for status in user.statuses.all():
         statuses.append((status.value, format_date(status.created_at)))
@@ -136,10 +136,17 @@ def tracker():
 # this and the below method need to be secured
 @app.route("/admin")
 def admin():
-    users = []
-    for user in User.query.all():
-        users.append(user)
-    return render_template("admin.html", users=users)
+    auth_token = request.args.get('auth_token', None)
+    user = User.query.filter_by(auth_token=auth_token).first()
+    if user is None or not user.is_admin:
+        send_admin_login()
+        return abort(401)
+    else:
+        users = []
+        for user in User.query.all():
+            users.append(user)
+        return render_template("admin.html", users=users)
+
 
 @app.route("/approve", methods=["POST"])
 def approve():
@@ -152,36 +159,23 @@ def approve():
     return redirect(url_for("admin"))
 
 
-## Mailer
-def send_status_update_email(user):
+
+def send_admin_login():
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = "key-25pn6z0fogz-783zc7gcloa8gs23qkq2"
     from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
-    to_email = user.email
-    email_subject = "Update Your Health Today"
+    email_subject = "HealthTracker admin"
 
-    status_update_links = ["Let us know how you're feeling today. \n\n 1 being the first and worst, 5 being the best."]
-    for value in range(1,6):
-        status_update_link = construct_status_update_url(user, value)
-        status_update_links.append(status_update_link)
-    email_text = "\n\n".join(status_update_links)
-    # template = env.get_template('status_update.html')
-    # email_text = template.render(val_links=status_update_links)
+    user = User.query.filter_by(email="isaachodes@gmail.com").first()
+
+    email_text = "click to login: http://{0}/admin?auth_token={1}".format(HOST, user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
                          data={"from": from_email,
-                               "to": to_email,
+                               "to": "isaachodes@gmail.com",
                                "subject": email_subject,
                                "text": email_text})
-
-
-def construct_status_update_url(user, value):
-    url_base = "http://{0}/tracker?auth_token={1}&value={2}"
-    host = "localhost:5000"
-    auth = user.auth_token
-    return url_base.format(host, auth, value)
-
 
 
 
