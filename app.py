@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import string, random, datetime, requests
+import string, random, datetime, requests, os
 
 # for email template rendering... 
 # from jinja2 import Environment, PackageLoader
@@ -186,4 +186,5 @@ def construct_status_update_url(user, value):
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
