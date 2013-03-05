@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from healthtracker import app
 from healthtracker.database import User
 
 def send_admin_login():
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
-    api_key = "key-25pn6z0fogz-783zc7gcloa8gs23qkq2"
+    api_key = app.config["MAILGUN_API_KEY"]
     from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
     email_subject = "HealthTracker admin"
 

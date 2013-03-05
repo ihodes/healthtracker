@@ -3,6 +3,7 @@ from flask import render_template, session, redirect, url_for, request, \
      flash, g, jsonify, abort
 from healthtracker.database import db_session, User
 from healthtracker.utils import format_date
+from healthtracker.mailer import send_admin_login
 from healthtracker import app
 
 
