@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import requests
+
 from healthtracker import app
 from healthtracker.database import User
 
