@@ -1,12 +1,13 @@
-import os 
+import requests
+from Flash import render_template
 
-from app import *
+from healthtracker import app
+from healthtracker.database import User
 
-HOST = os.environ.get("HOST_NAME", "healthtracker.herokuapp.com")
-## Mailer
+
 def send_status_update_email(user):
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
-    api_key = "key-25pn6z0fogz-783zc7gcloa8gs23qkq2"
+    api_key = app.config["MAILGUN_API_KEY"]
     from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
     to_email = user.email
     email_subject = "Update Your Health Today"
@@ -17,8 +18,7 @@ def send_status_update_email(user):
         status_update_links.append("{0}: {1}".format(value, status_update_link))
 
     email_text = "\n\n".join(status_update_links)
-    # template = env.get_template('status_update.html')
-    # email_text = template.render(val_links=status_update_links)
+    # template = render_template('emails/status_update.html', val_links=status_update_links)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -30,7 +30,7 @@ def send_status_update_email(user):
 
 def construct_status_update_url(user, value):
     url_base = "http://{0}/tracker?auth_token={1}&value={2}"
-    host = HOST
+    host = app.config["HOST"]
     auth = user.auth_token
     return url_base.format(host, auth, value)
 
