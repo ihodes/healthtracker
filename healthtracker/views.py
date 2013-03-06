@@ -2,8 +2,8 @@
 from flask import render_template, session, redirect, url_for, request, \
      flash, g, jsonify, abort
 from healthtracker.database import db_session, User
-from healthtracker.utils import format_date
-from healthtracker.mailer import send_admin_login
+from healthtracker.utils import format_date, is_valid_email
+from healthtracker.mailer import send_admin_login, send_status_update_email
 from healthtracker import app
 
 
@@ -15,31 +15,23 @@ def index():
 @app.route("/subscribe", methods=["POST"])
 def subscribe():
     email = request.form.get("email")
-    if "@" in email: # assume this is enough, for now
-        User.create_user(email)
-        flash(u"""You've been subscribed. An email has been sent
-              to {0} with more information""".format(email))
+    if is_valid_email(email):
+        if User.create_user(email):
+            flash(u"""You've been subscribed. An email has been sent
+                  to {0} with more information""".format(email), "info")
     else:
         flash(u""""{0}" is not a valid email address:
               please re-enter your email.""".format(email), "error")
     return redirect(url_for("index"))
 
 
-@app.route("/unsubscribe", methods=["GET", "POST"])
-def unsubscribe():
-    if request.method == "GET":
-        return "unsubscribe form"
-    elif request.method == "POST":
-        flash("You've been unsubscribed. We're sorry to see you go! You can always subscribe again below to recieve emails for us.", "info")
-        return redirect(url_for("index"))
-
-
 @app.route("/tracker") # pull out url params here; this is how we track everything
 def tracker():
     auth_token = request.args.get('auth_token', None)
-    value = int(request.args.get('value', -100))
-    user = User.query.filter_by(auth_token=auth_token).first_or_404()
-    if auth_token is None or value is None or user is None or value < 0 or value > 5:
+    value = int(request.args.get('value', None))
+    user = User.query.filter_by(auth_token=auth_token).first()
+
+    if auth_token is None or value is None or user is None or 0 > value > 5:
         return abort(404)
 
     user.add_status(value)
@@ -63,15 +55,63 @@ def admin():
         users = []
         for user in User.query.all():
             users.append(user)
-        return render_template("admin.html", users=users)
+        return render_template("admin.html", users=users, auth_token=auth_token)
 
 
-@app.route("/approve", methods=["POST"])
-def approve():
+@app.route("/approve_user", methods=["POST"])
+def approve_user():
+    auth_token = request.form.get('auth_token', None)
+    user = User.query.filter_by(auth_token=auth_token).first()
+    if user is None or not user.is_admin:
+        return abort(401)
+
     user_id = request.form.get("user_id", None)
     if user_id is not None:
         user = User.query.get(user_id)
     user.is_approved = True
-    db.session.add(user)
-    db.session.commit()
-    return redirect(url_for("admin"))
+    db_session.add(user)
+    db_session.commit()
+    return redirect(url_for("admin", auth_token=auth_token))
+
+@app.route("/delete_user", methods=["POST"])
+def delete_user():
+    auth_token = request.form.get('auth_token', None)
+    user = User.query.filter_by(auth_token=auth_token).first()
+    if user is None or not user.is_admin:
+        return abort(401)
+
+
+    user_id = request.form.get("user_id", None)
+    if user_id is not None:
+        user = User.query.get(user_id)
+    db_session.delete(user)
+    db_session.commit()
+    return redirect(url_for("admin", auth_token=auth_token))
+
+@app.route("/reset_auth_user", methods=["POST"])
+def approve_user():
+    auth_token = request.form.get('auth_token', None)
+    user = User.query.filter_by(auth_token=auth_token).first()
+    if user is None or not user.is_admin:
+        return abort(401)
+
+    user_id = request.form.get("user_id", None)
+    if user_id is not None:
+        user = User.query.get(user_id)
+    user.reset_auth_token()
+
+    return redirect(url_for("admin", auth_token=auth_token))
+
+@app.route("/send_update_email_user", methods=["POST"])
+def send_update_email_user():
+    auth_token = request.form.get('auth_token', None)
+    user = User.query.filter_by(auth_token=auth_token).first()
+    if user is None or not user.is_admin:
+        return abort(401)
+
+    user_id = request.form.get("user_id", None)
+    if user_id is not None:
+        user = User.query.get(user_id)
+    send_status_update_email(user)
+
+    return redirect(url_for("admin", auth_token=auth_token))

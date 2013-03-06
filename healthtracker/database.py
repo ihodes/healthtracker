@@ -55,8 +55,11 @@ class User(Model):
 
     @staticmethod
     def create_user(email):
-        db_session.add(User(email))
-        db_session.commit()
+        if User.query.filter_by(email=email).first() is None:
+            db_session.add(User(email))
+            db_session.commit()
+            return True
+        return False
 
 
 class Status(Model):

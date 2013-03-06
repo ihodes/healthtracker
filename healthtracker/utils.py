@@ -10,3 +10,6 @@ def format_date(datetime):
     month = datetime.month
     day = datetime.day
     return "{0}/{1}, {2}".format(day, month, year)
+
+def is_valid_email(email):
+    return email is not None and "@" in email

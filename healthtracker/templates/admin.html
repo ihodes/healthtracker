@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% block body %}
-
 <div class="container">
 
   <div class="well">
@@ -12,7 +11,9 @@
             <th>ID</th>
             <th>Email</th>
             <th>Authentication Token</th>
-            <th>Approve</th>
+            <th>Approved</th>
+            <th>Delete</th>
+            <th>Update Email</th>
           </tr>
         </thead>
         <tbody>
@@ -26,11 +27,18 @@
               {% if user.is_admin %}<span class="label label-important">admin</span>{% endif %}
             </td>
             <td>
-              {{ user.auth_token }}
+              <tt>{{ user.auth_token }}</tt>
+              <form style="display:inline-block;" action="/reset_auth_user" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-warning btn-mini" value="reset" type="submit"></form>
             </td>
             <td>
               {% if user.is_approved %}<span class="label label-info">approved</span>{% endif %}
-              {% if not user.is_approved %}<form style="display:inline-block;" action="/approve" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input class="btn btn-primary" value="Approve" type="submit"></form>{% endif %}
+              {% if not user.is_approved %}<form style="display:inline-block;" action="/approve_user" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-primary btn-mini" value="Approve" type="submit"></form>{% endif %}
+            </td>
+            <td>
+              <form style="display:inline-block;" action="/delete_user" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-danger btn-mini" value="Delete" type="submit"></form>
+            </td>
+            <td>
+              <form style="display:inline-block;" action="/send_update_email_user" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-primary btn-mini" value="Send Status Update Email" type="submit"></form>
             </td>
           </tr>
           {% endfor %}
@@ -39,5 +47,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
