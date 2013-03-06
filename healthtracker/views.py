@@ -73,6 +73,7 @@ def approve_user():
     db_session.commit()
     return redirect(url_for("admin", auth_token=auth_token))
 
+
 @app.route("/delete_user", methods=["POST"])
 def delete_user():
     auth_token = request.form.get('auth_token', None)
@@ -88,8 +89,9 @@ def delete_user():
     db_session.commit()
     return redirect(url_for("admin", auth_token=auth_token))
 
+
 @app.route("/reset_auth_user", methods=["POST"])
-def approve_user():
+def reset_auth_user():
     auth_token = request.form.get('auth_token', None)
     user = User.query.filter_by(auth_token=auth_token).first()
     if user is None or not user.is_admin:

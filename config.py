@@ -2,7 +2,7 @@ import os
 
 SECRET_KEY=os.environ.get("SECRET_KEY")
 HOST=os.environ.get("HOST")
-# SERVER_NAME=os.environ.get("SERVER_NAME")
+HOST_NAME=os.environ.get("HOST_NAME")
 PORT=int(os.environ.get("PORT"))
 
 DATABASE_URI=os.environ.get("HEROKU_POSTGRESQL_AMBER_URL")

@@ -13,7 +13,7 @@ def send_admin_login():
 
     user = User.query.filter_by(email="isaachodes@gmail.com").first()
 
-    email_text = "click to login: http://{0}/admin?auth_token={1}".format(app.config["SERVER_NAME"], user.auth_token)
+    email_text = "click to login: http://{0}/admin?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -47,6 +47,6 @@ def send_status_update_email(user):
 
 def construct_status_update_url(user, value):
     url_base = "http://{0}/tracker?auth_token={1}&value={2}"
-    server_name= app.config["SERVER_NAME"]
+    server_name = app.config["HOST_NAME"]
     auth = user.auth_token
     return url_base.format(server_name, auth, value)
