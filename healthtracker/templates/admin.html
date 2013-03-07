@@ -3,7 +3,7 @@
 <div class="container">
 
   <div class="well">
-    <h2>Here are all of the users!</h2>
+    <h2>All Users of Healthtracr:</h2>
     <div class="users" style="margin-top: 50px;">
       <table class="table">
         <thead>
@@ -24,7 +24,7 @@
             </td>
             <td>
               <a href="mailto:{{user.email}}">{{ user.email }}</a>
-              {% if user.is_admin %}<span class="label label-important">admin</span>{% endif %}
+              {% if user.is_admin %}<span class="label label-info">admin</span>{% endif %}
             </td>
             <td>
               <tt>{{ user.auth_token }}</tt>

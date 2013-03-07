@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, \
      Boolean, ForeignKey, Sequence
@@ -10,16 +9,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from healthtracker import app
 from healthtracker.utils import random_string
 
+
 engine = create_engine(app.config['DATABASE_URI'],
                        convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
 
-
 def init_db():
     Model.metadata.create_all(bind=engine)
-
 
 Model = declarative_base(name='Model')
 Model.query = db_session.query_property()
@@ -44,17 +42,23 @@ class User(Model):
 
     def reset_auth_token(self):
         self.auth_token = random_string(36)
-        db_session.add(self)
-        db_session.commit()
+        self.save()
 
     def add_status(self, value):
         status = Status(self, value)
-        self.reset_auth_token()
         db_session.add(status)
         db_session.commit()
 
+    def save(self):
+        db_session.add(self)
+        db_session.commit()
+
+    def delete(self):
+        db_session.delete(self)
+        db_session.commit()
+
     @staticmethod
-    def create_user(email):
+    def create(email):
         if User.query.filter_by(email=email).first() is None:
             db_session.add(User(email))
             db_session.commit()

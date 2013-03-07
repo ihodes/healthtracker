@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import requests
 
 from healthtracker import app
