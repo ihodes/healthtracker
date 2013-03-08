@@ -29,7 +29,8 @@ class User(Model):
     email = Column(String(255), unique=True)
     auth_token = Column(String, unique=True)
     statuses = relationship("Status", backref="users", lazy="dynamic")
-    is_approved = Column(Boolean)
+    is_confirmed = Column(Boolean, default=False)
+    is_approved = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)
 
     def __init__(self, email, is_approved=False):
@@ -42,6 +43,18 @@ class User(Model):
 
     def reset_auth_token(self):
         self.auth_token = random_string(36)
+        self.save()
+
+    def confirm(self):
+        self.is_confirmed = True
+        self.save()
+
+    def approve(self):
+        self.is_approved = True
+        self.save()
+
+    def unapprove(self):
+        self.is_approved = False
         self.save()
 
     def add_status(self, value):
@@ -60,10 +73,11 @@ class User(Model):
     @staticmethod
     def create(email):
         if User.query.filter_by(email=email).first() is None:
-            db_session.add(User(email))
+            user = User(email)
+            db_session.add(user)
             db_session.commit()
-            return True
-        return False
+            return user
+        return None
 
 
 class Status(Model):

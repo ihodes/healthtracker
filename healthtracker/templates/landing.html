@@ -2,7 +2,8 @@
 {% block body %}
 <div class="container">
 
-  <div class="sign-up well">
+  <div class="sign-up">
+    <img class="wordmark" src="/static/img/healthtracker_wordmark.png" alt="wordmark">
     <h2>Start Tracking Your Health Now</h2>
     <form action="/subscribe" method="post" class="form">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -16,7 +17,7 @@
       <input type="text" placeholder="jane.doe@example.com" name="email"/>
 
       <input type="submit" name="submit" 
-             value="Start" class="btn btn-primary btn-block"/>
+             value="Start Tracking" class="btn btn-primary btn-block"/>
     </form>
   </div>
 
