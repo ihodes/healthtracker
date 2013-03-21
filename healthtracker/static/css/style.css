@@ -4,3 +4,6 @@ body { background: url("/static/img/bg.png"); }
 .sign-up img.wordmark { margin-left: 20px; width: 447px; }
 .sign-up form { width: 300px; margin: 23px auto 0; }
 .sign-up form input { width: 285px; } 
+.sign-up .privacy-notice { margin-top: 17px; display: block; } 
+
+.tracker-holder { margin-top: 33px; }

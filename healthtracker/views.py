@@ -37,6 +37,7 @@ def subscribe():
     else:
         flash(u""""{0}" is not a valid email address:
               please re-enter your email.""".format(email), "error")
+        return redirect(url_for("index"))
     return redirect(url_for("messages"))
 
 
@@ -52,23 +53,20 @@ def confirm_email(user):
 
 @app.route("/tracker")
 @provide_user_from_auth
-def tracker():
+def tracker(user):
     value = request.args.get("value", None)
     if user is None:
         flash(u"""You can't update your status; use the newest email from us,
               or sign up for an account if you don't have one.""", "error")
         return redirect(url_for("messages"))
-
     if value is not None:
         user.add_status(value)
         user.reset_auth_token() # to prevent accidental multiple updates
         flash(u"""You've reported a {} out of 5.""".format(value), "info")
 
-    statuses = []
-    for status in user.statuses.order_by("created_at desc").all():
-        statuses.append((status.value, format_date(status.created_at)))
-
-    return render_template("tracker.html", statuses=statuses)
+    statuses = user.statuses.order_by("created_at desc").all()
+    status_values = [status.value for status in statuses]
+    return render_template("tracker.html", statuses=status_values)
 
 
 @app.route("/admin")
