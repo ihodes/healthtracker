@@ -64,9 +64,8 @@ def tracker(user):
         user.reset_auth_token() # to prevent accidental multiple updates
         flash(u"""You've reported a {} out of 5.""".format(value), "info")
 
-    statuses = user.statuses.order_by("created_at desc").all()
-    status_values = [status.value for status in statuses]
-    return render_template("tracker.html", statuses=status_values)
+    statuses = [status.value for status in user.statuses.all()]
+    return render_template("tracker.html", statuses=statuses)
 
 
 @app.route("/admin")

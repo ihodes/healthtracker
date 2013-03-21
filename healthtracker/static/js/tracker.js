@@ -28,6 +28,6 @@ $(document).ready(function(){
         .attr("text-anchor", "middle")
         .attr("font-family", "sans-serif")
         .attr("font-size", "14px")
-        .attr("fill", "black");
+        .attr("fill", "white");
 
 });
