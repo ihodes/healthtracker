@@ -4,6 +4,7 @@ import requests
 from healthtracker import app
 from healthtracker.database import User
 
+
 def send_admin_login():
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
@@ -20,6 +21,24 @@ def send_admin_login():
                                "to": "isaachodes@gmail.com",
                                "subject": email_subject,
                                "text": email_text})
+
+
+def send_login_email(user):
+    api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
+    api_key = app.config["MAILGUN_API_KEY"]
+    to_email = user.email
+    from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
+    email_subject = "HealthTracr Login"
+    
+    email_text = "Click to login: http://{0}/tracker?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
+
+    return requests.post(api_endpoint,
+                         auth=("api", api_key),
+                         data={"from": from_email,
+                               "to": to_email,
+                               "subject": email_subject,
+                               "text": email_text})
+
 
 
 def send_status_update_email(user):

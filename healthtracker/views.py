@@ -5,9 +5,9 @@ from flask import render_template, session, redirect, url_for, request, \
 from healthtracker.database import User
 from healthtracker.utils import format_date, is_valid_email
 from healthtracker.view_helpers import get_user_by_auth, get_user_by_id, \
-     admin_required
+     require_admin, provide_user_from_auth, provide_user_from_id
 from healthtracker.mailer import send_admin_login, send_status_update_email, \
-     send_approval_email, send_confirmation_email
+     send_approval_email, send_confirmation_email, send_login_email
 from healthtracker import app
 
 
@@ -16,41 +16,48 @@ def index():
     return render_template("landing.html")
 
 
+@app.route("/messages")
+def messages():
+    return render_template("messages.html")
+
+
 @app.route("/subscribe", methods=["POST"])
 def subscribe():
     email = request.form.get("email")
     if is_valid_email(email):
-        user = User.create(email)
-        if user:
+        user = User.find_by(email=email)
+        if user is None:
+            user = User.create(email)
             send_confirmation_email(user)
             flash(u"""You've been subscribed. An email has been sent
                   to {0} with more information""".format(email), "info")
+        else:
+            send_login_email(user)
+            flash(u"""We've sent you a link to log in with: check your email.""".format(email), "info")
     else:
         flash(u""""{0}" is not a valid email address:
               please re-enter your email.""".format(email), "error")
-    return redirect(url_for("index"))
+    return redirect(url_for("messages"))
 
 
 @app.route("/confirm-email")
-def confirm_email():
-    user = get_user_by_auth(request)
-
+@provide_user_from_auth
+def confirm_email(user):
     if user is not None:
         user.confirm()
         flash(u"""We've confirmed your email address; you can expect an email
                   from us after you've been approved.""", "info")
-    return redirect(url_for("index"))
+    return redirect(url_for("messages"))
     
 
 @app.route("/tracker")
+@provide_user_from_auth
 def tracker():
-    value = request.args.get('value', None)
-    user = get_user_by_auth(request)
-
+    value = request.args.get("value", None)
     if user is None:
         flash(u"""You can't update your status; use the newest email from us,
               or sign up for an account if you don't have one.""", "error")
-        return redirect(url_for("index"))
+        return redirect(url_for("messages"))
 
     if value is not None:
         user.add_status(value)
@@ -65,20 +72,19 @@ def tracker():
 
 
 @app.route("/admin")
-def admin():
-    admin = get_user_by_auth(request)
+@provide_user_from_auth
+def admin(admin):
     if admin is None or not admin.is_admin:
         send_admin_login()
         return "Must be administrator. (Email sent to admin)."
-
     users = User.query.all()
     return render_template("admin.html", users=users, auth_token=admin.auth_token)
 
 
 @app.route("/toggle_approve_user", methods=["POST"])
-@admin_required
-def toggle_approve_user(admin):
-    user = get_user_by_id(request)
+@require_admin
+@provide_user_from_id
+def toggle_approve_user(user, admin):
     if user.is_approved:
         user.unapprove()
     else:
@@ -88,26 +94,26 @@ def toggle_approve_user(admin):
         send_approval_email(user)
     return redirect(url_for("admin", auth_token=admin.auth_token))
 
+
 @app.route("/delete_user", methods=["POST"])
-@admin_required
-def delete_user(admin):
-    user = get_user_by_id(request)
-    if user:
-        user.delete()
+@require_admin
+@provide_user_from_id
+def delete_user(user, admin):
+    user.delete()
     return redirect(url_for("admin", auth_token=admin.auth_token))
 
 
 @app.route("/reset_auth_user", methods=["POST"])
-@admin_required
-def reset_auth_user(admin):
-    user = get_user_by_id(request)
+@require_admin
+@provide_user_from_id
+def reset_auth_user(user, admin):
     user.reset_auth_token()
     return redirect(url_for("admin", auth_token=admin.auth_token))
 
 
 @app.route("/send_update_email_user", methods=["POST"])
-@admin_required
-def send_update_email_user(admin):
-    user = get_user_by_id(request)
+@require_admin
+@provide_user_from_auth
+def send_update_email_user(user, admin):
     send_status_update_email(user)
     return redirect(url_for("admin", auth_token=admin.auth_token))

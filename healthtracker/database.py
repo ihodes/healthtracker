@@ -79,6 +79,10 @@ class User(Model):
             return user
         return None
 
+    @staticmethod
+    def find_by(**kwargs):
+        return User.query.filter_by(**kwargs).first()
+
 
 class Status(Model):
     __tablename__ = "statuses"
