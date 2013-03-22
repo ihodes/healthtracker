@@ -49,16 +49,17 @@ def send_status_update_email(user):
     from_email = "HealthTracr <hello@healthtracker.mailgun.org>"
     to_email = user.email
     email_subject = "Update Your Health Today"
-
+    
+    unsubscribe_link = unsubscribe_url(user)
     status_update_text = ["Let us know how you're feeling today. \n\n 0 being the first and worst, 5 being the best."]
     status_update_links = []
     for value in range(6):
         status_update_link = status_update_url(user, value)
         status_update_links.append(status_update_link)
         status_update_text.append("{0}: {1}".format(value, status_update_link))
-
+    status_update_text.append("\n\n\n Unsubscribe: "+unsubscribe_link)
     email_text = "\n\n".join(status_update_text)
-    html_text = render_template('emails/status_update.html', status_update_links=status_update_links)
+    html_text = render_template('emails/status_update.html', status_update_links=status_update_links, unsubscribe_link=unsubscribe_link)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -118,3 +119,10 @@ def status_update_url(user, value):
     server_name = app.config["HOST_NAME"]
     auth = user.auth_token
     return url_base.format(server_name, auth, value)
+
+
+def unsubscribe_url(user):
+    url_base = "http://{0}/unsubscribe?auth_token={1}"
+    server_name = app.config["HOST_NAME"]
+    auth = user.auth_token
+    return url_base.format(server_name, auth)

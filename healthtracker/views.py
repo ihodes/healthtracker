@@ -31,6 +31,9 @@ def subscribe():
             send_confirmation_email(user)
             flash(u"""You've been subscribed. An email has been sent
                   to {0} with more information""".format(email), "info")
+        elif not user.is_confirmed:
+            flash(u"""Check your email to confirm your subscription (check your spam if you don't see it within a minute!)""", "info")
+            send_confirmation_email(user)
         else:
             send_login_email(user)
             flash(u"""We've sent you a link to log in with: check your email.""".format(email), "info")
@@ -66,6 +69,17 @@ def tracker(user):
 
     statuses = [status.value for status in user.statuses.all()]
     return render_template("tracker.html", statuses=statuses)
+
+
+@app.route("/unsubscribe")
+@provide_user_from_auth
+def unsubscribe(user):
+    if user is None:
+        flash(u"""Use the unsubscribe link from your newest email to unsubscribe (this link has expired!)""", "error")
+    else:
+        user.unconfirm()
+        flash(u"""You've been unsubscribed: we're sorry to see you go.""", "info")
+    return redirect(url_for("messages"))
 
 
 @app.route("/admin")

@@ -49,6 +49,10 @@ class User(Model):
         self.is_confirmed = True
         self.save()
 
+    def unconfirm(self):
+        self.is_confirmed = False
+        self.save()
+
     def approve(self):
         self.is_approved = True
         self.save()
