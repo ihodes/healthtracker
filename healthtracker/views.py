@@ -110,7 +110,7 @@ def reset_auth_user(user, admin):
 
 @app.route("/send_update_email_user", methods=["POST"])
 @require_admin
-@provide_user_from_auth
+@provide_user_from_id
 def send_update_email_user(user, admin):
     send_status_update_email(user)
     return redirect(url_for("admin", auth_token=admin.auth_token))
