@@ -4,6 +4,8 @@ import requests
 from healthtracker import app
 from healthtracker.database import User
 
+from flask import render_template
+
 
 def send_admin_login():
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
@@ -48,20 +50,23 @@ def send_status_update_email(user):
     to_email = user.email
     email_subject = "Update Your Health Today"
 
-    status_update_links = ["Let us know how you're feeling today. \n\n 0 being the first and worst, 5 being the best."]
+    status_update_text = ["Let us know how you're feeling today. \n\n 0 being the first and worst, 5 being the best."]
+    status_update_links = []
     for value in range(6):
         status_update_link = status_update_url(user, value)
-        status_update_links.append("{0}: {1}".format(value, status_update_link))
+        status_update_links.append(status_update_link)
+        status_update_text.append("{0}: {1}".format(value, status_update_link))
 
-    email_text = "\n\n".join(status_update_links)
-    # template = render_template('emails/status_update.html', val_links=status_update_links)
+    email_text = "\n\n".join(status_update_text)
+    html_text = render_template('emails/status_update.html', status_update_links=status_update_links)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
                          data={"from": from_email,
                                "to": to_email,
                                "subject": email_subject,
-                               "text": email_text})
+                               "text": email_text,
+                               "html": html_text})
 
 
 def send_confirmation_email(user):

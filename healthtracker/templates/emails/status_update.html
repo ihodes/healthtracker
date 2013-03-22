@@ -1,33 +1,631 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 
-    <title>{% block title %}Give us an update{% endblock %}</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www=2Ew3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3DUTF-8">
+        <title>Track Your Health</title>
 
-    <style type="text/css" media="screen">
-      body { padding: 0 !important; margin: 0 !important; display: block !important; background: #f3f3f3; -webkit-text-size-adjust: none; }
-      div { padding: 0 !important; margin: 0 !important;}
-      p { padding: 0 !important; margin: 0 !important; }
-      a { color: #F2E318 !importsnt; text-decoration: none !important; }
-    </style>
-  </head>
+        <!--[if gte mso 6]>
+        <style>
+            table.mcnFollowContent {width:100% !important;}
+            table.mcnShareContent {width:100% !important;}
+        </style>
+        <![endif]-->
+    <style type=3D"text/css">
+#outlook a{
+padding:0;
+}
+.ReadMsgBody{
+width:100%;
+}
+.ExternalClass{
+width:100%;
+}
+span.yshortcuts{
+background-color:none !important;
+border:none !important;
+}
+span.yshortcuts:hover,span.yshortcuts:active,span.yshortcuts:focus{
+background-color:none !important;
+border:none !important;
+}
+body{
+margin:0;
+padding:0;
+}
+a{
+word-wrap:break-word !important;
+}
+img{
+border:0;
+height:auto;
+line-height:100%;
+outline:none;
+text-decoration:none;
+}
+table,td{
+border-collapse:collapse;
+mso-table-lspace:0pt;
+mso-table-rspace:0pt;
+}
+#bodyTable,#bodyCell{
+height:100% !important;
+margin:0;
+padding:0;
+width:100% !important;
+}
+#bodyCell{
+padding:20px;
+}
+.mcnImage{
+vertical-align:bottom;
+}
+body,#bodyTable{
+background-color:#DEE0E2;
+}
+#bodyCell{
+border-top:0;
+}
+#templateContainer{
+border:1px solid #BBBBBB;
+}
+h1{
+color:#202020 !important;
+display:block;
+font-family:Helvetica;
+font-size:26px;
+font-style:normal;
+font-weight:bold;
+line-height:100%;
+letter-spacing:normal;
+margin:0;
+text-align:left;
+}
+h2{
+color:#404040 !important;
+display:block;
+font-family:Helvetica;
+font-size:20px;
+font-style:normal;
+font-weight:bold;
+line-height:100%;
+letter-spacing:normal;
+margin:0;
+text-align:left;
+}
+h3{
+color:#606060 !important;
+display:block;
+font-family:Helvetica;
+font-size:16px;
+font-style:italic;
+font-weight:normal;
+line-height:100%;
+letter-spacing:normal;
+margin:0;
+text-align:left;
+}
+h4{
+color:#808080 !important;
+display:block;
+font-family:Helvetica;
+font-size:14px;
+font-style:italic;
+font-weight:normal;
+line-height:100%;
+letter-spacing:normal;
+margin:0;
+text-align:left;
+}
+#templatePreheader{
+background-color:#F4F4F4;
+border-top:0;
+border-bottom:0;
+}
+.preheaderContainer .mcnTextContent{
+color:#808080;
+font-family:Helvetica;
+font-size:10px;
+line-height:150%;
+text-align:left;
+}
+.preheaderContainer .mcnTextContent a,.preheaderContent a .yshortcuts {
+color:#606060;
+font-weight:normal;
+text-decoration:underline;
+}
+#templateHeader{
+background-color:#F4F4F4;
+border-top:0;
+border-bottom:0;
+}
+.headerContainer .mcnTextContent{
+color:#505050;
+font-family:Helvetica;
+font-size:14px;
+line-height:150%;
+text-align:left;
+}
+.headerContainer .mcnTextContent a,.headerContainer .mcnTextContent a:link,.headerContainer .mcnTextContent a:visited,.headerContainer .mcnTextContent a .yshortcuts {
+color:#EB4102;
+font-weight:normal;
+text-decoration:underline;
+}
+#templateBody{
+background-color:#F4F4F4;
+border-top:0;
+border-bottom:0;
+}
+.bodyContainer .mcnTextContent{
+color:#505050;
+font-family:Helvetica;
+font-size:14px;
+line-height:150%;
+text-align:left;
+}
+.bodyContainer .mcnTextContent a,.bodyContainer .mcnTextContent a .yshortcuts {
+color:#EB4102;
+font-weight:normal;
+text-decoration:underline;
+}
+#templateFooter{
+background-color:#F4F4F4;
+border-top:0;
+border-bottom:0;
+}
+.footerContainer .mcnTextContent{
+color:#808080;
+font-family:Helvetica;
+font-size:10px;
+line-height:150%;
+text-align:left;
+}
+.footerContainer .mcnTextContent a,.footerContainer .mcnTextContent a .yshortcuts {
+color:#606060;
+font-weight:normal;
+text-decoration:underline;
+}
+@media only screen and (max-width: 480px){
+body,table,td,p,a,li,blockquote{
+-webkit-text-size-adjust:none !important;
+}
 
-  <body>
-    <div style="text-align:center;background:#F2F2F2;width:350px;margin:10px auto 20px;padding: 20px;border:2px solid #303030;">
-      <h1 style="font-size:25px;font-family:palatino,serif;color:#1C1C1C;font-weight:800;">
-        Track Your Health
-      </h1>
-      <p style="font-size:18px;font-family:serif;color:#303030;padding:20px;margin-bottom:23px;">
-        Good morning! I hope you're doing well today. Please let me know how you're doing, with 1 being the worst, and 5 being the best.
-      </p>
-      <div style="background:#808080;">
-        <table style="text-align:center;">
-          {% for value, link in val_links -%}
-            <tr style="text-align:center;padding:33px;color:#F2E318;font-weight:800;font-size:44px;"><a href="{{ link  }}" style="text-decoration:none;margin-left:72px;">{{ value }} out of 5</a></tr>
-          {%- endfor %}
-        </table>
-      </div>
-    </div>
-  </body>
+}@media only screen and (max-width: 480px){
+body{
+width:100% !important;
+min-width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[id=3DbodyCell]{
+padding:10px !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3DmcnTextContentContainer]{
+width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3DmcnBoxedTextContentContainer]{
+width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3Dmcpreview-image-uploader]{
+width:100% !important;
+display:none !important;
+}
+
+}@media only screen and (max-width: 480px){
+img[class=3DmcnImage]{
+width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3DmcnImageGroupContentContainer]{
+width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageGroupContent]{
+padding:9px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageGroupBlockInner]{
+padding-bottom:0 !important;
+padding-top:0 !important;
+}
+
+}@media only screen and (max-width: 480px){
+tbody[class=3DmcnImageGroupBlockOuter]{
+padding-bottom:9px !important;
+padding-top:9px !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3DmcnCaptionLeftTextContentContainer],table[class=3DmcnCaptionRightTextContentContainer],table[class=3DmcnCaptionLeftImageContentContainer],table[class=3DmcnCaptionRightImageContentContainer],table[class=3DmcnImageCardLeftTextContentContainer],table[class=3DmcnImageCardRightTextContentContainer]{
+width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageCardLeftImageContent],td[class=3DmcnImageCardRightImageContent]{
+padding-right:18px !important;
+padding-left:18px !important;
+padding-bottom:0 !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageCardBottomImageContent]{
+padding-bottom:9px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageCardTopImageContent]{
+padding-top:18px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageCardLeftImageContent],td[class=3DmcnImageCardRightImageContent]{
+padding-right:18px !important;
+padding-left:18px !important;
+padding-bottom:0 !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageCardBottomImageContent]{
+padding-bottom:9px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnImageCardTopImageContent]{
+padding-top:18px !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3DmcnCaptionLeftContentOuter] td[class=3DmcnTextContent],table[class=3DmcnCaptionRightContentOuter] td[class=3DmcnTextContent]{
+padding-top:9px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnCaptionBlockInner] table[class=3DmcnCaptionTopContent]:last-child td[class=3DmcnTextContent]{
+padding-top:18px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DmcnBoxedTextContentColumn]{
+padding-left:18px !important;
+padding-right:18px !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[id=3DtemplateContainer],table[id=3DtemplateHeader],table[id=3DtemplateBody],table[id=3DtemplateFooter]{
+max-width:600px !important;
+width:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+h1{
+font-size:24px !important;
+line-height:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+h2{
+font-size:20px !important;
+line-height:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+h3{
+font-size:18px !important;
+line-height:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+h4{
+font-size:16px !important;
+line-height:100% !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[class=3DmcnBoxedTextContentContainer] td[class=3DmcnTextContent]{
+font-size:18px !important;
+line-height:125% !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[id=3DtemplatePreheader]{
+display:none !important;
+}
+
+}@media only screen and (max-width: 480px){
+table[id=3DtemplateHeader]{
+border-top:0 !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DheaderContainer] td[class=3DmcnTextContent]{
+font-size:18px !important;
+line-height:125% !important;
+padding-right:18px !important;
+padding-left:18px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DbodyContainer] td[class=3DmcnTextContent]{
+font-size:18px !important;
+line-height:125% !important;
+padding-right:18px !important;
+padding-left:18px !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DfooterContainer] td[class=3DmcnTextContent]{
+font-size:14px !important;
+line-height:115% !important;
+}
+
+}@media only screen and (max-width: 480px){
+td[class=3DfooterContainer] a[class=3DutilityLink]{
+display:block !important;
+}
+
+}</style></head>
+    <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="margin: 0;padding: 0;background-color: #DEE0E2;">
+        <center>
+            <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;margin: 0;padding: 0;background-color: #DEE0E2;height: 100% !important;width: 100% !important;">
+                <tr>
+                    <td align="center" valign="top" id="bodyCell" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;margin: 0;padding: 20px;border-top: 0;height: 100% !important;width: 100% !important;">
+                        <!-- BEGIN TEMPLATE // -->
+                        <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;border: 1px solid #BBBBBB;">
+                            <tr>
+                                <td align="center" valign="top" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                    <!-- BEGIN PREHEADER // -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="600" id="templatePreheader" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 0;border-bottom: 0;">
+                                        <tr>
+                                        <td valign="top" class="preheaderContainer" style="padding-top: 9px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+
+                <table align="left" border="0" cellpadding="0" cellspacing="0" width="366" class="mcnTextContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody><tr>
+
+                        <td valign="top" class="mcnTextContent" style="padding: 9px 0px 9px 18px;font-family: Verdana, Geneva, sans-serif;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-size: 10px;line-height: 150%;text-align: left;">
+
+                            Good evening from Healthtracr! Let us know how you're feeling today.
+                        </td>
+                    </tr>
+                </tbody></table>
+
+                <table align="right" border="0" cellpadding="0" cellspacing="0" width="197" class="mcnTextContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody><tr>
+
+                        <td valign="top" class="mcnTextContent" style="padding: 9px 18px 9px 0px;font-family: Verdana, Geneva, sans-serif;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-size: 10px;line-height: 150%;text-align: left;">
+
+                            <br>
+
+                        </td>
+                    </tr>
+                </tbody></table>
+
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                                        </tr>
+                                    </table>
+                                    <!-- // END PREHEADER -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                    <!-- BEGIN HEADER // -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateHeader" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 0;border-bottom: 0;">
+                                        <tr>
+                                            <td valign="top" class="headerContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnBoxedTextBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnBoxedTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnBoxedTextBlockInner" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+
+                <table align="left" border="0" cellpadding="0" cellspacing="0" width="600" class="mcnBoxedTextContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody><tr>
+
+                        <td style="padding-top: 9px;padding-left: 18px;padding-bottom: 9px;padding-right: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+
+                            <table border="0" cellpadding="18" cellspacing="0" class="mcnTextContentContainer" width="100%" style="border: 1px solid #999999;background-color: #EBEBEB;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <tbody><tr>
+                                    <td valign="top" class="mcnTextContent" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #505050;font-family: Helvetica;font-size: 14px;line-height: 150%;text-align: left;">
+                                        Here's your daily email from HealthTracr.com. Just click the button that is closest to how you feel, and we'll do the rest. As always, we hope you're feeling well!
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnDividerBlockOuter">
+        <tr>
+            <td class="mcnDividerBlockInner" style="padding: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top-width: 1px;border-top-style: solid;border-top-color: #999999;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody><tr>
+                        <td style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                            <span></span>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                                        </tr>
+                                    </table>
+                                    <!-- // END HEADER -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                    <!-- BEGIN BODY // -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateBody" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 0;border-bottom: 0;">
+                                        <tr>
+                                            <td valign="top" class="bodyContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #119E11;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <a class="mcnButton " title="5 out of 5" href="{{status_update_links[5]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">5 out of 5</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #619E11;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <a class="mcnButton " title="4 out of 5" href="{{status_update_links[4]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">4 out of 5</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #82AF0F;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <a class="mcnButton " title="3 out of 5" href="{{status_update_links[3]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">3 out of 5</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #ADAD0F;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <a class="mcnButton " title="2 out of 5" href="{{status_update_links[2]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">2 out of 5</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #B4920B;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <a class="mcnButton " title="1 out of 5" href="{{status_update_links[1]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">1 out of 5</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                                        </tr>
+                                    </table>
+                                    <!-- // END BODY -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                    <!-- BEGIN FOOTER // -->
+                                    <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateFooter" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 0;border-bottom: 0;">
+                                        <tr>
+                                            <td valign="top" class="footerContainer" style="padding-bottom: 9px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnButtonBlockOuter">
+        <tr>
+            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
+                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #9E4911;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody>
+                        <tr>
+                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                <a class="mcnButton " title="0 out of 5" href="{{status_update_links[0]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">0 out of 5</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnDividerBlockOuter">
+        <tr>
+            <td class="mcnDividerBlockInner" style="padding: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top-width: 1px;border-top-style: solid;border-top-color: #999999;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody><tr>
+                        <td style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                            <span></span>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </td>
+        </tr>
+    </tbody>
+</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+    <tbody class="mcnTextBlockOuter">
+        <tr>
+            <td valign="top" class="mcnTextBlockInner" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+
+                <table align="left" border="0" cellpadding="0" cellspacing="0" width="600" class="mcnTextContentContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                    <tbody><tr>
+
+                        <td valign="top" class="mcnTextContent" style="padding-top: 9px;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-family: Helvetica;font-size: 10px;line-height: 150%;text-align: left;">
+
+                            <em>Copyright 2013 HealthTracker, All rights reserved.</em><br>
+ <a class="utilityLink" href="" style="color: #606060;font-weight: normal;text-decoration: underline;word-wrap: break-word !important;">unsubscribe from healthtracr.com</a>&nbsp;&nbsp;&nbsp; 
+<br>
+                        </td>
+                    </tr>
+                </tbody></table>
+
+            </td>
+        </tr>
+    </tbody>
+</table></td>
+                                        </tr>
+                                    </table>
+                                    <!-- // END FOOTER -->
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- // END TEMPLATE -->
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </body>
 </html>
