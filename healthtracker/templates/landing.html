@@ -4,7 +4,9 @@
 
   <div class="sign-up">
     <img class="wordmark" src="/static/img/healthtracker_wordmark.png" alt="wordmark">
-    <h2>Start Tracking Your Health Now</h2>
+    <p class="lead">
+      We'll send you a daily email asking you how you are: track your health to see what you can do to feel well.
+    </p>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
