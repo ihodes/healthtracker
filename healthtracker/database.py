@@ -10,7 +10,7 @@ from healthtracker import app
 from healthtracker.utils import random_string
 
 
-engine = create_engine(app.config['DATABASE_URI'],
+engine = create_engine(app.config['DATABASE_URL'],
                        convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
