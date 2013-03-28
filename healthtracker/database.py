@@ -16,11 +16,21 @@ db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
 
-def init_db():
-    Model.metadata.create_all(bind=engine)
-
 Model = declarative_base(name='Model')
 Model.query = db_session.query_property()
+
+def init_db():
+    my_metadata.create_all(engine)
+
+    # Load the Alembic configuration and generate the
+    # version table, "stamping" it with the most recent rev:
+    from alembic.config import Config
+    from alembic import command
+    alembic_cfg = Config("../alembic.ini")
+    command.stamp(alembic_cfg, "head")
+
+def drop_db():
+    Model.metadata.drop_all(bind=engine)
 
 
 class User(Model):
