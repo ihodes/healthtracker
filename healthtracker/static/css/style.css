@@ -1,10 +1,18 @@
 body { background: url("/static/img/bg.png"); }
 
-.sign-up { width: 500px; margin: 40px auto 0; padding: 55px; }
-.sign-up img.wordmark { margin-left: 20px; width: 447px; }
-.sign-up form { width: 300px; margin: 23px auto 0; }
+.bg-img { background: url("/static/img/bg-img.jpg"); 
+          width:1200px; height:800px; 
+          position: fixed; top: 0; left: 0; z-index: -1;}
+
+.sign-up { width: 500px; margin: 70px 70px 0; padding: 55px;
+         border: 1px solid grey; border-radius: 5px; background: rgba(0,0,0,.5);}
+.sign-up .lead { color: white; }
+.sign-up .wordmark { text-align: center; margin-bottom: 45px;  
+                     font: 'Open Sans', sans-serif; font-size: 77px; color: white; }
+.sign-up form { width: 300px; margin: 40px auto 0; }
 .sign-up form input { width: 285px; } 
-.sign-up .privacy-notice { margin-top: 17px; display: block; } 
+.sign-up form label { }
+.sign-up .privacy-notice { margin-top: 50px; display: block; color: white; }
 
 .tracker-holder { margin-top: 33px; }
 
