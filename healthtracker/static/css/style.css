@@ -1,18 +1,36 @@
-body { background: url("/static/img/bg.png"); }
+body { padding: 0; margin: 0;}
 
-.bg-img { background: url("/static/img/bg-img.jpg"); 
-          width:1200px; height:800px; 
-          position: fixed; top: 0; left: 0; z-index: -1;}
+.section-container { margin: 0 auto; float:none;}
 
-.sign-up { width: 500px; margin: 70px 70px 0; padding: 55px;
-         border: 1px solid grey; border-radius: 5px; background: rgba(0,0,0,.5);}
+.container-top { background: url("/static/img/bg-img.jpg") no-repeat; 
+                 width:1200px; height:800px; 
+                 margin: 0 auto; position: relative; }
+
+.sign-up { width: 500px; padding: 55px; position: relative; top: 45px; left: 45px; 
+           border: 1px solid grey; border-radius: 5px; background: rgba(0,0,0,.5);}
 .sign-up .lead { color: white; }
-.sign-up .wordmark { text-align: center; margin-bottom: 45px;  
-                     font: 'Open Sans', sans-serif; font-size: 77px; color: white; }
+.sign-up .wordmark { text-align: center; margin-bottom: 45px; margin-top: 13px;
+                     font-family: 'Open Sans', sans-serif; font-size: 77px; color: white; }
 .sign-up form { width: 300px; margin: 40px auto 0; }
 .sign-up form input { width: 285px; } 
 .sign-up form label { }
 .sign-up .privacy-notice { margin-top: 50px; display: block; color: white; }
+
+
+.container-middle { margin-top: 77px; padding-left: 23px; 
+                    height: 800px; position: absolute; }
+.container-middle h1 { font-family: 'Open Sans', sans-serif; font-size: 53px; 
+                       line-height: 1.2em;}
+.container-middle ul { list-style: bullet; }
+.container-middle li { font-size: 33px; font-color: #cdcdcd; margin: 20px;}
+.container-middle div { height: 221px; padding-top: 33px; }
+.container-middle .learn-more { padding-top: 90px; z-index: 2; }
+.container-middle .learn-more a.btn { margin-left: 90px; }
+.container-middle .graph { height: 318px; width: 775px; margin-top: 38px; float: left;
+                           position: relative; left: 33px;  z-index: -1;
+                           opacity: 0.7; display: block;
+                           background: url("/static/img/graph.png") no-repeat;}
+
 
 .tracker-holder { margin-top: 33px; }
 

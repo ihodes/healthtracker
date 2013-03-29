@@ -16,6 +16,11 @@ def index():
     return render_template("landing.html")
 
 
+@app.route("/learn-more")
+def learn_more():
+    return render_template("learn_more.html")
+
+
 @app.route("/messages")
 def messages():
     return render_template("messages.html")
