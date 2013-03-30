@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+{% block head %}
+<script>
+$(document).ready(function(){
+$(".sparkline").each(function(idx,el)
+{ 
+  var randoms = [];
+  for(var i = 0; i < 20; i++)
+    randoms.push(Math.random());
+  $(el).sparkline(randoms);
+});
+});
+
+</script>
+{% endblock %}
+{% block body %}
+<ul class="nav nav-tabs console-table row">
+  <li class="">
+    <a href="#">Need Follow-Up</a>
+  </li>
+  <li class="active">
+    <a href="#">All</a>
+  </li>
+</ul>
+<div class="console-table row table-info span12">
+  <form class="navbar-search pull-right input-append" style="float:right;">
+    <input type="text" placeholder="Search for a patient...">
+    <button class="btn"><i class="icon-search"></i></button>
+  </form>
+</div>
+<table class="table console-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Health <small class="muted">7 days trailing</small></th>
+      <th>Adherence</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Andria Fischer</td>
+      <td>
+        <span class="sparkline"></span>
+        <span class="label label-important">1.80 / 5.00</span>
+      </td>
+      <td><span class="badge badge-important">-</span></td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-small btn-warning">Follow-Up</button>
+          <button class="btn btn-small btn-primary">Info</button>
+        </div>
+      </td>
+      <td>
+        <i class="icon-bell"></i>
+        <i class="icon-calendar"></i>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Stan McLarn</td>
+      <td>
+        <span class="sparkline"></span>
+        <span class="label label-warning">2.87 / 5.00</span>
+      </td>
+      <td><span class="badge badge-important">-</span></td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-small btn-warning">Follow-Up</button>
+          <button class="btn btn-small btn-primary">Info</button>
+        </div>
+      </td>
+      <td>
+        <i class="icon-calendar"></i>
+        <i class="icon-inbox"></i>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Zmrinsk Ptelov</td>
+      <td>
+        <span class="sparkline"></span>
+        <span class="label label-warning">3.11 / 5.00</span>
+      </td>
+      <td><span class="badge badge-warning">+</span></td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-small btn-warning">Follow-Up</button>
+          <button class="btn btn-small btn-primary">Info</button>
+        </div>
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td colspan="6" style="text-align:center;">...</td>
+    </tr>
+
+    <tr>
+      <td>Jason Bourne</td>
+      <td>
+        <span class="sparkline"></span>
+        <span class="label label-success">4.35 / 5.00</span>
+      </td>
+      <td><span class="badge badge-success">+</span></td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-small btn-warning">Follow-Up</button>
+          <button class="btn btn-small btn-primary">Info</button>
+        </div>
+      </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>James Keen</td>
+      <td>
+        <span class="sparkline"></span>
+        <span class="label label-success">5.00 / 5.00</span>
+      </td>
+      <td><span class="badge badge-success">+</span></td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-small btn-warning">Follow-Up</button>
+          <button class="btn btn-small btn-primary">Info</button>
+        </div>
+      </td>
+      <td>
+        <i class="icon-inbox"></i>
+      </td>
+    </tr>
+  </tbody>
+
+  <!-- <tfoot> -->
+  <!--   <tr> -->
+  <!--     <td rowspan="1" colspan="5" class="muted">total patients 1057</td> -->
+  <!--   </tr> -->
+  <!--   <tr> -->
+  <!--     <td rowspan="1" colspan="5" class="">require attention 17</td> -->
+  <!--   </tr> -->
+  <!-- </tfoot> -->
+</table>
+{% endblock %}

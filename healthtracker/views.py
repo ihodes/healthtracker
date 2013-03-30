@@ -21,6 +21,11 @@ def learn_more():
     return render_template("learn_more.html")
 
 
+@app.route("/drconsole")
+def drconsole():
+    return render_template("doctor_console.html")
+
+
 @app.route("/messages")
 def messages():
     return render_template("messages.html")
