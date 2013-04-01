@@ -1,21 +1,33 @@
 {% extends "layout.html" %}
 {% block body %}
+<ul class="breadcrumb">
+  <li><a href="/">Home</a> <span class="divider">/</span></li>
+  <li class="active">Learn More</li>
+</ul>
 <br>
-<div class="wrapper">
-  <h1>Coming soon...</h1>
+<div class="wrapper learn-more">
+  <h1>Coming Soon</h1>
 
-  <p class="lead">If you're interested in working with us to test HealthTracker in your practice or organization, <a href="/">sign up with us on the front page</a> and we'll be in touch with you soon.</p>
+  <p class="lead">
+    If you're interested in working with us to test HealthTracker in your practice or organization, submit your email below and we'll be in touch with you.
+  </p>
 
+  <form class="form form-inline" method="POST">
+    <input type="text" placeholder="email@example.com" name="email">
+    <input type="submit" class="btn btn-primary">
+  </form>
+  
   <section>
-    <br><br>
-    <caption>Example patient list</caption>
-    <br>
+    <p>
+      This is what your doctors will see. Patients who need special attention will automatically be ranked highly, giving you advance notice of a patient's degrading health. 
+    </p>
+    <caption>Example patient list: </caption>
     <img src="/static/img/patient-list.png" class="img img-polaroid">
   </section>
 
   <section>
-    <br><br><br><br>
-    <caption>Example patient portal</caption>
+    <p>Patients will see a page like this when they log in. They'll have access to their historical health as well, giving them a sense of how their treatment is affecting their health. Small improvements over time (which would otherwise be undetectable) will stand out.</p>
+    <caption>Example patient portal: </caption>
     <br>
     <img src="/static/img/ptportal.png" class="img img-polaroid">
   </section>

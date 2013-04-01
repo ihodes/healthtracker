@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-import string, random, datetime
+import string
+import random
+import datetime
+import requests
 
 
 def random_string(size=32):
@@ -16,3 +19,4 @@ def format_date(datetime):
 
 def is_valid_email(email):
     return email is not None and "@" in email
+

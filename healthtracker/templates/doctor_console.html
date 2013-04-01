@@ -10,20 +10,27 @@ $(".sparkline").each(function(idx,el)
   $(el).sparkline(randoms);
 });
 
-$(".icon-bell").tooltip({title:"An alert has been sent to RN (Becky Z.)"});
-$(".icon-calendar").tooltip({title:"There is an upcoming appointment for this patient."});
-$(".icon-inbox").tooltip({title:"This patient has sent an unread message."});
+$("td .icon-bell").tooltip({title:"An alert has been sent to RN (Becky Z.)"});
+$("td .icon-calendar").tooltip({title:"There is an upcoming appointment for this patient."});
+$("td .icon-inbox").tooltip({title:"This patient has sent an unread message."});
 });
 </script>
 {% endblock %}
 {% block body %}
 <div class="wrapper">
+
+  <div class="progress patient-status-bar">
+    <div class="bar bar-success" style="width: 65%;"></div>
+    <div class="bar bar-warning" style="width: 25%;"></div>
+    <div class="bar bar-danger" style="width: 10%;"></div>
+  </div>
+
   <ul class="nav nav-tabs">
     <li class="">
-      <a href="#">Needs Attention</a>
+      <a href="#">Needs Attention <span class="label">23</span></a>
     </li>
     <li class="active">
-      <a href="#">All Patients</a>
+      <a href="#">All Patients <span class="label">2997</span></a>
     </li>
   </ul>
   <div class="table-details">

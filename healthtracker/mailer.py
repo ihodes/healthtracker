@@ -126,3 +126,16 @@ def unsubscribe_url(user):
     server_name = app.config["HOST_NAME"]
     auth = user.auth_token
     return url_base.format(server_name, auth)
+
+
+def send_simple_email(subject, message, email):
+    api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
+    api_key = app.config["MAILGUN_API_KEY"]
+    from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
+
+    return requests.post(api_endpoint,
+                         auth=("api", api_key),
+                         data={"from": from_email,
+                               "to": email,
+                               "subject": subject,
+                               "text": message})

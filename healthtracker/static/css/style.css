@@ -1,6 +1,13 @@
 body { padding: 0; margin: 0;}
 .wrapper { margin: 0 auto; width: 940px;}
+footer { height: 150px; padding: 20px; 
+         background: linear-gradient(0deg, #131a10 97%, #477047);
+         border-top: 2px grey solid; }
+footer p { width: 500px; margin: 20px auto 0 auto; }
+footer ul { width: 50px; margin: 10px auto 0 auto; }
 
+footer ul { margin-top: 20px; text-align: right; }
+footer ul li { color: #cdcdcd; list-style: none; }
 
 /* Landing Page */
 section.top { background: url("/static/img/bg.png"); 
@@ -14,12 +21,12 @@ section.top { background: url("/static/img/bg.png");
 .sign-up form { width: 300px; margin: 40px auto 0; }
 .sign-up form input { width: 285px; } 
 .sign-up form label { }
-.sign-up .privacy-notice { margin-top: 50px; display: block; color: grey; }
+.sign-up .privacy-notice { margin-top: 50px; margin-left: 13px; display: block; color: grey; }
 
 section.middle { margin-top:550px; }
 section.middle .row-fluid { margin: 23px auto; }
 section.middle .learn-more {}
-
+.why-copy .span4 { height: 300px; }
 
 /* Dr. Console  */
 .table-details { margin: 0 0 37px -18px; }
@@ -30,9 +37,15 @@ tfoot td { text-align: right !important; padding-right: 100px !important; }
 
 .table-details { padding: 27px 0 37px 20px; }
 
+.patient-status-bar { margin: -3px 0 40px 0; }
 
 /* Pt Portal */
 section.question { padding-top: 37px; width: 500px; }
 section.question textarea { width: 480px; }
 
 .tracker-holder { margin-top: 33px; }
+
+
+/* Learn More */
+.learn-more section { margin: 60px auto; }
+.learn-more img { margin: 0 auto; display: block; }

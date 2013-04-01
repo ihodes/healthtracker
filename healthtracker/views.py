@@ -7,7 +7,8 @@ from healthtracker.utils import format_date, is_valid_email
 from healthtracker.view_helpers import get_user_by_auth, get_user_by_id, \
      require_admin, provide_user_from_auth, provide_user_from_id
 from healthtracker.mailer import send_admin_login, send_status_update_email, \
-     send_approval_email, send_confirmation_email, send_login_email
+     send_approval_email, send_confirmation_email, send_login_email, \
+     send_simple_email
 from healthtracker import app
 
 
@@ -16,14 +17,30 @@ def index():
     return render_template("landing.html")
 
 
-@app.route("/learn-more")
+@app.route("/learn-more", methods=["POST", "GET"])
 def learn_more():
-    return render_template("learn_more.html")
-
+    if request.method == "POST":
+        email = request.form.get("email")
+        send_simple_email("Request For Info",
+                          "{} has requested information on HealthTracker".format(email),
+                          "isaachodes@gmail.com")
+        return redirect(url_for("learn_more"))
+    else: 
+        return render_template("learn_more.html")
 
 @app.route("/drconsole")
 def drconsole():
     return render_template("doctor_console.html")
+
+@app.route("/privacy")
+def drconsole():
+    return render_template("privacy.html")
+@app.route("/about")
+def drconsole():
+    return render_template("about.html")
+@app.route("/contact")
+def drconsole():
+    return render_template("contact_us.html")
 
 
 @app.route("/ptportal")
