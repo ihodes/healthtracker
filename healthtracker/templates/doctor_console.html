@@ -3,7 +3,7 @@
 <script>
 $(document).ready(function(){
 $(".sparkline").each(function(idx,el)
-{ 
+{
   var randoms = [];
   for(var i = 0; i < 20; i++)
     randoms.push(Math.random());
@@ -13,146 +13,142 @@ $(".sparkline").each(function(idx,el)
 $(".icon-bell").tooltip({title:"An alert has been sent to RN (Becky Z.)"});
 $(".icon-calendar").tooltip({title:"There is an upcoming appointment for this patient."});
 $(".icon-inbox").tooltip({title:"This patient has sent an unread message."});
-
-$("td.name").popover({trigger:"hover", placement:"right", content: "Patient is 39 years old with a history of sleep apnea and cardiovascular stress. "})
 });
-
-
 </script>
 {% endblock %}
 {% block body %}
 <div class="wrapper">
-<ul class="nav nav-tabs">
-  <li class="">
-    <a href="#">Needs Attention</a>
-  </li>
-  <li class="active">
-    <a href="#">All Patients</a>
-  </li>
-</ul>
-<div class="table-details">
-  <div class="pull-left">
-    <i class="icon-inbox"></i> 7 new messages
-    <br>
-    <i class="icon-bell"></i> 2 alerts
+  <ul class="nav nav-tabs">
+    <li class="">
+      <a href="#">Needs Attention</a>
+    </li>
+    <li class="active">
+      <a href="#">All Patients</a>
+    </li>
+  </ul>
+  <div class="table-details">
+    <div class="pull-left">
+      <i class="icon-inbox"></i> 7 new messages
+      <br>
+      <i class="icon-bell"></i> 2 alerts
+    </div>
+    <form class="navbar-search pull-right input-append">
+      <input type="text" placeholder="Search for a patient...">
+      <button class="btn"><i class="icon-search"></i></button>
+    </form>
   </div>
-  <form class="navbar-search pull-right input-append">
-    <input type="text" placeholder="Search for a patient...">
-    <button class="btn"><i class="icon-search"></i></button>
-  </form>
-</div>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Health <small class="muted">7 days trailing</small></th>
-      <th>Adherence</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="name" title="Andria McGee">Andria McGee</td>
-      <td>
-        <span class="sparkline"></span>
-        <span class="label label-important">1.80 / 5.00</span>
-      </td>
-      <td><span class="badge badge-important">-</span> 32%</td>
-      <td>
-        <div class="btn-group">
-          <button class="btn btn-small btn-warning">Delegate</button>
-          <button class="btn btn-small btn-primary">Details</button>
-        </div>
-      </td>
-      <td>
-        <i class="icon-bell"></i>
-        <i class="icon-calendar"></i>
-      </td>
-    </tr>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Health <small class="muted">7 days trailing</small></th>
+        <th>Adherence</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="name" title="Andria McGee">Andria McGee</td>
+        <td>
+          <span class="sparkline"></span>
+          <span class="label label-important">1.80 / 5.00</span>
+        </td>
+        <td><span class="badge badge-important">-</span> 32%</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-small btn-warning">Delegate</button>
+            <button class="btn btn-small btn-primary">Details</button>
+          </div>
+        </td>
+        <td>
+          <i class="icon-bell"></i>
+          <i class="icon-calendar"></i>
+        </td>
+      </tr>
 
-    <tr>
-      <td class="name" title="Stan McLarn">Stan McLarn</td>
-      <td>
-        <span class="sparkline"></span>
-        <span class="label label-warning">2.87 / 5.00</span>
-      </td>
-      <td><span class="badge badge-important">-</span> 44%</td>
-      <td>
-        <div class="btn-group">
-          <button class="btn btn-small btn-warning">Delegate</button>
-          <button class="btn btn-small btn-primary">Details</button>
-        </div>
-      </td>
-      <td>
-        <i class="icon-calendar"></i>
-        <i class="icon-inbox"></i>
-      </td>
-    </tr>
+      <tr>
+        <td class="name" title="Stan McLarn">Stan McLarn</td>
+        <td>
+          <span class="sparkline"></span>
+          <span class="label label-warning">2.87 / 5.00</span>
+        </td>
+        <td><span class="badge badge-important">-</span> 44%</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-small btn-warning">Delegate</button>
+            <button class="btn btn-small btn-primary">Details</button>
+          </div>
+        </td>
+        <td>
+          <i class="icon-calendar"></i>
+          <i class="icon-inbox"></i>
+        </td>
+      </tr>
 
-    <tr>
-      <td class="name" title="Zmrinsk Ptelov">Zmrinsk Ptelov</td>
-      <td>
-        <span class="sparkline"></span>
-        <span class="label label-warning">3.11 / 5.00</span>
-      </td>
-      <td><span class="badge badge-warning">+</span> 85%</td>
-      <td>
-        <div class="btn-group">
-          <button class="btn btn-small btn-warning">Delegate</button>
-          <button class="btn btn-small btn-primary">Details</button>
-        </div>
-      </td>
-      <td></td>
-    </tr>
+      <tr>
+        <td class="name" title="Zmrinsk Ptelov">Zmrinsk Ptelov</td>
+        <td>
+          <span class="sparkline"></span>
+          <span class="label label-warning">3.11 / 5.00</span>
+        </td>
+        <td><span class="badge badge-warning">+</span> 85%</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-small btn-warning">Delegate</button>
+            <button class="btn btn-small btn-primary">Details</button>
+          </div>
+        </td>
+        <td></td>
+      </tr>
 
-    <tr>
-      <td colspan="6" style="text-align:center;">...</td>
-    </tr>
+      <tr>
+        <td colspan="6" style="text-align:center;">...</td>
+      </tr>
 
-    <tr>
-      <td class="name" title="Jason Bourne">Jason Bourne</td>
-      <td>
-        <span class="sparkline"></span>
-        <span class="label label-success">4.35 / 5.00</span>
-      </td>
-      <td><span class="badge badge-success">+</span> 98%</td>
-      <td>
-        <div class="btn-group">
-          <button class="btn btn-small btn-warning">Delegate</button>
-          <button class="btn btn-small btn-primary">Details</button>
-        </div>
-      </td>
-      <td></td>
-    </tr>
+      <tr>
+        <td class="name" title="Jason Bourne">Jason Bourne</td>
+        <td>
+          <span class="sparkline"></span>
+          <span class="label label-success">4.35 / 5.00</span>
+        </td>
+        <td><span class="badge badge-success">+</span> 98%</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-small btn-warning">Delegate</button>
+            <button class="btn btn-small btn-primary">Details</button>
+          </div>
+        </td>
+        <td></td>
+      </tr>
 
-    <tr>
-      <td class="name" title="James Keen">James Keen</td>
-      <td>
-        <span class="sparkline"></span>
-        <span class="label label-success">5.00 / 5.00</span>
-      </td>
-      <td><span class="badge badge-success">+</span> 99%</td>
-      <td>
-        <div class="btn-group">
-          <button class="btn btn-small btn-warning">Delegate</button>
-          <button class="btn btn-small btn-primary">Details</button>
-        </div>
-      </td>
-      <td>
-        <i class="icon-inbox"></i>
-      </td>
-    </tr>
-  </tbody>
+      <tr>
+        <td class="name" title="James Keen">James Keen</td>
+        <td>
+          <span class="sparkline"></span>
+          <span class="label label-success">5.00 / 5.00</span>
+        </td>
+        <td><span class="badge badge-success">+</span> 99%</td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-small btn-warning">Delegate</button>
+            <button class="btn btn-small btn-primary">Details</button>
+          </div>
+        </td>
+        <td>
+          <i class="icon-inbox"></i>
+        </td>
+      </tr>
+    </tbody>
 
-  <!-- <tfoot> -->
-  <!--   <tr> -->
-  <!--     <td rowspan="1" colspan="5" class="muted">total patients 1057</td> -->
-  <!--   </tr> -->
-  <!--   <tr> -->
-  <!--     <td rowspan="1" colspan="5" class="">require attention 17</td> -->
-  <!--   </tr> -->
-  <!-- </tfoot> -->
-</table>
+    <!-- <tfoot> -->
+    <!--   <tr> -->
+    <!--     <td rowspan="1" colspan="5" class="muted">total patients 1057</td> -->
+    <!--   </tr> -->
+    <!--   <tr> -->
+    <!--     <td rowspan="1" colspan="5" class="">require attention 17</td> -->
+    <!--   </tr> -->
+    <!-- </tfoot> -->
+  </table>
 </div>
 {% endblock %}

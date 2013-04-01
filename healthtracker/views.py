@@ -26,6 +26,11 @@ def drconsole():
     return render_template("doctor_console.html")
 
 
+@app.route("/ptportal")
+def ptportal():
+    return render_template("patient_portal.html")
+
+
 @app.route("/messages")
 def messages():
     return render_template("messages.html")

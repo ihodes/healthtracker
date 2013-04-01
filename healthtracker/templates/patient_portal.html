@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="wrapper">
+  <div class="row">
+    <h1>Good Evening, Jason.</h1>
+
+    <section class="question">
+      <h3>How are you feeling today? <small>0 = terrible, 5 = great</small></h3>
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn btn-info">0 out of 5</button>
+        <button class="btn btn-info">1 out of 5</button>
+        <button class="btn btn-info">2 out of 5</button>
+        <button class="btn btn-info">3 out of 5</button>
+        <button class="btn btn-info">4 out of 5</button>
+        <button class="btn btn-info">5 out of 5</button>
+      </div>
+    </section>
+
+    <section class="question">
+      <h3>Did you use your CPAP machine?</h3>
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn btn-large">Yes</button>
+        <button class="btn btn-large">No</button>
+        <button class="btn btn-large">Some of the time</button>
+      </div>
+    </section>
+
+    <section class="question">
+      <h3>How many hours of sleep did you get?</h3>
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button class="btn">0</button>
+        <button class="btn">1</button>
+        <button class="btn">2</button>
+        <button class="btn">3</button>
+        <button class="btn">4</button>
+        <button class="btn">5</button>
+        <button class="btn">6</button>
+        <button class="btn">7</button>
+        <button class="btn">8</button>
+        <button class="btn">9</button>
+        <button class="btn">10</button>
+        <button class="btn">11</button>
+        <button class="btn">12</button>
+      </div>
+    </section>
+
+    <section class="question">
+      <h3>Anything else your doctor should know?</h3>
+      <textarea rows="10" cols="100">
+      </textarea>
+    </section>
+
+    <section class="question">
+      <button class="btn btn-block btn-primary btn-large">Submit</button>
+    </section>
+
+  </div>
+</div>
+{% endblock %}
