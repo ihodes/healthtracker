@@ -1,9 +1,13 @@
 body { padding: 0; margin: 0;}
 .wrapper { margin: 0 auto; width: 940px;}
 footer { height: 150px; padding: 20px; 
-         background: linear-gradient(0deg, #131a10 97%, #477047);
+         /* background: linear-gradient(0deg, #131a10 97%, #477047); */
+         background: url("/static/img/footer-bg.png");
          border-top: 2px grey solid; }
-footer p { width: 500px; margin: 20px auto 0 auto; }
+footer p { width: 500px; margin: 22px auto 0 auto; 
+           color: #cdcdcd; 
+           font-size: 11px; line-height: 1.5em; 
+           font-family: Helvetica;}
 footer ul { width: 50px; margin: 10px auto 0 auto; }
 
 footer ul { margin-top: 20px; text-align: right; }
