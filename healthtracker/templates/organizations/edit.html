@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="wrapper row" style="margin-top: 50px; ">
+  <h1>{{ organization.name }} <small>Doctors List</small></h1>
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>Name</th>
+        <th>Patients</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in organization.providers.all() %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.patients.count() }}</td>
+        <td><a href="/providers/{{p.id}}/edit" class="btn btn-mini btn-primary">Edit</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form action="/providers" method="post" class="form form-horizontal">
+    <h4>Create New Doctor:</h4>
+    <input type="hidden" name="organization_id" value="{{ organization.id }}">
+    <div class="control-group">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        <input type="text" name="name" placeholder="Name">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Username</label>
+      <div class="controls">
+        <input type="text" name="username" placeholder="Username">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Email</label>
+      <div class="controls">
+        <input type="text" name="email" placeholder="Email">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Password</label>
+      <div class="controls">
+        <input type="password" name="password" placeholder="Password">
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

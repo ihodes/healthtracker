@@ -1,18 +1,22 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block body %}
 <section class="top">
   <div class="sign-up">
     <div class="wordmark">HealthTracker</div>
     <p class="lead">
-      We'll send you a daily email asking you how you are. Track your health to see what you can do to feel well.
+      We'll send you a daily email asking you how you are.
     </p>
     
     {% include "flash.html" %}
     
-    <form action="/subscribe" method="post" class="form well">
+    <form action="/login" method="post" class="form well">
       <input type="text" placeholder="jane.doe@example.com" name="email" autofocus/>  
+      <input type="password" placeholder="password" name="password"/>  
       <input type="submit" name="submit" 
-             value="Start Tracking Now" class="btn btn-success btn-block btn-large"/>
+             value="Log In" class="btn btn-success btn-block btn-large"/>
+      <br>
+      <span style="margin-left: 15px; margin-top: 15px; ">If you have a registration code, <a href="/register">click here</a>.</span>
+      <span style="margin-left: 15px; margin-top: 15px; ">If you are a provider, <a href="/dr-console">click here</a>.</span>
     </form>
     
     <small class="muted privacy-notice">

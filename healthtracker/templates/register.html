@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<div style="margin: 0 auto; width: 285px;">
+  <h1>Sign Up</h1>
+  <form action="/register" method="post" class="well">
+    <label name="registration-code">Enter the code your doctor gave you:</label>
+    <input type="text" placeholder="7XTCG4NKW" name="registration-code">
+    <label name="email">Enter your email address:</label>
+    <input type="text" placeholder="jane.doe@example.com" name="email">
+    <label name="password">Enter a password:</label>
+    <input type="password" placeholder="password" name="password">
+    <input type="submit" class="btn btn-block btn-success" value="Register"/>
+  </form>
+</div>
+{% endblock %}

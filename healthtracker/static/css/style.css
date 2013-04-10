@@ -25,7 +25,7 @@ section.top { background: url("/static/img/bg.png");
 .sign-up form { width: 300px; margin: 40px auto 0; }
 .sign-up form input { width: 285px; } 
 .sign-up form label { }
-.sign-up .privacy-notice { margin-top: 50px; margin-left: 13px; display: block; color: grey; }
+.sign-up .privacy-notice { margin-top: 20px; margin-left: 13px; display: block; color: grey; }
 
 section.middle { margin-top:550px; }
 section.middle .row-fluid { margin: 23px auto; }

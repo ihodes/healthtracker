@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="wrapper row" style="margin-top: 50px; ">
+  <h1>Manager Interface</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>Name</th>
+        <th>Doctors</th>
+        <th>Patients</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in organizations %}
+      <tr>
+        <td>{{ o.id }}</td>
+        <td>{{ o.name }}</td>
+        <td>{{ o.providers.count() }}</td>
+        <td>#</td>
+        <td><a href="/organizations/{{o.id}}/edit" class="btn btn-mini btn-primary">Edit</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <form action="/organizations" method="post" class="form form-inline">
+    <h4>Create New Organization:</h4>
+    <input type="text" name="name" placeholder="name">
+    <input type="submit" class="btn btn-primary">
+  </form>
+</div>
+{% endblock %}
