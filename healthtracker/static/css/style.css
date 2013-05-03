@@ -1,36 +1,34 @@
-body { padding: 0; margin: 0;}
-.wrapper { margin: 0 auto; width: 940px;}
-footer { height: 150px; padding: 20px; 
-         /* background: linear-gradient(0deg, #131a10 97%, #477047); */
-         background: url("/static/img/footer-bg.png");
-         border-top: 2px grey solid; }
-footer p { width: 500px; margin: 22px auto 0 auto; 
-           color: #cdcdcd; 
-           font-size: 11px; line-height: 1.5em; 
-           font-family: Helvetica;}
-footer ul { width: 50px; margin: 10px auto 0 auto; }
-
-footer ul { margin-top: 20px; text-align: right; }
-footer ul li { color: #cdcdcd; list-style: none; }
-
 /* Landing Page */
-section.top { background: url("/static/img/bg.png"); 
-              width: 100%; height: 500px; 
-              position: absolute; top: 0; }
+.wrapper { width: 800px; margin: 0 auto; }
 
-.sign-up { width: 500px; margin: 57px auto 0 auto; }
-.sign-up .lead { color: #454545; margin-left: 7px; }
-.sign-up .wordmark { text-align: center; margin-bottom: 45px; margin-top: 13px;
-                     font-family: 'Open Sans', sans-serif; font-size: 77px; color: #323232; }
-.sign-up form { width: 300px; margin: 40px auto 0; }
-.sign-up form input { width: 285px; } 
-.sign-up form label { }
-.sign-up .privacy-notice { margin-top: 50px; margin-left: 13px; display: block; color: grey; }
+header .logo { height: 63px; width: 106px; 
+               background: url('/static/img/marion.png') no-repeat;
+               margin: 13px 0; }
 
-section.middle { margin-top:550px; }
-section.middle .row-fluid { margin: 23px auto; }
-section.middle .learn-more {}
-.why-copy .span4 { height: 300px; }
+.wrapper section { margin-top: 63px; height: 250px; position: relative; }
+
+section.sign-up { text-align: center; 
+           background: url('http://www.science2health.org/wp-content/uploads/2012/09/healthy-living-woman.jpg');
+           background-position: 0px -450px;
+           padding: 23px; margin-top: 0px; 
+           border: 1px solid grey; 
+           color: white; 
+           font-weight: bold; }
+
+section#graph p { width: 360px; clear: right; }
+section#graph ul { margin-top: 30px; }
+section#graph img { position: absolute; top: 4em; right: -20px; }
+
+section#progress p { width: 360px; position: absolute; right: 0; top: 4.5em;}
+section#progress ul { margin-top: 30px; position: absolute; top: 7.5em; left: 2em; }
+section#progress img { position: absolute; top: 4.5em; left: 2em; }
+
+
+footer { margin-top: 53px; }
+footer li { display: inline; }
+footer li:after { content: " |" }
+footer li:last-child:after { content: "" }
+
 
 /* Dr. Console  */
 .table-details { margin: 0 0 37px -18px; }

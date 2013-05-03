@@ -1,76 +1,60 @@
 {% extends "layout.html" %}
 {% block body %}
-<section class="top">
-  <div class="sign-up">
-    <div class="wordmark">HealthTracker</div>
-    <p class="lead">
-      We'll send you a daily email asking you how you are. Track your health to see what you can do to feel well.
-    </p>
-    
-    {% include "flash.html" %}
-    
-    <form action="/subscribe" method="post" class="form well">
-      <input type="text" placeholder="jane.doe@example.com" name="email" autofocus/>  
-      <input type="submit" name="submit" 
-             value="Start Tracking Now" class="btn btn-success btn-block btn-large"/>
-    </form>
-    
-    <small class="muted privacy-notice">
-      Note, this website is in alpha and not open to the public. The information you submit to HealthTracr is not secured to HIPPA's standards, and may be read by us (Healthtracr).
-    </small>
-  </div>
-</section>
+<div class="wrapper">
 
-<section class="middle wrapper">
-  <div class="row-fluid">
-      <h1>For ACOs & other Healthcare Providers</h1>
-      <p class="lead">
-        We make it easy for you to help your elderly and chronically ill patients manage their illnesses, preempt costly emergencies, and feel better. You provide your expertise, and we'll do the rest.
-      </p>
-      <div class="row-fluid why-copy">
-        <div class="span4">
-          <h3>Increase Adherence</h3>
-Patients visit the doctor to feel better and you do everything you can to help. But we know that it can sometimes be difficult to keep patients on track with their treatment. HealthTracker makes it easy to maintain cost-effective contact with patients to increase adherence while teaching them about how their daily choices affect their health over time.
-        </div>
-        <div class="span4">
-          <h3>Improve Outcomes</h3>
-Adherence is crucial to improve your patients' outcomes, but there's more we can do. Your doctors will be able to track their patients' health in real-time. Our Smart Alert system will notify doctors of declining (or improving health), and enable you to reach out proactively to adjust their treatment and prevent additional costs down the line. The more you know, the better you can take care of your patient population.
-        </div>
-        <div class="span4">
-          <h3>Involve Your Patients</h3>
-Patients trust their doctors with decisions that impact quality of life. Now you can show them how their lifestyle choices and treatment plan affect how they feel. Chronically ill patients live with illness every day of their lives; now they can see how each day is relative to the previous, and take more of an active role to improve their health. It's easier to make difficult lifestyle choices such as sticking to a diet when you can see the results. HealthTracker makes those results visible.
-        </div>
-      </div>
+  <header>
+    <div class="logo" title="A Marion berry."></div>
+  </header>
 
-      <div class="row-fluid">
-        <div class="span8">
-          <img class="" src="/static/img/graph.png">
-        </div>
-        <div class="span4 learn-more lead">
-          We will work with you to create a solution that just works.
-          <br><br>
-          <a href="/learn-more" class="btn btn-primary btn-large btn-block">
-            Learn More Now
-          </a>
-        </div>
-      </div>
-    </div>
-</section>
+  <section class="sign-up">
+    <h1>Marion Health</h1>
+    <p class="lead">Start feeling better, today.</p>
+    
+      {% include "flash.html" %}
 
-<footer>
-  <div class="wrapper row">
-    <p class="span4">
-      HealthTracker was created by a patient who wanted to feel better, a healthcare consultant who saw an opportunity to save her clients even more money, and a doctor who wanted to improve the quality of care he provided to his patients.
+      <form action="/sign-up" method="post" class="form">
+        <label>Your Email</label>
+        <input type="text" placeholder="youremail@example.com" name="email" autofocus/>  
+        <br>
+        <input type="submit" name="submit" 
+               value="Start Feeling Better" class="btn btn-success  btn-large"/>
+      </form>
+  </section>
+
+  <section id="graph">
+    <h3>Track Your Health: See What works</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <ul>
+      <li>Things to track, and other thing</li>
+      <li>Why should we track this?</li>
+      <li>Because that is why, is why!</li>
+      <li>Obiligatory Lorem Ipsum text here</li>
+    </ul>
+    <img src="/static/img/graph.png"/>
+  </section>
+
+  <section id="progress">
+    <h3>Get Points for Tracking Your Health</h3>
+    <img src="/static/img/progress.png"/>
+    <ul>
+      <li>You get points and levels!</li>
+      <li>Why are points awesome?</li>
+      <li>Because that is why, is why!</li>
+      <li>Obiligatory Lorem Ipsum text here</li>
+    </ul>
+    <p>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
-    <p class="span4">
-      
-    </p>
-  <ul class="span2 pull-right">
-    <li><a href="/">Home</a></li>
-    <li><a href="/privacy">Privacy</a></li>
-    <li><a href="/about">About Us</a></li>
-    <li><a href="/contact">Contact Us</a></li>
-  </ul>
-  </div>
-</footer>
+  </section>
+  
+  <footer>
+    <ul class="pull-right">
+      <li><a href="/privacy-policy">Privacy Policy</a></li>
+      <li><a href="/terms-of-service">Terms of Service</a></li>
+      <li><a href="/about-us">About Us</a></li>
+      <li><a href="/contact-us">Contact Us</a></li>
+    </ul>
+  </footer>
+</div>
+
 {% endblock %}

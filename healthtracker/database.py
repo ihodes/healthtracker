@@ -20,7 +20,7 @@ Model = declarative_base(name='Model')
 Model.query = db_session.query_property()
 
 def init_db():
-    my_metadata.create_all(engine)
+    db_session.create_all(engine)
 
     # Load the Alembic configuration and generate the
     # version table, "stamping" it with the most recent rev:

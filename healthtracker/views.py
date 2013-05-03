@@ -32,15 +32,18 @@ def learn_more():
 def drconsole():
     return render_template("doctor_console.html")
 
-@app.route("/privacy")
-def drconsole():
+@app.route("/privacy-policy")
+def privacy():
     return render_template("privacy.html")
-@app.route("/about")
-def drconsole():
+@app.route("/about-us")
+def about():
     return render_template("about.html")
-@app.route("/contact")
-def drconsole():
+@app.route("/contact-us")
+def contact():
     return render_template("contact_us.html")
+@app.route("/terms-of-service")
+def tos():
+    return render_template("tos.html")
 
 
 @app.route("/ptportal")
@@ -53,7 +56,7 @@ def messages():
     return render_template("messages.html")
 
 
-@app.route("/subscribe", methods=["POST"])
+@app.route("/sign-up", methods=["POST"])
 def subscribe():
     email = request.form.get("email")
     if is_valid_email(email):
