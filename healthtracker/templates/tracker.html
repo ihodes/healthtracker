@@ -3,9 +3,25 @@
 <script src="static/js/tracker.js"></script>
 
 <style>
-.statuses rect {
-  fill: steelblue;
-  stroke: white;
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
 </style>
 {% endblock %}
@@ -15,25 +31,18 @@
 <div class="container">
 
   <div class="tracker-holder">
-    <p class="lead">We'll keep track of your health for you, so you can see how you feel over time.</p>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-    {% endwith %}
-
     <div class="status-report">
-      <h3>Historical Wellbeing Report <small>{{ statuses|length }} total updates</small></h3>
-      <div class="statuses" data-statuses="{{statuses|safe}}">
-        
-      </div>
+      <h3>Historical Wellbeing Report</h3>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
 
+      <div class="statuses" data-statuses='{{ statuses|safe }}'></div>
     </div>
-
-    <i class="muted">Features are being added all the time, so we'll be sure to keep you updated! We want HealthTracker to be a pain-free way to keep yourself pain-free, knowledgeable, and in control of your health.</i>
   </div>
 </div>
 

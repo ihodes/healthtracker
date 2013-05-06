@@ -38,7 +38,7 @@ class User(Model):
     id = Column(Integer, Sequence('users_id_seq'), primary_key=True)
     email = Column(String(255), unique=True)
     auth_token = Column(String, unique=True)
-    statuses = relationship("Status", backref="users", lazy="dynamic")
+    statuses = relationship("Status", backref="user", lazy="dynamic")
     is_confirmed = Column(Boolean, default=False)
     is_approved = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, session, redirect, url_for, request, \
-     flash, g, jsonify, abort
+     flash, g, jsonify, abort, json
 
 from healthtracker.database import User
 from healthtracker.utils import format_date, is_valid_email
@@ -10,7 +10,6 @@ from healthtracker.mailer import send_admin_login, send_status_update_email, \
      send_approval_email, send_confirmation_email, send_login_email, \
      send_simple_email
 from healthtracker import app
-
 
 @app.route("/")
 def index():
@@ -102,8 +101,9 @@ def tracker(user):
         user.reset_auth_token() # to prevent accidental multiple updates
         flash(u"""You've reported a {} out of 5.""".format(value), "info")
 
-    statuses = [status.value for status in user.statuses.all()]
-    return render_template("tracker.html", statuses=statuses)
+    statuses = [{'date':s.created_at.strftime("%d-%m-%Y"), 'value':s.value} for s in user.statuses.all()]
+    app.logger.info(json.dumps(statuses))
+    return render_template("tracker.html", statuses=json.dumps({'statuses':statuses}))
 
 
 @app.route("/unsubscribe")
