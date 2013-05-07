@@ -2,3 +2,4 @@ init/
 *.pyc
 .env
 .DS_STORE
+latest.dump
