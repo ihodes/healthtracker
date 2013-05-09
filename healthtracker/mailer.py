@@ -12,8 +12,8 @@ app = current_app
 def send_admin_login():
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
-    from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
-    email_subject = "HealthTracker admin"
+    from_email = "Marion Health <hello@healthtracker.mailgun.org>"
+    email_subject = "Marion Health admin"
 
     user = User.query.filter_by(email="isaachodes@gmail.com").first()
 
@@ -31,7 +31,7 @@ def send_login_email(user):
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
     to_email = user.email
-    from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
+    from_email = "Marion Health <hello@healthtracker.mailgun.org>"
     email_subject = "HealthTracr Login"
     
     email_text = "Click to login: http://{0}/tracker/track?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
@@ -48,7 +48,7 @@ def send_login_email(user):
 def send_status_update_email(user):
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
-    from_email = "HealthTracr <hello@healthtracker.mailgun.org>"
+    from_email = "Marion Health <hello@healthtracker.mailgun.org>"
     to_email = user.email
     email_subject = "Update Your Health Today"
     
@@ -82,11 +82,11 @@ def send_confirmation_email(user):
     to_email = user.email
 
     email_text = """
-Thank you for signing up to HealthTracr! Please confirm that this is your email address, and we'll try to approve you as soon as possible. We're in early Alpha right now, so we're letting people in very slowly for now.
+Thank you for signing up to Marion Health! Please confirm that this is your email address, and we'll try to approve you as soon as possible. We're in early Alpha right now, so we're letting people in very slowly for now.
                  
 Click to confirm your email address: http://{0}/users/confirm-email?auth_token={1}
 
-If you didn't signed up for HealthTracr.com, please ignore this email""".format(app.config["HOST_NAME"], user.auth_token)
+If you didn't signed up for getMarion.com, please ignore this email""".format(app.config["HOST_NAME"], user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -99,16 +99,16 @@ If you didn't signed up for HealthTracr.com, please ignore this email""".format(
 def send_approval_email(user):
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
-    from_email = "HealthTracr <hello@healthtracker.mailgun.org>"
-    email_subject = "HealthTracr Account Approval "
+    from_email = "Marion Health <hello@healthtracker.mailgun.org>"
+    email_subject = "Marion Health Account Approval "
     to_email = user.email
 
-    email_text = """You've been approved to join HealthTracr! Thank you for your patience. You will be recieving an email from us today or tomorrow asking for your first status update.
+    email_text = """You've been approved to join the Marion Health alpha test! Thank you for your patience. You will be recieving an email from us today or tomorrow asking for your first status update.
 
 Sincerely, 
 Isaac Hodes
 
-Founder, HealthTracr""".format(app.config["HOST_NAME"], user.auth_token)
+Founder, Marion Health""".format(app.config["HOST_NAME"], user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -135,7 +135,7 @@ def unsubscribe_url(user):
 def send_simple_email(subject, message, email):
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
-    from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
+    from_email = "Marion Health <hello@healthtracker.mailgun.org>"
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
