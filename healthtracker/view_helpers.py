@@ -3,7 +3,7 @@ from functools import wraps
 
 from flask import redirect, url_for, request
 
-from healthtracker.database import User
+from .users.models import User
 
 
 

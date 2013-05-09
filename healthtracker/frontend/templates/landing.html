@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layouts/layout.html" %}
 {% block body %}
 <div class="wrapper">
 
@@ -10,9 +10,9 @@
     <h1>Marion Health</h1>
     <p class="lead">Start feeling better, today.</p>
     
-      {% include "flash.html" %}
+      {% include "macros/flash.html" %}
 
-      <form action="/sign-up" method="post" class="form">
+      <form action="/users/sign-up" method="post" class="form">
         <label>Your Email</label>
         <input type="text" placeholder="youremail@example.com" name="email" autofocus/>  
         <br>
@@ -37,7 +37,7 @@
     <h3>Get Points for Tracking Your Health</h3>
     <img src="/static/img/progress.png"/>
     <ul>
-      <li>As you record you health, get points</li>
+      <li>As you record your health, get points</li>
       <li>We will be adding rewards as we can</li>
       <li>You will compete against your illness</li>
       <li>And, of course, badges are awesome</li>

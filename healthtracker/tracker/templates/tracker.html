@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "layouts/layout.html" %}
 {% block head %}
-<script src="static/js/tracker.js"></script>
+<script src="/tracker/static/tracker.js"></script> <!-- TODO : use url_for -->
 
 <style>
 body {
@@ -33,14 +33,7 @@ body {
   <div class="tracker-holder">
     <div class="status-report">
       <h3>Historical Wellbeing Report</h3>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-      {% endwith %}
-
+      {% include "macros/flash.html" %}
       <div class="statuses" data-statuses='{{ statuses|safe }}'></div>
     </div>
   </div>

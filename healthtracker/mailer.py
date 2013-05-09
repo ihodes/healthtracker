@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import requests
+from flask import render_template, current_app
 
-from healthtracker import app
-from healthtracker.database import User
+from .users.models import User
 
-from flask import render_template
+
+
+app = current_app
 
 
 def send_admin_login():
@@ -15,7 +17,7 @@ def send_admin_login():
 
     user = User.query.filter_by(email="isaachodes@gmail.com").first()
 
-    email_text = "click to login: http://{0}/admin?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
+    email_text = "click to login: http://{0}/users/admin?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -32,7 +34,7 @@ def send_login_email(user):
     from_email = "Health Tracker <hello@healthtracker.mailgun.org>"
     email_subject = "HealthTracr Login"
     
-    email_text = "Click to login: http://{0}/tracker?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
+    email_text = "Click to login: http://{0}/tracker/track?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -59,7 +61,9 @@ def send_status_update_email(user):
         status_update_text.append("{0}: {1}".format(value, status_update_link))
     status_update_text.append("\n\n\n Unsubscribe: "+unsubscribe_link)
     email_text = "\n\n".join(status_update_text)
-    html_text = render_template('emails/status_update.html', status_update_links=status_update_links, unsubscribe_link=unsubscribe_link)
+    html_text = render_template('emails/status_update.html',
+                                status_update_links=status_update_links,
+                                unsubscribe_link=unsubscribe_link)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
@@ -80,7 +84,7 @@ def send_confirmation_email(user):
     email_text = """
 Thank you for signing up to HealthTracr! Please confirm that this is your email address, and we'll try to approve you as soon as possible. We're in early Alpha right now, so we're letting people in very slowly for now.
                  
-Click to confirm your email address: http://{0}/confirm-email?auth_token={1}
+Click to confirm your email address: http://{0}/users/confirm-email?auth_token={1}
 
 If you didn't signed up for HealthTracr.com, please ignore this email""".format(app.config["HOST_NAME"], user.auth_token)
 
@@ -115,14 +119,14 @@ Founder, HealthTracr""".format(app.config["HOST_NAME"], user.auth_token)
 
 
 def status_update_url(user, value):
-    url_base = "http://{0}/tracker?auth_token={1}&value={2}"
+    url_base = "http://{0}/tracker/track?auth_token={1}&value={2}"
     server_name = app.config["HOST_NAME"]
     auth = user.auth_token
     return url_base.format(server_name, auth, value)
 
 
 def unsubscribe_url(user):
-    url_base = "http://{0}/unsubscribe?auth_token={1}"
+    url_base = "http://{0}/users/unsubscribe?auth_token={1}"
     server_name = app.config["HOST_NAME"]
     auth = user.auth_token
     return url_base.format(server_name, auth)

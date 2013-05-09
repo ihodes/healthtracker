@@ -1,9 +1,9 @@
-{% extends "layout.html" %}
+{% extends "layouts/layout.html" %}
 {% block body %}
 <div class="container">
 
   <div class="well">
-    <h2>All Users of Healthtracr:</h2>
+    <h2>All Users of Marion Health</h2>
     <div class="users" style="margin-top: 50px;">
       <table class="table">
         <thead>
@@ -29,14 +29,14 @@
             </td>
             <td>
               <tt>{{ user.auth_token }}</tt>
-              <form style="display:inline-block;" action="/reset_auth_user" method="post">
+              <form style="display:inline-block;" action="/users/reset_auth" method="post">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 <input class="btn btn-warning btn-mini" value="reset" type="submit">
               </form>
             </td>
             <td>
-              <form style="display:inline-block;" action="/toggle_approve_user" method="post">
+              <form style="display:inline-block;" action="/users/toggle_approve" method="post">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 {% if not user.is_approved %}
@@ -47,10 +47,10 @@
               </form>
             </td>
             <td>
-              <form style="display:inline-block;" action="/delete_user" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-danger btn-mini" value="Delete" type="submit"></form>
+              <form style="display:inline-block;" action="/users/delete" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-danger btn-mini" value="Delete" type="submit"></form>
             </td>
             <td>
-              <form style="display:inline-block;" action="/send_update_email_user" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-primary btn-mini" value="Send Status Update Email" type="submit"></form>
+              <form style="display:inline-block;" action="/users/send_update_email" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-primary btn-mini" value="Send Status Update Email" type="submit"></form>
               <a href="/tracker?auth_token={{user.auth_token}}">
                 <span class="badge badge-info">{{ user.statuses.all()|length }}</span>
               </a>
