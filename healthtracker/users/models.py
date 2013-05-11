@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from ..extensions import db
-from ..database import Status
+from ..database import Status, user_question_relation
 from ..utils import random_string
+
 
 
 class User(db.Model):
@@ -13,6 +14,10 @@ class User(db.Model):
     is_confirmed = db.Column(db.Boolean, default=False)
     is_approved = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
+
+    questions = db.relationship('Question', secondary=user_question_relation,
+                            backref=db.backref('users', lazy='dynamic'))
+
 
     def __init__(self, email, is_approved=False):
         self.email = email

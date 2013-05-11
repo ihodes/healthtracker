@@ -1,0 +1,77 @@
+{% extends "layouts/layout.html" %}
+{% block head %}
+<script>
+$(function(){
+  $(".remove").click(function(){
+    $.ajax("/questions/"+$(this).data("id")+"?auth_token={{auth_token}}", {type: "DELETE"})
+          .done(function(){window.location = "";});
+  });
+}
+);
+</script>
+{% endblock %}
+{% block body %}
+<div class="container">
+  <h1>Questions</h1>
+  {% include "macros/flash.html" %}
+  <table id="questions" class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Text</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+    {% for question in questions %}
+    <tr>
+      <td>
+        {{ question.name }}
+      </td>
+      <td>
+        {{ question.text }}
+      </td>
+      <td>
+        <button class="btn btn-danger remove" data-id="{{ question.id }}">Remove</button>
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  
+  <form action="" method="POST" class="form-horizontal">
+    <h3>Add a Question</h3>
+
+    <div class="control-group">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        <input type="text" name="name" placeholder="Name">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Question Text</label>
+      <div class="controls">
+        <textarea name="text" placeholder="Enter question text here"></textarea>
+      </div>
+    </div>
+
+
+    <div class="control-group">
+      <label class="control-label">Min Value</label>
+      <div class="controls">
+        <input type="text" name="min_value" value="0">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Max Value</label>
+      <div class="controls">
+        <input type="text" name="max_value" value="5">
+      </div>
+    </div>
+    <button type="submit" class="btn" style="margin-left: 179px;">Create Question</button>
+  </form>
+</div>
+{% endblock %}

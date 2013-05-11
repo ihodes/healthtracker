@@ -1,0 +1,44 @@
+{% extends "layouts/layout.html" %}
+{% block body %}
+<div class="container">
+
+  <div class="well">
+    <h2>{{ user.email }}</h2>
+    
+    <div style="margin-top: 50px;">
+      <form action="/users/{{ user.id }}/edit" method="POST" class="form">
+        <label>Select a question to add:</label>
+        ... 
+        
+        <input type="submit" value="Submit" class="btn btn-success">
+      </form>
+
+      <table id="questions" class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Text</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for question in user.questions %}
+          <tr>
+            <td>
+              {{ question.name }}
+            </td>
+            <td>
+              {{ question.text }}
+            </td>
+            <td>
+              <button class="btn btn-danger">Remove</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

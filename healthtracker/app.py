@@ -4,18 +4,18 @@ from flask import Flask, session, render_template
 from .extensions import db
 from .utils import format_date
 
-
 # Blueprints
 from .frontend import frontend
 from .users import user
 from .tracker import tracker
 from .sms import sms
+from .questions import question
 
 
+
+BLUEPRINTS = (frontend, user, tracker, sms, question)
 
 __all__ = ['create_app']
-
-BLUEPRINTS = (frontend, user, tracker, sms,)
 
 
 def create_app():

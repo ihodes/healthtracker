@@ -17,7 +17,7 @@ def send_admin_login():
 
     user = User.query.filter_by(email="isaachodes@gmail.com").first()
 
-    email_text = "click to login: http://{0}/users/admin?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
+    email_text = "click to login: http://{0}/users/?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
 
     return requests.post(api_endpoint,
                          auth=("api", api_key),
