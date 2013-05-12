@@ -1,11 +1,11 @@
 $(document).ready(function(){
     
-    statuses = $(".statuses").data("statuses").statuses;
+    answers = $(".answers").data("answers").answers;
     var width = 300;
     var height = 80;
     var margin = {top: 20, right: 20, bottom: 30, left: 50}
 
-    var chart = d3.select(".statuses").append("svg:svg")
+    var chart = d3.select(".answers").append("svg:svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -28,13 +28,13 @@ $(document).ready(function(){
         .scale(y)
         .orient("left");
 
-    $.each(statuses, function(i,d) {
+    $.each(answers, function(i,d) {
         d.date = parseDate(d.date);
         d.value = +d.value;
     });
 
 
-    x.domain(d3.extent(statuses, function(d) { return d.date; }));
+    x.domain(d3.extent(answers, function(d) { return d.date; }));
 
     chart.append("g")
         .attr("class", "x axis")
@@ -51,29 +51,7 @@ $(document).ready(function(){
         .style("text-anchor", "end");
 
     chart.append("path")
-        .datum(statuses)
+        .datum(answers)
         .attr("class", "line")
         .attr("d", line);
-
-
-
-    // chart.selectAll("rect")
-    //     .data(statuses)
-    //     .enter().append("rect")
-    //     .attr("x", function(d, i) { return x(i); })
-    //     .attr("y", function(d) { return height - y(d); })
-    //     .attr("width", barWidth)
-    //     .attr("height", function(d) { return y(d); });
-
-    // chart.selectAll("text")
-    //     .data(statuses)
-    //     .enter().append("text")
-    //     .text(function(d) { return d; })
-    //     .attr("x", function(d, i) { return x(i) + barWidth/2; })
-    //     .attr("y", function(d) { return height - 6; })
-    //     .attr("text-anchor", "middle")
-    //     .attr("font-family", "sans-serif")
-    //     .attr("font-size", "14px")
-    //     .attr("fill", "white");
-
 });

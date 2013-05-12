@@ -3,7 +3,7 @@ from flask import (Blueprint, render_template, redirect, url_for, request, flash
                    current_app)
 
 from .models import User
-from ..database import Status
+from ..questions.models import Question
 from ..extensions import db
 from ..utils import format_date, is_valid_email
 from ..view_helpers import (get_user_by_auth, get_user_by_id,
@@ -73,7 +73,8 @@ def admin(admin):
 @require_admin
 def edit(admin, user_id=None):
     user = User.query.filter_by(id=user_id).first()
-    return render_template('edit.html', user=user)
+    questions = Question.query.all()
+    return render_template('edit.html', user=user, questions=questions, auth_token=admin.auth_token)
 
 
 @user.route('/toggle_approve', methods=['POST'])
@@ -123,3 +124,21 @@ def unsubscribe(user):
         user.unconfirm()
         flash(u"""You've been unsubscribed: we're sorry to see you go.""", 'info')
     return redirect('frontend.messages') # TODO need to use url_for correctly here... 
+
+
+@user.route('/question', methods=['DELETE', 'POST'])
+@require_admin
+def question(admin):
+    user = User.query.get(request.values['user_id'])
+    question = Question.query.get(request.values['question_id'])
+    if request.method == 'POST':
+        user.questions.append(question)
+        db.session.add(user)
+        db.session.commit()
+        return ''
+    else:
+        user.questions.remove(question)
+        db.session.add(user)
+        db.session.commit()
+        return ''
+

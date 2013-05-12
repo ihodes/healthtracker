@@ -1,4 +1,21 @@
 {% extends "layouts/layout.html" %}
+{% block head %}
+<script>
+$(function(){
+  // Remove question from the user
+  $(".remove").click(function(){
+    $.ajax("/users/question?auth_token={{auth_token}}&user_id={{user.id}}&question_id="+$(this).data("id"), {type: "DELETE"})
+          .done(function(){window.location = "";});
+  });
+
+  // Add question to the user
+  $(".add").click(function(){
+    $.ajax("/users/question", {type: "POST", data: {auth_token: "{{auth_token}}", user_id: "{{ user.id }}", question_id: $(this).data("id")}})
+          .done(function(){window.location = "";});
+  });
+});
+</script>
+{% endblock %}
 {% block body %}
 <div class="container">
 
@@ -6,13 +23,6 @@
     <h2>{{ user.email }}</h2>
     
     <div style="margin-top: 50px;">
-      <form action="/users/{{ user.id }}/edit" method="POST" class="form">
-        <label>Select a question to add:</label>
-        ... 
-        
-        <input type="submit" value="Submit" class="btn btn-success">
-      </form>
-
       <table id="questions" class="table">
         <thead>
           <tr>
@@ -23,7 +33,7 @@
         </thead>
 
         <tbody>
-          {% for question in user.questions %}
+          {% for question in questions %}
           <tr>
             <td>
               {{ question.name }}
@@ -32,7 +42,11 @@
               {{ question.text }}
             </td>
             <td>
-              <button class="btn btn-danger">Remove</button>
+              {% if question in user.questions %}
+              <button class="btn btn-danger remove" data-id="{{ question.id }}">Remove</button> <!-- TK TODO -->
+              {% else %}
+              <button class="btn btn-primary add" data-id="{{ question.id }}">Add</button> <!-- TK TODO -->
+              {% endif %}
             </td>
           </tr>
           {% endfor %}

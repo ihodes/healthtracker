@@ -26,8 +26,7 @@ class QuestionAPI(MethodView):
 
     def post(self, admin):
         form = request.form
-        question = Question(form["name"], form["text"],
-                            int(form["min_value"]), int(form["max_value"]))
+        question = Question(form["name"], form["text"])
         db.session.add(question)
         db.session.commit()
         flash("Created question: {}.".format(question.name), 'info')

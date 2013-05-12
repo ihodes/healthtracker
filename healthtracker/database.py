@@ -12,24 +12,24 @@ user_question_relation = db.Table('user_question_relation',
 )
 
 
-class Status(db.Model):
-    __tablename__ = "statuses"
-    id = db.Column(db.Integer, db.Sequence('statuses_id_seq'), primary_key=True)
-    value = db.Column(db.Integer)
+class Answer(db.Model):
+    __tablename__ = "answers"
+    id = db.Column(db.Integer, db.Sequence('answers_id_seq'), primary_key=True)
+    value = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-#    question_id = db.Column(db.Integer, db.ForeignKey("questions.id"))
+    question_id = db.Column(db.Integer, db.ForeignKey("questions.id"))
+    question = db.relationship("Question", backref=db.backref('answers', lazy='dynamic'))
 
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.utcnow)
-
-#    question = db.relationship("Question", backref=db.backref('statuses', lazy='dynamic')) # TK TODO: implement
-
     
     def __init__(self, user, value):
         self.user_id = user.id
         self.value = value
 
     def __repr__(self):
-        return "<Status('%s' :: '%r')>" % (self.user.email, self.value)
+        return "<Answer({}::{}::{})>".format(self.user.email,
+                                             self.value,
+                                             self.question.name)
 

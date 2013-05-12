@@ -10,10 +10,7 @@
           <tr>
             <th>Email</th>
             <th>Authentication Token</th>
-            <th>Approval</th>
-            <th>Delete</th>
-            <th>Update Email</th>
-            <th>Edit</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -30,11 +27,11 @@
             </td>
 
             <td>
-              <tt>{{ user.auth_token }}</tt>
+              <tt><span title="{{ user.auth_token }}">{{ user.auth_token[10:] + '...' }}</span></tt>
               <form style="display:inline-block;" action="/users/reset_auth" method="post">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <input class="btn btn-warning btn-mini" value="reset" type="submit">
+                <button class="btn btn-warning btn-mini" type="submit"><i class="icon-repeat icon-white"></i></button>
               </form>
             </td>
 
@@ -48,26 +45,34 @@
                 <input class="btn btn-warning btn-mini" value="Unapprove" type="submit">
                 {% endif %}
               </form>
-            </td>
 
-            <td>
-              <form style="display:inline-block;" action="/users/delete" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-danger btn-mini" value="Delete" type="submit"></form>
-            </td>
+<!--              <form style="display:inline-block;" action="/users/delete" method="post">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="auth_token" value="{{auth_token}}">
+                <button class="btn btn-danger btn-mini" type="submit"><i class="icon-remove-sign icon-white"></i></button>
+              </form>
+-->
 
-            <td>
-              <form style="display:inline-block;" action="/users/send_update_email" method="post"><input type="hidden" name="user_id" value="{{user.id}}"><input type="hidden" name="auth_token" value="{{auth_token}}"><input class="btn btn-primary btn-mini" value="Send Status Update Email" type="submit"></form>
+              <form style="display:inline-block;" action="/users/send_update_email" method="post">
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                <input type="hidden" name="auth_token" value="{{auth_token}}">
+                <input class="btn btn-primary btn-mini" value="Send Update Email" type="submit">
+              </form>
+
+              <a href="/users/{{ user.id }}/edit?auth_token={{ auth_token }}" class="btn btn-mini">
+                <i class="icon-edit"></i>
+              </a>
+
               <a href="/tracker?auth_token={{user.auth_token}}">
-                <span class="badge badge-info">{{ user.statuses.all() | length }}</span>
+                <span class="badge badge-info">{{ user.answers.all() | length }}</span>
               </a>
             </td>
-
-            <td><a href="/users/{{ user.id }}/edit?auth_token={{ auth_token }}" class="btn">Edit</a></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-  <a href="{{ url_for('question.question_api', auth_token=auth_token) }}">HERE</a>
+  <a href="{{ url_for('question.question_api', auth_token=auth_token) }}" class="btn btn-large">Manage Questions</a>
 </div>
 {% endblock %}

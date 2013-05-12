@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..extensions import db
-from ..database import Status, user_question_relation
+from ..database import Answer, user_question_relation
 from ..utils import random_string
 
 
@@ -10,7 +10,7 @@ class User(db.Model):
     id = db.Column(db.Integer, db.Sequence('users_id_seq'), primary_key=True)
     email = db.Column(db.String(255), unique=True)
     auth_token = db.Column(db.String, unique=True)
-    statuses = db.relationship("Status", backref="user", lazy="dynamic")
+    answers = db.relationship("Answer", backref="user", lazy="dynamic")
     is_confirmed = db.Column(db.Boolean, default=False)
     is_approved = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
@@ -46,11 +46,6 @@ class User(db.Model):
     def unapprove(self):
         self.is_approved = False
         self.save()
-
-    def add_status(self, value):
-        status = Status(self, value)
-        db.session.add(status)
-        db.session.commit()
 
     def save(self):
         db.session.add(self)
