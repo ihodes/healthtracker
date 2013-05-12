@@ -8,10 +8,29 @@ $(function(){
           .done(function(){window.location = "";});
   });
 
+
   // Add question to the user
   $(".add").click(function(){
-    $.ajax("/users/question", {type: "POST", data: {auth_token: "{{auth_token}}", user_id: "{{ user.id }}", question_id: $(this).data("id")}})
+    $.ajax("/users/question",
+           {type: "POST",
+            data: {auth_token: "{{auth_token}}",
+                   user_id: "{{ user.id }}",
+                   question_id: $(this).data("id")}})
           .done(function(){window.location = "";});
+  });
+
+
+  // Update user (with form)
+  // ... TK TODO
+  $(".update-user").click(function(event){
+    console.log($("form").serialize());
+    $.ajax("/users/{{user.id}}",
+      {
+       type: "PUT",
+       data: $("form").serialize(),
+       success: function () { window.location = ""; },
+      });
+    return false;
   });
 });
 </script>
@@ -20,7 +39,27 @@ $(function(){
 <div class="container">
 
   <div class="well">
-    <h2>{{ user.email }}</h2>
+    <h2>{{ user.name or "" }}{{ " :: " if user.name else "" }}{{ user.email }}</h2>
+
+    <form class="form-horizontal">
+      <input type="text" name="name" placeholder="full name" value="{{ user.name }}">
+      <input type="hidden" name="auth_token" value="{{ auth_token }}">
+      <select type="text" name="timezone">
+        <option>UTC +00</option>
+        <option>EST +05</option>
+        <option>CST +06</option>
+        <option>MST +07</option>
+        <option>PDT +08</option>
+      </select>
+      <textarea name="notes" placeholder="notes/condition">{{ user.notes or "" }}</textarea>
+      <button class="btn update-user">Update</button>
+    </form>
+
+    <div>
+      <p>
+        {{ user.name or user.email }} has <a href="/tracker?auth_token={{user.auth_token}}"><span class="badge badge-info">{{ user.answers.all() | length }}</span></a> updates so far.
+      </p>
+    </div>
     
     <div style="margin-top: 50px;">
       <table id="questions" class="table">

@@ -44,8 +44,7 @@ def send_login_email(user):
                                "text": email_text})
 
 
-
-def send_status_update_email(user):
+def send_update_email(user, question):
     api_endpoint = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
     api_key = app.config["MAILGUN_API_KEY"]
     from_email = "Marion Health <hello@healthtracker.mailgun.org>"
@@ -53,9 +52,10 @@ def send_status_update_email(user):
     email_subject = "Update Your Health Today"
     
     unsubscribe_link = unsubscribe_url(user)
-    status_update_text = ["Let us know how you're feeling today. \n\n 0 being the first and worst, 5 being the best."]
+    status_update_text = []
+    status_update_text.append(question.text)
     status_update_links = []
-    for value in range(6):
+    for value in range(6): # this is not ideal (e.g. how many pushups did you do today: 0-6?)
         status_update_link = status_update_url(user, value)
         status_update_links.append(status_update_link)
         status_update_text.append("{0}: {1}".format(value, status_update_link))

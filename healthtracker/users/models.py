@@ -15,6 +15,10 @@ class User(db.Model):
     is_approved = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
 
+    name = db.Column(db.Text)
+    notes = db.Column(db.Text)
+    timezone = db.Column(db.String(255))
+
     questions = db.relationship('Question', secondary=user_question_relation,
                             backref=db.backref('users', lazy='dynamic'))
 

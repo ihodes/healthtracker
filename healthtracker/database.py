@@ -7,8 +7,10 @@ from .extensions import db
 
 
 user_question_relation = db.Table('user_question_relation',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('question_id', db.Integer, db.ForeignKey('questions.id'))
+  db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+  db.Column('question_id', db.Integer, db.ForeignKey('questions.id')),
+  db.Column('scheduled_for', db.DateTime(timezone=True)),
+  db.Column('notification_method', db.String(255))
 )
 
 
@@ -23,9 +25,10 @@ class Answer(db.Model):
 
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.utcnow)
-    
-    def __init__(self, user, value):
+
+    def __init__(self, user, question, value):
         self.user_id = user.id
+        self.question_id = question.id
         self.value = value
 
     def __repr__(self):

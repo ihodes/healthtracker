@@ -1,0 +1,15 @@
+{% macro admin_nav(active) -%}
+<ul class="nav nav-tabs" id="admin-nav">
+  <li class="{{ "active" if active == "users" else "" }}">
+    <a href="{{ url_for('user.admin', auth_token=auth_token) }}">Users</a>
+  </li>
+  <li class="{{ "active" if active == "questions" else "" }}">
+    <a href="{{ url_for('question.question_api', auth_token=auth_token) }}">
+      Questions
+    </a>
+  </li>
+  <!-- <li> -->
+  <!--   <a href=""></a> -->
+  <!-- </li> -->
+</ul>
+{%- endmacro %}

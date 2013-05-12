@@ -1,18 +1,12 @@
 {% extends "layouts/layout.html" %}
+{% from 'macros/admin_nav.html' import admin_nav with context %}
 {% block body %}
 <div class="container">
-
-  <div class="well">
-    <h2>All Users of Marion Health</h2>
-    <div class="users" style="margin-top: 50px;">
+  {{ admin_nav("users") }}
+  {% include "macros/flash.html" %}
+  <div>
+    <div class="users">
       <table class="table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Authentication Token</th>
-            <th></th>
-          </tr>
-        </thead>
         <tbody>
           {% for user in users %}
           <tr>
@@ -22,7 +16,7 @@
               {% else %}
               <i class="icon-remove"></i>
               {% endif %}
-              <a href="mailto:{{user.email}}">{{ user.email }}</a>
+              <a href="/users/{{ user.id }}/edit?auth_token={{ auth_token }}">{{ user.email }}</a>
               {% if user.is_admin %}<span class="label label-info">admin</span>{% endif %}
             </td>
 
@@ -53,19 +47,12 @@
               </form>
 -->
 
-              <form style="display:inline-block;" action="/users/send_update_email" method="post">
-                <input type="hidden" name="user_id" value="{{user.id}}">
+              <form style="display:inline-block;"
+                    action="/users/{{user.id}}/send_update_email"
+                    method="post">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 <input class="btn btn-primary btn-mini" value="Send Update Email" type="submit">
               </form>
-
-              <a href="/users/{{ user.id }}/edit?auth_token={{ auth_token }}" class="btn btn-mini">
-                <i class="icon-edit"></i>
-              </a>
-
-              <a href="/tracker?auth_token={{user.auth_token}}">
-                <span class="badge badge-info">{{ user.answers.all() | length }}</span>
-              </a>
             </td>
           </tr>
           {% endfor %}
@@ -73,6 +60,5 @@
       </table>
     </div>
   </div>
-  <a href="{{ url_for('question.question_api', auth_token=auth_token) }}" class="btn btn-large">Manage Questions</a>
 </div>
 {% endblock %}
