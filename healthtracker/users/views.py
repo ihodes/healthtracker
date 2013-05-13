@@ -27,6 +27,7 @@ def subscribe():
         if user is None:
             user = User.create(email)
             mailer.send_confirmation_email(user)
+            mailer.send_simple_email("New Marion User", "email: '{}'".format(email), 'isaachodes@gmail.com') # TODO TK: shouldn't hardcode admin email
             flash(u"""You've been subscribed. An email has been sent
                   to {0} with more information""".format(email), 'info')
         elif not user.is_confirmed:
