@@ -19,6 +19,7 @@ $(function(){
           {% for user in users %}
           <tr>
             <td>
+              {% if not user.is_confirmed %}<i class="icon-ban-circle"></i>{% endif %}
               {% if user.is_admin %}<span class="label">A</span>{% endif %}
               <a href="/users/{{ user.id }}/edit?auth_token={{ auth_token }}">{{ user.email }}</a>
             </td>
