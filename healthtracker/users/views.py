@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import (Blueprint, render_template, redirect, url_for, request, flash,
                    current_app)
+import pytz
 
 from .models import User
 from ..questions.models import Question
@@ -71,7 +72,8 @@ def admin(admin):
 def edit(admin, user_id=None):
     user = User.query.filter_by(id=user_id).first()
     questions = Question.query.all()
-    return render_template('edit.html', user=user, questions=questions, auth_token=admin.auth_token)
+    timezones = pytz.country_timezones('US')
+    return render_template('edit.html', user=user, questions=questions, auth_token=admin.auth_token, timezones=timezones)
 
 
 @user.route('/<user_id>', methods=['PUT'])

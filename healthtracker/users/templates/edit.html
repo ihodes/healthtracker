@@ -42,14 +42,13 @@ $(function(){
     <h2>{{ user.name or "" }}{{ " :: " if user.name else "" }}{{ user.email }}</h2>
 
     <form class="form-horizontal">
-      <input type="text" name="name" placeholder="full name" value="{{ user.name }}">
+      <input type="text" name="name" placeholder="full name" value="{{ user.name or "" }}">
       <input type="hidden" name="auth_token" value="{{ auth_token }}">
       <select type="text" name="timezone">
-        <option>UTC +00</option>
-        <option>EST +05</option>
-        <option>CST +06</option>
-        <option>MST +07</option>
-        <option>PDT +08</option>
+        <option>~</option>
+        {% for timezone in timezones %}
+        <option {% if timezone == user.timezone -%}selected="selected"{%- endif %}>{{ timezone }}</option>
+        {% endfor %}
       </select>
       <textarea name="notes" placeholder="notes/condition">{{ user.notes or "" }}</textarea>
       <button class="btn update-user">Update</button>

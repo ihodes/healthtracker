@@ -19,6 +19,8 @@ def send_admin_login():
 
     email_text = "click to login: http://{0}/users/?auth_token={1}".format(app.config["HOST_NAME"], user.auth_token)
 
+    current_app.logger.info("Sending admin login email to admin.")
+
     return requests.post(api_endpoint,
                          auth=("api", api_key),
                          data={"from": from_email,
