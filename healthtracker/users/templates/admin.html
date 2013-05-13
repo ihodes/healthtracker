@@ -25,7 +25,10 @@
               <form style="display:inline-block;" action="/users/reset_auth" method="post">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <button class="btn btn-warning btn-mini" type="submit"><i class="icon-repeat icon-white"></i></button>
+                <button class="btn btn-warning btn-mini" type="submit"
+                        data-confirm="Are you sure you want to refresh this auth token?">
+                  <i class="icon-repeat icon-white"></i>
+                </button>
               </form>
             </td>
 
@@ -34,24 +37,26 @@
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 {% if not user.is_approved %}
-                <input class="btn btn-primary btn-mini" value="Approve" type="submit">
+                <input class="btn btn-primary btn-mini" value="Approve"
+                       type="submit" data-confirm="Are you sure you want to approve this user?">
                 {% else %}
-                <input class="btn btn-warning btn-mini" value="Unapprove" type="submit">
+                <input class="btn btn-warning btn-mini" value="Unapprove"
+                       type="submit" data-confirm="Are you sure you want to unapprove this user?">
                 {% endif %}
               </form>
 
-<!--              <form style="display:inline-block;" action="/users/delete" method="post">
+              <!--<form style="display:inline-block;" action="/users/delete" method="post">
                 <input type="hidden" name="user_id" value="{{user.id}}">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 <button class="btn btn-danger btn-mini" type="submit"><i class="icon-remove-sign icon-white"></i></button>
-              </form>
--->
+              </form>-->
 
               <form style="display:inline-block;"
                     action="/users/{{user.id}}/send_update_email"
                     method="post">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <input class="btn btn-primary btn-mini" value="Send Update Email" type="submit">
+                <input class="btn btn-primary btn-mini" value="Send Update Email"
+                       type="submit" data-confirm="Are you sure you want to send an update email to {{ user.email }}?">
               </form>
             </td>
           </tr>

@@ -119,7 +119,7 @@ def reset_auth(user, admin):
     return redirect(url_for('.admin', auth_token=admin.auth_token))
 
 
-@user.route('/<user_id>/mailer.send_update_email', methods=['POST'])
+@user.route('/<user_id>/send_update_email', methods=['POST'])
 @require_admin
 def update_email(admin, user_id=None):
     user = User.query.get(user_id)
