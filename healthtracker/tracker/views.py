@@ -44,6 +44,7 @@ def track(user):
     value = request.args.get("value", None)
     user.answers.append(Answer(user, question, value))
     user.reset_auth_token() # to prevent accidental multiple updates (as this is a GET)
+    # user.save() -- TK not needed because reset_auth_token commits the user, but would be needed otherwise
     flash(u"""You've reported a {} out of 5.""".format(value), 'info')
     return redirect(url_for('.show', auth_token=user.auth_token))
 

@@ -59,6 +59,14 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    # hack for now
+    def wq(self):
+        return sum(map(lambda a: float(a.value), self.answers.order_by('created_at ASC').all()[-7:]))/7
+
+    # hack for now
+    def last_30_days_str(self):
+        return str(map(lambda a: int(a.value), self.answers.order_by('created_at ASC').all()[-30:]))[1:-1]
+
     @staticmethod
     def create(email):
         if User.query.filter_by(email=email).first() is None:

@@ -1,4 +1,12 @@
 {% extends "layouts/layout.html" %}
+{% block head %}
+<script>
+$(function(){
+  $('.sparkline').sparkline('html', {type: 'line', width: '200', fillColor: 'white', lineColor: 'black' });
+});
+</script>
+{% endblock %}
+
 {% from 'macros/admin_nav.html' import admin_nav with context %}
 {% block body %}
 <div class="container">
@@ -11,37 +19,21 @@
           {% for user in users %}
           <tr>
             <td>
-              {% if user.is_confirmed %}
-              <i class="icon-check"></i>
-              {% else %}
-              <i class="icon-remove"></i>
-              {% endif %}
+              {% if user.is_admin %}<span class="label">A</span>{% endif %}
               <a href="/users/{{ user.id }}/edit?auth_token={{ auth_token }}">{{ user.email }}</a>
-              {% if user.is_admin %}<span class="label label-info">admin</span>{% endif %}
             </td>
 
             <td>
-              <tt><span title="{{ user.auth_token }}">{{ user.auth_token[10:] + '...' }}</span></tt>
-              <a class="btn btn-warning btn-mini" 
-                 data-action-url="{{ url_for('user.reset_auth', user_id=user.id, auth_token=auth_token) }}"
-                 data-action-method="POST"
-                 data-confirm="Are you sure you want to refresh this auth token?">
-                <i class="icon-repeat icon-white"></i>
-              </a>
+              <span class="sparkline">{{ user.last_30_days_str() }}</span>
             </td>
 
             <td>
-              <a class="btn {{ 'btn-warning' if user.is_approved else 'btn-primary' }} btn-mini"
-                 data-action-url="{{ url_for('user.toggle_approve', user_id=user.id, auth_token=auth_token) }}"
-                 data-action-method="POST"
-                 data-confirm="Are you sure you want to {{ 'unapprove' if user.is_approved else 'approve' }} {{ user.email }}?">
-                {{ 'Unapprove' if user.is_approved else 'Approve' }}
-              </a>
-
-              <a class="btn btn-primary btn-mini"
-                 data-action-url="{{ url_for('user.update_email', user_id=user.id, auth_token=auth_token) }}"
-                 data-action-method="POST"
-                 data-confirm="Send update email?">Send Update Email</a>
+              <tt>
+                <a href="{{ url_for('tracker.show', auth_token=user.auth_token) }}">
+                  {{ '%0.2f' % user.wq() }}
+                </a>
+                W.Q.
+              </tt>
             </td>
           </tr>
           {% endfor %}

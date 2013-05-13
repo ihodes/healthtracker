@@ -36,7 +36,7 @@ $(function(){
 </script>
 {% endblock %}
 {% block body %}
-<div class="container">
+<div class="container ">
 
   <div class="well">
     <h2>{{ user.name or "" }}{{ " :: " if user.name else "" }}{{ user.email }}</h2>
@@ -58,9 +58,30 @@ $(function(){
       <p>
         {{ user.name or user.email }} has <a href="/tracker?auth_token={{user.auth_token}}"><span class="badge badge-info">{{ user.answers.all() | length }}</span></a> updates so far.
       </p>
+      <p>
+        {{ user.name or user.email }} has {{ "confirmed" if user.is_confirmed else "not confirmed" }} their email.
+      </p>
+      <p>
+        <a class="btn btn-mini"
+           data-action-url="{{ url_for('user.toggle_approve', user_id=user.id, auth_token=auth_token) }}"
+           data-action-method="POST"
+           data-confirm="Are you sure you want to {{ 'unapprove' if user.is_approved else 'approve' }} {{ user.email }}?">
+          {{ 'Unapprove' if user.is_approved else 'Approve' }}
+        </a>
+
+        <a class="btn btn-mini"
+           data-action-url="{{ url_for('user.update_email', user_id=user.id, auth_token=auth_token) }}"
+           data-action-method="POST"
+           data-confirm="Send update email?">
+          Send Update Email
+        </a>
+      </p>
     </div>
+
+
     
-    <div style="margin-top: 50px;">
+    <div style="margin: 50px 0 20px 0; ">
+      <h4> Questions </h4>
       <table id="questions" class="table">
         <thead>
           <tr>
@@ -91,6 +112,7 @@ $(function(){
         </tbody>
       </table>
     </div>
+
   </div>
 </div>
 {% endblock %}
