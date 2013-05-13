@@ -6,7 +6,7 @@
   {% include "macros/flash.html" %}
   <div>
     <div class="users">
-      <table class="table">
+      <table class="table table-condensed">
         <tbody>
           {% for user in users %}
           <tr>
@@ -22,42 +22,26 @@
 
             <td>
               <tt><span title="{{ user.auth_token }}">{{ user.auth_token[10:] + '...' }}</span></tt>
-              <form style="display:inline-block;" action="/users/reset_auth" method="post">
-                <input type="hidden" name="user_id" value="{{user.id}}">
-                <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <button class="btn btn-warning btn-mini" type="submit"
-                        data-confirm="Are you sure you want to refresh this auth token?">
-                  <i class="icon-repeat icon-white"></i>
-                </button>
-              </form>
+              <a class="btn btn-warning btn-mini" 
+                 data-action-url="{{ url_for('user.reset_auth', user_id=user.id, auth_token=auth_token) }}"
+                 data-action-method="POST"
+                 data-confirm="Are you sure you want to refresh this auth token?">
+                <i class="icon-repeat icon-white"></i>
+              </a>
             </td>
 
             <td>
-              <form style="display:inline-block;" action="/users/toggle_approve" method="post">
-                <input type="hidden" name="user_id" value="{{user.id}}">
-                <input type="hidden" name="auth_token" value="{{auth_token}}">
-                {% if not user.is_approved %}
-                <input class="btn btn-primary btn-mini" value="Approve"
-                       type="submit" data-confirm="Are you sure you want to approve this user?">
-                {% else %}
-                <input class="btn btn-warning btn-mini" value="Unapprove"
-                       type="submit" data-confirm="Are you sure you want to unapprove this user?">
-                {% endif %}
-              </form>
+              <a class="btn {{ 'btn-warning' if user.is_approved else 'btn-primary' }} btn-mini"
+                 data-action-url="{{ url_for('user.toggle_approve', user_id=user.id, auth_token=auth_token) }}"
+                 data-action-method="POST"
+                 data-confirm="Are you sure you want to {{ 'unapprove' if user.is_approved else 'approve' }} {{ user.email }}?">
+                {{ 'Unapprove' if user.is_approved else 'Approve' }}
+              </a>
 
-              <!--<form style="display:inline-block;" action="/users/delete" method="post">
-                <input type="hidden" name="user_id" value="{{user.id}}">
-                <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <button class="btn btn-danger btn-mini" type="submit"><i class="icon-remove-sign icon-white"></i></button>
-              </form>-->
-
-              <form style="display:inline-block;"
-                    action="/users/{{user.id}}/send_update_email"
-                    method="post">
-                <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <input class="btn btn-primary btn-mini" value="Send Update Email"
-                       type="submit" data-confirm="Are you sure you want to send an update email to {{ user.email }}?">
-              </form>
+              <a class="btn btn-primary btn-mini"
+                 data-action-url="{{ url_for('user.update_email', user_id=user.id, auth_token=auth_token) }}"
+                 data-action-method="POST"
+                 data-confirm="Send update email?">Send Update Email</a>
             </td>
           </tr>
           {% endfor %}

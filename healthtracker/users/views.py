@@ -80,7 +80,7 @@ def edit(admin, user_id=None):
 @user.route('/<user_id>', methods=['PUT'])
 @require_admin
 def update(admin, user_id=None):
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.get(user_id)
     user.name = request.values['name']
     user.timezone = request.values['timezone']
     user.notes = request.values['notes']
@@ -89,10 +89,10 @@ def update(admin, user_id=None):
     return ''
 
 
-@user.route('/toggle_approve', methods=['POST'])
+@user.route('/<user_id>/toggle_approve', methods=['POST'])
 @require_admin
-@provide_user_from_id
-def toggle_approve(user, admin):
+def toggle_approve(admin, user_id=None):
+    user = User.query.get(user_id)
     if user.is_approved:
         user.unapprove()
     else:
@@ -103,18 +103,10 @@ def toggle_approve(user, admin):
     return redirect(url_for('.admin', auth_token=admin.auth_token))
 
 
-@user.route('/delete', methods=['POST'])
+@user.route('/<user_id>/reset_auth', methods=['POST'])
 @require_admin
-@provide_user_from_id
-def delete(user, admin):
-    user.delete()
-    return redirect(url_for('.admin', auth_token=admin.auth_token))
-
-
-@user.route('/reset_auth', methods=['POST'])
-@require_admin
-@provide_user_from_id
-def reset_auth(user, admin):
+def reset_auth(admin, user_id=None):
+    user = User.query.get(user_id)
     user.reset_auth_token()
     return redirect(url_for('.admin', auth_token=admin.auth_token))
 
@@ -137,7 +129,7 @@ def unsubscribe(user):
     else:
         user.unconfirm()
         flash(u"""You've been unsubscribed: we're sorry to see you go.""", 'info')
-    return redirect('frontend.messages') # TODO need to use url_for correctly here... 
+    return redirect(url_for('frontend.messages'))
 
 
 @user.route('/question', methods=['DELETE', 'POST'])
