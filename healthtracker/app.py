@@ -15,13 +15,11 @@ from .questions import question
 
 BLUEPRINTS = (frontend, user, tracker, sms, question)
 
-__all__ = ['create_app']
-
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('config')
 
+    _initialize_config(app)
     _initialize_hooks(app)
     _initialize_extensions(app)
     _initialize_blueprints(app)
@@ -31,10 +29,15 @@ def create_app():
     return app
 
 
+def _initialize_config(app):
+    app.config.from_object('config')
+
+
 def _initialize_hooks(app):
-    @app.before_request
-    def before_request():
-        pass
+    # @app.before_request
+    # def before_request():
+    #     pass
+    pass
 
 
 def _initialize_extensions(app):
