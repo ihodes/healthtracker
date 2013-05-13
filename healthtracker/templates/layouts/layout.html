@@ -8,6 +8,7 @@
     <script src="{{ url_for('static', filename='js/jquery.sparkline.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/site.js') }}"></script>
 
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400"
           rel="stylesheet" type="text/css">
@@ -16,11 +17,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-
     <script type="text/javascript">
       var analytics=analytics||[];analytics.load=function(e){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"===document.location.protocol?"https://":"http://")+"d2dq2ahtl5zl1z.cloudfront.net/analytics.js/v1/"+e+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);var r=function(e){return function(){analytics.push([e].concat(Array.prototype.slice.call(arguments,0)))}},i=["identify","track","trackLink","trackForm","trackClick","trackSubmit","pageview","ab","alias","ready"];for(var s=0;s<i.length;s++)analytics[i[s]]=r(i[s])};
 
-      analytics.load("{{ app.config[SEGMENTIO_API_KEY'] }}");
+      analytics.load("{{ config['SEGMENTIO_API_KEY'] }}");
     </script>
 
     {% block head %}{% endblock %}
