@@ -3,7 +3,7 @@ from flask import (Blueprint, render_template, redirect, url_for, request, flash
                    current_app)
 import pytz
 
-from ..database import User, Question
+from ..database import User, Question, ScheduledQuestion
 from ..extensions import db
 from ..utils import format_date, is_valid_email
 from ..view_helpers import (get_user_by_auth, get_user_by_id,
@@ -13,8 +13,7 @@ from .. import mailer
 
 
 
-user = Blueprint('user', __name__, url_prefix='/users',
-                 template_folder='templates')
+user = Blueprint('user', __name__, url_prefix='/users', template_folder='templates')
 
 
 # User views:
@@ -76,7 +75,9 @@ def edit(admin, user_id=None):
     user = User.query.filter_by(id=user_id).first()
     questions = Question.query.all()
     timezones = pytz.country_timezones('US')
-    return render_template('edit.html', user=user, questions=questions, auth_token=admin.auth_token, timezones=timezones)
+    NOTIFICATIONS = ['none', 'email']
+    return render_template('edit.html', user=user, questions=questions, auth_token=admin.auth_token,
+                           timezones=timezones, notifications=NOTIFICATIONS)
 
 
 @user.route('/<user_id>', methods=['PUT'])
@@ -143,14 +144,14 @@ def unsubscribe(user):
     return redirect(url_for('frontend.messages'))
 
 
-@user.route('/question', methods=['DELETE', 'POST'])
+@user.route('/<user_id>/questions/<question_id>', methods=['DELETE', 'POST'])
 @require_admin
-def question(admin):
-    user = User.query.get(request.values['user_id'])
-    question = Question.query.get(request.values['question_id'])
+def question(admin, user_id=None, question_id=None):
+    user = User.query.get(user_id)
+    question = Question.query.get(question_id)
     if request.method == 'POST':
-        user.questions.append(question)
-        db.session.add(user)
+        sq = ScheduledQuestion(user, question)
+        db.session.add(sq)
         db.session.commit()
         return ''
     else:
@@ -159,3 +160,13 @@ def question(admin):
         db.session.commit()
         return ''
 
+
+@user.route('/<user_id>/notification', methods=['POST'])
+@require_admin
+def notification(admin, user_id=None, question_id=None):
+    current_app.logger.info(request.values)
+    scheduled = ScheduledQuestion.query.get(request.values['sq_id'])
+    scheduled.notification_method = request.values['notification_method']
+    db.session.add(scheduled)
+    db.session.commit()
+    return redirect(url_for('.edit', user_id=user_id, question_id=question_id, auth_token=admin.auth_token))

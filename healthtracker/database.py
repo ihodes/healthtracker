@@ -3,16 +3,25 @@ from datetime import datetime
 
 from .utils import random_string
 from .extensions import db
+from sqlalchemy.ext.associationproxy import association_proxy
 
 
+class ScheduledQuestion(db.Model):
+    __tablename__ = 'scheduled_questions'
+    id = db.Column(db.Integer, db.Sequence('scheduled_questions_id_seq'), primary_key=True)
+    user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.id'))
+    question_id = db.Column('question_id', db.Integer, db.ForeignKey('questions.id'))
+    scheduled_for = db.Column('scheduled_for', db.DateTime(timezone=True))
+    notification_method = db.Column('notification_method', db.String(255))
 
-user_question_relation = db.Table('user_question_relation',
-  db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-  db.Column('question_id', db.Integer, db.ForeignKey('questions.id')),
-  db.Column('scheduled_for', db.DateTime(timezone=True)),
-  db.Column('notification_method', db.String(255))
-)
-
+    question = db.relationship('Question', backref=db.backref('scheduling_user_assocs', lazy='dynamic'))
+    user = db.relationship('User', backref='scheduled_question_assocs')
+    
+    def __init__(self, user, question, notification_method=None):
+        self.user_id = user.id
+        self.question_id = question.id
+        self.notification_method = notification_method or 'none'
+        
 
 class Answer(db.Model):
     __tablename__ = "answers"
@@ -51,8 +60,8 @@ class User(db.Model):
     notes = db.Column(db.Text)
     timezone = db.Column(db.String(255))
 
-    questions = db.relationship('Question', secondary=user_question_relation,
-                            backref=db.backref('users', lazy='dynamic'))
+    scheduled_questions = db.relationship('ScheduledQuestion',  backref='users')
+    questions = association_proxy('scheduled_questions', 'question')
 
 
     def __init__(self, email, is_approved=False):

@@ -1,21 +1,21 @@
 {% extends "layouts/layout.html" %}
+
 {% block head %}
 <script>
 $(function(){
   // Remove question from the user
   $(".remove").click(function(){
-    $.ajax("/users/question?auth_token={{auth_token}}&user_id={{user.id}}&question_id="+$(this).data("id"), {type: "DELETE"})
+    $.ajax("/users/{{user.id}}/questions/"+$(this).data("id")+"?auth_token={{auth_token}}",
+           {type: "DELETE"})
           .done(function(){window.location = "";});
   });
 
 
   // Add question to the user
   $(".add").click(function(){
-    $.ajax("/users/question",
+    $.ajax("/users/{{user.id}}/questions/"+$(this).data("id"),
            {type: "POST",
-            data: {auth_token: "{{auth_token}}",
-                   user_id: "{{ user.id }}",
-                   question_id: $(this).data("id")}})
+            data: {auth_token: "{{auth_token}}"}})
           .done(function(){window.location = "";});
   });
 
@@ -35,12 +35,11 @@ $(function(){
 });
 </script>
 {% endblock %}
+
 {% block body %}
 <div class="container ">
-
   <div class="well">
     <h2>{{ user.name or "" }}{{ " :: " if user.name else "" }}{{ user.email }}</h2>
-
     <form class="form-horizontal">
       <input type="text" name="name" placeholder="full name" value="{{ user.name or "" }}">
       <input type="hidden" name="auth_token" value="{{ auth_token }}">
@@ -68,14 +67,12 @@ $(function(){
            data-confirm="Are you sure you want to {{ 'unapprove' if user.is_approved else 'approve' }} {{ user.email }}?">
           {{ 'Unapprove' if user.is_approved else 'Approve' }}
         </a>
-
         <a class="btn btn-mini"
            data-action-url="{{ url_for('user.update_email', user_id=user.id, auth_token=auth_token) }}"
            data-action-method="POST"
            data-confirm="Send update email?">
           Send Update Email
         </a>
-
         <a class="btn btn-mini btn-danger"
            data-action-url="{{ url_for('user.delete', user_id=user.id, auth_token=auth_token) }}"
            data-action-method="DELETE"
@@ -84,21 +81,52 @@ $(function(){
         </a>
       </p>
     </div>
-
-
     
     <div style="margin: 50px 0 20px 0; ">
-      <h4> Questions </h4>
       <table id="questions" class="table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Text</th>
-            <th>Actions</th>
+            <th></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
 
         <tbody>
+          <tr>
+            <td colspan=3>
+              <h3>Scheduled Questions:</h3>
+            </td>
+          </tr>
+          {% for sq in user.scheduled_questions %}
+          {% set question = sq.question %}
+          <tr>
+            <td>
+              {{ question.name }}
+            </td>
+            <td>
+              {{ question.text }}
+            </td>
+            <td>
+              <button class="btn btn-danger remove" data-id="{{ question.id }}">Remove</button>
+              <form action="/users/{{user.id}}/notification" method="POST" style="margin-top: 20px;">
+                <input type="hidden" name="auth_token" value="{{auth_token}}">
+                <input type="hidden" name="sq_id" value="{{sq.id}}">
+                <select name="notification_method">
+                  {% for noti in notifications %}
+                  <option {% if noti == sq.notification_method -%}selected="selected"{%- endif %}>{{ noti }}</option>
+                  {% endfor %}
+                </select>
+                <input type="submit" value="Set notification type">
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td colspan=3>
+              <h3>Questions:</h3>
+            </td>
+          </tr>
           {% for question in questions %}
           <tr>
             <td>
@@ -108,18 +136,13 @@ $(function(){
               {{ question.text }}
             </td>
             <td>
-              {% if question in user.questions %}
-              <button class="btn btn-danger remove" data-id="{{ question.id }}">Remove</button> <!-- TK TODO -->
-              {% else %}
-              <button class="btn btn-primary add" data-id="{{ question.id }}">Add</button> <!-- TK TODO -->
-              {% endif %}
+              <button class="btn btn-primary add" data-id="{{ question.id }}">Add</button>
             </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-
   </div>
 </div>
 {% endblock %}
