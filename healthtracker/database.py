@@ -104,7 +104,7 @@ class User(db.Model):
 
     # hack for now
     def wq(self):
-        return sum(map(lambda a: float(a.value), self.answers.order_by('created_at ASC').all()[-7:]))/7
+        return sum(map(lambda a: float(a.value), self.answers.filter_by(question_id=Question.default().id).order_by('created_at ASC').all()[-7:]))/7
 
     # hack for now
     def last_30_days_str(self):

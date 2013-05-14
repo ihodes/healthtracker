@@ -17,16 +17,16 @@ tracker = Blueprint('tracker', __name__,
 @tracker.route("/")
 @provide_user_from_auth
 def show(user):
-    # TODO TK: haxxx just to get it working for the regular WQ question
-    question = Question.query.get(1)
-
     if user is None:
         flash(u"""invalid authentication""", "error")
         return redirect(url_for("frontend.messages"))
 
-    answers = [{'date':a.created_at.strftime("%d-%m-%Y"), 'value':a.value}
-                for a in user.answers.filter_by(question=question).order_by('created_at ASC')]
-    return render_template('tracker.html', answers=json.dumps({'answers':answers}))
+    questions = []
+    for question in user.questions:
+        answers = [{'date':a.created_at.strftime("%d-%m-%Y"), 'value':a.value}
+                   for a in user.answers.filter_by(question=question).order_by('created_at ASC')]
+        questions.append({'name': question.name, 'text': question.text, 'answers': json.dumps({'answers':answers})})
+    return render_template('tracker.html', questions=questions)
 
 
 @tracker.route("/track/<question_id>/")
@@ -40,6 +40,6 @@ def track(user, question_id=None):
     value = request.args.get("value", None)
     user.answers.append(Answer(user, question, value))
     user.save()
-    flash(u"""You've reported a {} out of {}.""".format(value, question.max_value), 'info')
+    flash(u"""You've reported a {} out of {} for question '{}'""".format(value, question.max_value, question.name), 'info')
     return redirect(url_for('.show', auth_token=user.auth_token))
 
