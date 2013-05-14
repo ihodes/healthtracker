@@ -435,17 +435,24 @@ display:block !important;
 
                         <td style="padding-top: 9px;padding-left: 18px;padding-bottom: 9px;padding-right: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
 
-                            <table border="0" cellpadding="18" cellspacing="0" class="mcnTextContentContainer" width="100%" style="border: 1px solid #999999;background-color: #EBEBEB;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <tbody><tr>
-                                    <td valign="top" class="mcnTextContent" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #505050;font-family: Helvetica;font-size: 14px;line-height: 150%;text-align: left;">
-                                        Here's your daily email from getMarion.com. Just click the button that is closest to how you feel, and we'll do the rest. As always, we hope you're feeling well!
-                                    </td>
-                                </tr>
-                            </tbody></table>
-                        </td>
-                    </tr>
-                </tbody></table>
 
+
+                          <table border="0" cellpadding="18" cellspacing="0" class="mcnTextContentContainer" width="100%" style="border: 1px solid #999999;background-color: #EBEBEB;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                            <tbody>
+                              <tr>
+                                <td valign="top" class="mcnTextContent" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #505050;font-family: Helvetica;font-size: 14px;line-height: 150%;text-align: left;">
+                                  {{ question_text }}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+
+
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
             </td>
         </tr>
     </tbody>
@@ -474,15 +481,21 @@ display:block !important;
                                     <!-- BEGIN BODY // -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateBody" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 0;border-bottom: 0;">
                                         <tr>
-                                            <td valign="top" class="bodyContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;"><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-    <tbody class="mcnButtonBlockOuter">
+                                          <td valign="top" class="bodyContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+
+
+
+<!-- BUTTONS HERE -->
+{% for status_link in status_update_links %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+  <tbody class="mcnButtonBlockOuter">
         <tr>
             <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
                 <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #119E11;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                     <tbody>
                         <tr>
                             <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <a class="mcnButton " title="5 out of 5" href="{{status_update_links[5]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">5 out of 5</a>
+                                <a class="mcnButton " title="{{ status_link['text'] }}" href="{{status_link['link']}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">{{ status_link['text'] }}</a>
                             </td>
                         </tr>
                     </tbody>
@@ -490,71 +503,14 @@ display:block !important;
             </td>
         </tr>
     </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-    <tbody class="mcnButtonBlockOuter">
-        <tr>
-            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
-                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #619E11;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                    <tbody>
-                        <tr>
-                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <a class="mcnButton " title="4 out of 5" href="{{status_update_links[4]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">4 out of 5</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-    <tbody class="mcnButtonBlockOuter">
-        <tr>
-            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
-                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #82AF0F;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                    <tbody>
-                        <tr>
-                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <a class="mcnButton " title="3 out of 5" href="{{status_update_links[3]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">3 out of 5</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-    <tbody class="mcnButtonBlockOuter">
-        <tr>
-            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
-                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #ADAD0F;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                    <tbody>
-                        <tr>
-                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <a class="mcnButton " title="2 out of 5" href="{{status_update_links[2]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">2 out of 5</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table><table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnButtonBlock" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-    <tbody class="mcnButtonBlockOuter">
-        <tr>
-            <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
-                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #B4920B;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                    <tbody>
-                        <tr>
-                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <a class="mcnButton " title="1 out of 5" href="{{status_update_links[1]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">1 out of 5</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table></td>
+</table>
+{% endfor %}
+<!-- /END BUTTONS -->
+
+
+
+
+</td>
                                         </tr>
                                     </table>
                                     <!-- // END BODY -->
@@ -569,15 +525,6 @@ display:block !important;
     <tbody class="mcnButtonBlockOuter">
         <tr>
             <td style="padding-top: 0;padding-right: 18px;padding-bottom: 18px;padding-left: 18px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;" valign="top" align="center" class="mcnButtonBlockInner">
-                <table border="0" cellpadding="0" cellspacing="0" width="" class="mcnButtonContentContainer" style="border-top-left-radius: 5px;border-top-right-radius: 5px;border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;background-color: #9E4911;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                    <tbody>
-                        <tr>
-                            <td align="center" valign="middle" class="mcnButtonContent" style="color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <a class="mcnButton " title="0 out of 5" href="{{status_update_links[0]}}" target="_self" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;font-family: Verdana, Geneva, sans-serif;font-size: 16px;padding: 15px;word-wrap: break-word !important;">0 out of 5</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </td>
         </tr>
     </tbody>

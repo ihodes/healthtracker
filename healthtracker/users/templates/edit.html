@@ -3,14 +3,6 @@
 {% block head %}
 <script>
 $(function(){
-  // Remove question from the user
-  $(".remove").click(function(){
-    $.ajax("/users/{{user.id}}/questions/"+$(this).data("id")+"?auth_token={{auth_token}}",
-           {type: "DELETE"})
-          .done(function(){window.location = "";});
-  });
-
-
   // Add question to the user
   $(".add").click(function(){
     $.ajax("/users/{{user.id}}/questions/"+$(this).data("id"),
@@ -93,6 +85,7 @@ $(function(){
         </thead>
 
         <tbody>
+          {% if user.scheduled_questions %}
           <tr>
             <td colspan=3>
               <h3>Scheduled Questions:</h3>
@@ -108,7 +101,6 @@ $(function(){
               {{ question.text }}
             </td>
             <td>
-              <button class="btn btn-danger remove" data-id="{{ question.id }}">Remove</button>
               <form action="/users/{{user.id}}/notification" method="POST" style="margin-top: 20px;">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 <input type="hidden" name="sq_id" value="{{sq.id}}">
@@ -119,9 +111,11 @@ $(function(){
                 </select>
                 <input type="submit" value="Set notification type">
               </form>
+              <a data-action-url="/users/{{user.id}}/notification?auth_token={{auth_token}}&sq_id={{sq.id}}" data-action-method="DELETE" class="btn btn-danger">Remove notification</a>
             </td>
           </tr>
           {% endfor %}
+          {% endif %}
           <tr>
             <td colspan=3>
               <h3>Questions:</h3>

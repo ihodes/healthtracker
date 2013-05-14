@@ -127,9 +127,9 @@ def delete(admin, user_id=None):
 @require_admin
 def update_email(admin, user_id=None):
     user = User.query.get(user_id)
-    questions = user.questions
-    for question in user.questions:
-        mailer.send_update_email(user, question)
+    for sq in user.scheduled_questions:
+        if sq.notification_method == 'email': # TK TODO make this right...
+            mailer.send_update_email(user, sq.question)
     return redirect(url_for('.admin', auth_token=admin.auth_token))
 
 
@@ -144,7 +144,7 @@ def unsubscribe(user):
     return redirect(url_for('frontend.messages'))
 
 
-@user.route('/<user_id>/questions/<question_id>', methods=['DELETE', 'POST'])
+@user.route('/<user_id>/questions/<question_id>', methods=['POST'])
 @require_admin
 def question(admin, user_id=None, question_id=None):
     user = User.query.get(user_id)
@@ -154,19 +154,19 @@ def question(admin, user_id=None, question_id=None):
         db.session.add(sq)
         db.session.commit()
         return ''
-    else:
-        user.questions.remove(question)
-        db.session.add(user)
-        db.session.commit()
-        return ''
 
 
-@user.route('/<user_id>/notification', methods=['POST'])
+@user.route('/<user_id>/notification', methods=['POST', 'DELETE'])
 @require_admin
 def notification(admin, user_id=None, question_id=None):
-    current_app.logger.info(request.values)
     scheduled = ScheduledQuestion.query.get(request.values['sq_id'])
-    scheduled.notification_method = request.values['notification_method']
-    db.session.add(scheduled)
-    db.session.commit()
-    return redirect(url_for('.edit', user_id=user_id, question_id=question_id, auth_token=admin.auth_token))
+    user = User.query.get(user_id)
+    if request.method == 'POST':
+        scheduled.notification_method = request.values['notification_method']
+        db.session.add(scheduled)
+        db.session.commit()
+        return redirect(url_for('.edit', user_id=user_id, question_id=question_id, auth_token=admin.auth_token))
+    else:
+        db.session.delete(scheduled)
+        db.session.commit()
+        return ''

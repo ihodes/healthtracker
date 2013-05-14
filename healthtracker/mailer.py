@@ -45,21 +45,22 @@ def send_login_email(user):
 
 
 def send_update_email(user, question):
-    subject = "Update Your Health Today"
-    
-    unsubscribe_link = unsubscribe_url(user)
-    status_update_text = []
-    status_update_text.append(question.text)
+    subject = "Update Your Health Today [{}]".format(question.name)    
+    status_update_text = [question.text]
     status_update_links = []
-    for value in range(6): # this is not ideal (e.g. how many pushups did you do today: 0-6?)
-        status_update_link = status_update_url(user, value)
-        status_update_links.append(status_update_link)
-        status_update_text.append("{0}: {1}".format(value, status_update_link))
-    status_update_text.append("\n\n\n Unsubscribe: "+unsubscribe_link)
+
+    for value in range(question.min_value, question.max_value+1):
+        tracker_url = status_update_url(user, question, value)
+        status_update_links.append({'text': '{} out of {}'.format(value, question.max_value),
+                                    'link': tracker_url})
+        status_update_text.append("{0}: {1}".format(value, tracker_url))
+    status_update_text.append("\n\n\n Unsubscribe: "+unsubscribe_url(user))
     text = "\n\n".join(status_update_text)
+
     html = render_template('emails/status_update.html',
-                                status_update_links=status_update_links,
-                                unsubscribe_link=unsubscribe_link)
+                           question_text=question.text,
+                           status_update_links=status_update_links,
+                           unsubscribe_link=unsubscribe_url(user))
 
     send_email(text=text, to=user.email, subject=subject, html=html)
 
@@ -90,10 +91,10 @@ def send_simple_email(subject, message, email):
     send_email(text=message, to=email, subject=subject)
 
 
-def status_update_url(user, value):
-    url_base = "http://{0}/tracker/track?auth_token={1}&value={2}"
+def status_update_url(user, question, value):
+    url_base = "http://{0}/tracker/track/{1}/?auth_token={2}&value={3}"
     auth = user.auth_token
-    return url_base.format(current_app.config['HOST_NAME'], auth, value)
+    return url_base.format(current_app.config['HOST_NAME'], question.id, auth, value)
 
 
 def unsubscribe_url(user):

@@ -21,7 +21,9 @@ class ScheduledQuestion(db.Model):
         self.user_id = user.id
         self.question_id = question.id
         self.notification_method = notification_method or 'none'
-        
+
+    def __repr__(self):
+        return "<ScheduledQuestion({}::{}::{})>".format(self.user.name, self.question.name, self.notification_method)
 
 class Answer(db.Model):
     __tablename__ = "answers"
@@ -106,13 +108,12 @@ class User(db.Model):
 
     # hack for now
     def last_30_days_str(self):
-        return str(map(lambda a: int(a.value), self.answers.order_by('created_at ASC').all()[-30:]))[1:-1]
+        return str(map(lambda a: int(a.value), self.answers.filter_by(question_id=Question.default().id).order_by('created_at ASC').all()[-30:]))[1:-1]
 
     @staticmethod
     def create(email):
         if User.query.filter_by(email=email).first() is None:
             user = User(email)
-            user.questions.append(Question.default())
             user.save()
             return user
         return None
