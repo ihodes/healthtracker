@@ -111,6 +111,15 @@ def reset_auth(admin, user_id=None):
     return redirect(url_for('.admin', auth_token=admin.auth_token))
 
 
+@user.route('/<user_id>', methods=['DELETE'])
+@require_admin
+def delete(admin, user_id=None):
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('.admin', auth_token=admin.auth_token))
+
+
 @user.route('/<user_id>/send_update_email', methods=['POST'])
 @require_admin
 def update_email(admin, user_id=None):

@@ -75,6 +75,13 @@ $(function(){
            data-confirm="Send update email?">
           Send Update Email
         </a>
+
+        <a class="btn btn-mini btn-danger"
+           data-action-url="{{ url_for('user.delete', user_id=user.id, auth_token=auth_token) }}"
+           data-action-method="DELETE"
+           data-confirm="Are you sure you want to delete this user permenantly?">
+          Delete User
+        </a>
       </p>
     </div>
 
