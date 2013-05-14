@@ -2,7 +2,7 @@
 import requests
 from flask import render_template, current_app
 
-from .users import User
+from .database import User
 
 
 

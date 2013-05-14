@@ -3,8 +3,7 @@ from flask import (Blueprint, render_template, redirect, url_for, request, flash
                    current_app)
 import pytz
 
-from .models import User
-from ..questions.models import Question
+from ..database import User, Question
 from ..extensions import db
 from ..utils import format_date, is_valid_email
 from ..view_helpers import (get_user_by_auth, get_user_by_id,
@@ -27,18 +26,21 @@ def subscribe():
         if user is None:
             user = User.create(email)
             mailer.send_confirmation_email(user)
-            mailer.send_simple_email("New Marion User", "email: '{}'".format(email), 'isaachodes@gmail.com') # TODO TK: shouldn't hardcode admin email
+            mailer.send_simple_email("New Marion User", "email: '{}'".format(email),
+                                     'isaachodes@gmail.com') # TODO TK: shouldn't hardcode admin email
             flash(u"""You've been subscribed. An email has been sent
                   to {0} with more information""".format(email), 'info')
         elif not user.is_confirmed:
-            flash(u"""Check your email to confirm your subscription (check your spam if you don't see it within a minute!)""", 'info')
+            flash(("Check your email to confirm your subscription (check your "
+                   "spam if you don't see it within a minute!)"),
+                  'info')
             mailer.send_confirmation_email(user)
         else:
             mailer.send_login_email(user)
-            flash(u"""We've sent you a link to log in with: check your email.""".format(email), 'info')
+            flash("We've sent you a link to log in with: check your email.".format(email), 'info')
     else:
-        flash(u""""{0}" is not a valid email address:
-              please re-enter your email.""".format(email), 'error')
+        flash("'{0}' is not a valid email address: please re-enter your email.".format(email),
+              'error')
         return redirect(url_for('frontend.landing'))
     return redirect(url_for('frontend.messages'))
 

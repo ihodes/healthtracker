@@ -36,3 +36,104 @@ class Answer(db.Model):
                                              self.value,
                                              self.question.name)
 
+
+class User(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, db.Sequence('users_id_seq'), primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    auth_token = db.Column(db.String, unique=True)
+    answers = db.relationship("Answer", backref="user", lazy="dynamic")
+    is_confirmed = db.Column(db.Boolean, default=False)
+    is_approved = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)
+
+    name = db.Column(db.Text)
+    notes = db.Column(db.Text)
+    timezone = db.Column(db.String(255))
+
+    questions = db.relationship('Question', secondary=user_question_relation,
+                            backref=db.backref('users', lazy='dynamic'))
+
+
+    def __init__(self, email, is_approved=False):
+        self.email = email
+        self.auth_token = random_string(36)
+        self.is_approved = is_approved
+
+    def __repr__(self):
+        return "<User('%s')>" % (self.email)
+
+    def reset_auth_token(self):
+        self.auth_token = random_string(36)
+        self.save()
+
+    def confirm(self):
+        self.is_confirmed = True
+        self.save()
+
+    def unconfirm(self):
+        self.is_confirmed = False
+        self.save()
+
+    def approve(self):
+        self.is_approved = True
+        self.save()
+
+    def unapprove(self):
+        self.is_approved = False
+        self.save()
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    # hack for now
+    def wq(self):
+        return sum(map(lambda a: float(a.value), self.answers.order_by('created_at ASC').all()[-7:]))/7
+
+    # hack for now
+    def last_30_days_str(self):
+        return str(map(lambda a: int(a.value), self.answers.order_by('created_at ASC').all()[-30:]))[1:-1]
+
+    @staticmethod
+    def create(email):
+        if User.query.filter_by(email=email).first() is None:
+            user = User(email)
+            user.questions.append(Question.default())
+            user.save()
+            return user
+        return None
+
+    @staticmethod
+    def find_by(**kwargs):
+        return User.query.filter_by(**kwargs).first()
+
+
+class Question(db.Model):
+    __tablename__ = "questions"
+    id = db.Column(db.Integer, db.Sequence('questions_id_seq'), primary_key=True)
+    name = db.Column(db.String(255), unique=True)
+    text = db.Column(db.Text)
+
+    is_default = db.Column(db.Boolean, default=False)
+
+    min_value = db.Column(db.Integer, default=0)
+    max_value = db.Column(db.Integer, default=5)
+
+    def __init__(self, name, text, min_value=0, max_value=5):
+        self.name = name
+        self.text = text
+        # well, this is hacky. TK fix with WTForms?
+        self.min_value = 0 if min_value == '' else int(min_value)
+        self.max_value = 5 if max_value == '' else int(max_value)
+
+    def __repr__(self):
+        return "<Question::{}>".format(self.name)
+
+    @classmethod
+    def default(cls):
+        return cls.query.filter_by(is_default=True)[0]

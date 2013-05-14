@@ -4,8 +4,7 @@ from flask import (Blueprint, json, url_for, redirect, render_template, flash, r
 
 from ..extensions import db
 from ..view_helpers import provide_user_from_auth
-from ..database import Answer
-from ..questions.models import Question
+from ..database import Answer, Question
 
 
 

@@ -2,7 +2,7 @@
 from functools import wraps
 from flask import redirect, url_for, request, flash, current_app
 
-from .users import User
+from .database import User
 
 
 

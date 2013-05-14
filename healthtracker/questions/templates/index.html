@@ -18,8 +18,9 @@ $(function(){
   <table id="questions" class="table">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Text</th>
+        <th></th>
+        <th></th>
+        <th>Min/Max</th>
         <th>Answers</th>
       </tr>
     </thead>
@@ -28,10 +29,13 @@ $(function(){
     {% for question in questions %}
     <tr>
       <td>
-        {{ question.name }}
+        {% if question.is_default %}<span class="label">default</span>&nbsp;{% endif %}{{ question.name }}
       </td>
       <td>
         {{ question.text }}
+      </td>
+      <td>
+        {{ question.min_value }}—{{ question.max_value }}
       </td>
       <td>
         {{ question.answers.all() | length }}
@@ -58,6 +62,20 @@ $(function(){
       <label class="control-label">Question Text</label>
       <div class="controls">
         <textarea name="text" placeholder="Enter question text here"></textarea>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Min Value</label>
+      <div class="controls">
+        <input type="text" name="min_value" placeholder="0">
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Max Value</label>
+      <div class="controls">
+        <input type="text" name="max_value" placeholder="5">
       </div>
     </div>
 

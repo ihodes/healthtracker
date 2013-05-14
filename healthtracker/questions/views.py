@@ -4,7 +4,7 @@ from flask import (Blueprint, render_template, redirect, url_for, request, flash
                    current_app)
 from flask.views import MethodView
 
-from .models import Question
+from ..database import Question
 from ..extensions import db
 from ..view_helpers import (require_admin, register_api)
 
@@ -26,7 +26,8 @@ class QuestionAPI(MethodView):
 
     def post(self, admin):
         form = request.form
-        question = Question(form["name"], form["text"])
+        question = Question(form["name"], form["text"],
+                            form["min_value"], form["max_value"])
         db.session.add(question)
         db.session.commit()
         flash("Created question: {}.".format(question.name), 'info')
