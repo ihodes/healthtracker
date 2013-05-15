@@ -10,4 +10,4 @@ if __name__ == '__main__':
             for sq in user.scheduled_questions:
                 if sq.notification_method == 'email':
                     mailer.send_update_email(user, sq.question)
-                    app.logger.info("Sent <Question::{}> to {}.".format(question.name, user.email))
+                    app.logger.info("Sent <Question::{}> to {}.".format(sq.question.name, user.email))
