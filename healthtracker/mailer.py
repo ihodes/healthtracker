@@ -49,7 +49,7 @@ def send_update_email(user, question):
     status_update_text = [question.text]
     status_update_links = []
 
-    for value in range(question.min_value, question.max_value+1):
+    for value in range(question.min_value, question.max_value+1)[::-1]:
         tracker_url = status_update_url(user, question, value)
         status_update_links.append({'text': '{} out of {}'.format(value, question.max_value),
                                     'link': tracker_url})
