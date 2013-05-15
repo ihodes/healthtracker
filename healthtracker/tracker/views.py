@@ -23,7 +23,7 @@ def show(user):
 
     questions = []
     for question in user.questions:
-        answers = [{'date':a.created_at.strftime("%d-%m-%Y"), 'value':a.value}
+        answers = [{'date':a.created_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}
                    for a in user.answers.filter_by(question=question).order_by('created_at ASC')]
         questions.append({'name': question.name, 'text': question.text, 'answers': json.dumps({'answers':answers})})
     return render_template('tracker.html', questions=questions)

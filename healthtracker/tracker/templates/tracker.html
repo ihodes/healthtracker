@@ -3,26 +3,25 @@
 <script src="/tracker/static/tracker.js"></script>
 
 <style>
-body {
+
+.y.axis .tick {
+  font: 12px sans-serif;
+  font-weight: bold;
+}
+.x.axis .tick {
   font: 10px sans-serif;
 }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.x.axis path {
+.axis path {
   display: none;
 }
 
 .line {
   fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
+  stroke: blueviolet;
+  stroke-width: 1px;
 }
+
 </style>
 {% endblock %}
 
@@ -31,13 +30,15 @@ body {
 <div class="container">
   <div class="tracker-holder">
     {%- include "macros/flash.html" -%}
+
     {%- for question in questions -%}
     <div class="status-report">
       <h3>{{ question['name'] }}</h3>
       <p>{{ question['text'] }}</p>
-      <div class="answers" data-answers='{{ question['answers']|safe }}'></div>
+      <div class="answers" data-answers='{{ question['answers'] | safe }}'></div>
     </div>
     {%- endfor -%}
+
   </div>
 </div>
 
