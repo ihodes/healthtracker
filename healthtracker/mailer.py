@@ -7,7 +7,7 @@ from .database import User
 
 
 API_ENDPOINT = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
-DEFAULT_FROM = "Marion Health <hello@healthtracker.mailgun.org>"
+DEFAULT_FROM = "Marion Health <hello@getmarion.com>"
 
 
 def send_email(**kwargs):
