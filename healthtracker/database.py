@@ -11,7 +11,7 @@ class ScheduledQuestion(db.Model):
     id = db.Column(db.Integer, db.Sequence('scheduled_questions_id_seq'), primary_key=True)
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.id'))
     question_id = db.Column('question_id', db.Integer, db.ForeignKey('questions.id'))
-    scheduled_for = db.Column('scheduled_for', db.DateTime(timezone=True))
+    scheduled_for = db.Column('scheduled_for', db.DateTime())
     notification_method = db.Column('notification_method', db.String(255))
 
     question = db.relationship('Question', backref=db.backref('scheduling_user_assocs', lazy='dynamic'))
@@ -34,8 +34,7 @@ class Answer(db.Model):
     question_id = db.Column(db.Integer, db.ForeignKey("questions.id"))
     question = db.relationship("Question", backref=db.backref('answers', lazy='dynamic'))
 
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, user, question, value):
         self.user_id = user.id
