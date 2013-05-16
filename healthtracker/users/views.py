@@ -11,6 +11,7 @@ from ..view_helpers import (get_user_by_auth, get_user_by_id,
                             provide_user_from_id)
 from .. import mailer
 
+from .forms import ScheduledQuestionForm
 
 
 user = Blueprint('user', __name__, url_prefix='/users', template_folder='templates')
@@ -67,17 +68,6 @@ def admin(admin):
         return "Must be administrator. (Email sent to admin)."
     users = User.query.all()
     return render_template('admin.html', users=users, auth_token=admin.auth_token)
-
-
-@user.route('/<user_id>/edit')
-@require_admin
-def edit(admin, user_id=None):
-    user = User.query.filter_by(id=user_id).first()
-    questions = Question.query.all()
-    timezones = pytz.country_timezones('US')
-    NOTIFICATIONS = ['none', 'email']
-    return render_template('edit.html', user=user, questions=questions, auth_token=admin.auth_token,
-                           timezones=timezones, notifications=NOTIFICATIONS)
 
 
 @user.route('/<user_id>', methods=['PUT'])
@@ -144,29 +134,40 @@ def unsubscribe(user):
     return redirect(url_for('frontend.messages'))
 
 
-@user.route('/<user_id>/questions/<question_id>', methods=['POST'])
+@user.route('/<user_id>/edit')
 @require_admin
-def question(admin, user_id=None, question_id=None):
-    user = User.query.get(user_id)
-    question = Question.query.get(question_id)
-    if request.method == 'POST':
-        sq = ScheduledQuestion(user, question)
-        db.session.add(sq)
-        db.session.commit()
-        return ''
+def edit(admin, user_id=None):
+    user = User.query.filter_by(id=user_id).first()
+    questions = Question.query.all()
+    timezones = pytz.country_timezones('US')
+    NOTIFICATIONS = ['none', 'email']
+    return render_template('edit.html', user=user, questions=questions,
+                           auth_token=admin.auth_token, timezones=timezones,
+                           notifications=NOTIFICATIONS, ScheduledQuestionForm=ScheduledQuestionForm)
 
 
-@user.route('/<user_id>/notification', methods=['POST', 'DELETE'])
+@user.route('/<user_id>/scheduled_question', methods=['POST', 'PUT', 'DELETE'])
 @require_admin
-def notification(admin, user_id=None, question_id=None):
-    scheduled = ScheduledQuestion.query.get(request.values['sq_id'])
+def scheduled_question(admin, user_id=None):
     user = User.query.get(user_id)
-    if request.method == 'POST':
-        scheduled.notification_method = request.values['notification_method']
-        db.session.add(scheduled)
-        db.session.commit()
-        return redirect(url_for('.edit', user_id=user_id, question_id=question_id, auth_token=admin.auth_token))
-    else:
-        db.session.delete(scheduled)
+    form = ScheduledQuestionForm()
+
+    if request.method == 'DELETE':
+        sq_id = request.values.get('scheduled_question_id')
+        scheduled_question = ScheduledQuestion.query.get(sq_id)
+        db.session.delete(scheduled_question)
         db.session.commit()
         return ''
+    elif request.method == 'POST' and form.validate():
+        scheduled_question = ScheduledQuestion()
+        form.populate_obj(scheduled_question)
+        scheduled_question.id = None
+        db.session.add(scheduled_question)
+        db.session.commit()
+    elif request.method == 'PUT' and form.validate():
+        scheduled_question = ScheduledQuestion.query.get_or_404(request.form.get('id'))
+        form.populate_obj(scheduled_question)
+        db.session.add(scheduled_question)
+        db.session.commit()
+
+    return redirect(url_for('.edit', user_id=user_id, auth_token=admin.auth_token))

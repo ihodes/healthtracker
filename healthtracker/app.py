@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, session, render_template
+from werkzeug import url_decode
 
 from .extensions import db
 from .utils import format_date
@@ -26,6 +27,8 @@ def create_app():
     _initialize_error_handlers(app)
     _initialize_logging(app)
     _initialize_template_filters(app)
+    
+    app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
     return app
 
 
@@ -63,3 +66,18 @@ def _initialize_template_filters(app):
     @app.template_filter()
     def format_date(value):
         return pretty_date(value)
+
+
+
+class MethodRewriteMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        if 'METHOD_OVERRIDE' in environ.get('QUERY_STRING', ''):
+            args = url_decode(environ['QUERY_STRING'])
+            method = args.get('__METHOD_OVERRIDE__')
+            if method:
+                method = method.encode('ascii', 'replace')
+                environ['REQUEST_METHOD'] = method
+        return self.app(environ, start_response)

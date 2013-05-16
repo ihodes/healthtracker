@@ -8,6 +8,8 @@ from ..database import Question
 from ..extensions import db
 from ..view_helpers import (require_admin, register_api)
 
+from .forms import QuestionForm
+
 
 
 question = Blueprint('question', __name__, url_prefix='/questions',
@@ -18,19 +20,21 @@ class QuestionAPI(MethodView):
     decorators = [require_admin]
 
     def get(self, admin, question_id=None):
+        form = QuestionForm()
         if question_id:
             question = Question.query.get(question_id)
             return render_template('edit.html', question=question)
         questions = Question.query.all()
-        return render_template('index.html', questions=questions, auth_token=admin.auth_token)
+        return render_template('index.html', questions=questions, auth_token=admin.auth_token, form=form)
 
     def post(self, admin):
-        form = request.form
-        question = Question(form["name"], form["text"],
-                            form["min_value"], form["max_value"])
-        db.session.add(question)
-        db.session.commit()
-        flash("Created question: {}.".format(question.name), 'info')
+        form = QuestionForm()
+        if form.validate():
+            question = Question()
+            form.populate_obj(question)
+            db.session.add(question)
+            db.session.commit()
+            flash("Created question: {}.".format(question.name), 'info')
         return redirect(url_for('.question_api', auth_token=admin.auth_token))
 
     def delete(self, admin, question_id=None):

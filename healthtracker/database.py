@@ -17,13 +17,9 @@ class ScheduledQuestion(db.Model):
     question = db.relationship('Question', backref=db.backref('scheduling_user_assocs', lazy='dynamic'))
     user = db.relationship('User', backref='scheduled_question_assocs')
     
-    def __init__(self, user, question, notification_method=None):
-        self.user_id = user.id
-        self.question_id = question.id
-        self.notification_method = notification_method or 'none'
-
     def __repr__(self):
         return "<ScheduledQuestion({}::{}::{})>".format(self.user.name, self.question.name, self.notification_method)
+
 
 class Answer(db.Model):
     __tablename__ = "answers"
@@ -133,7 +129,7 @@ class Question(db.Model):
     min_value = db.Column(db.Integer, default=0)
     max_value = db.Column(db.Integer, default=5)
 
-    def __init__(self, name, text, min_value=0, max_value=5):
+    def __init__(self, name=None, text=None, min_value=0, max_value=5):
         self.name = name
         self.text = text
         # well, this is hacky. TK fix with WTForms?

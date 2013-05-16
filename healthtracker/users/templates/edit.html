@@ -12,8 +12,6 @@ $(function(){
   });
 
 
-  // Update user (with form)
-  // ... TK TODO
   $(".update-user").click(function(event){
     console.log($("form").serialize());
     $.ajax("/users/{{user.id}}",
@@ -101,17 +99,24 @@ $(function(){
               {{ question.text }}
             </td>
             <td>
-              <form action="/users/{{user.id}}/notification" method="POST" style="margin-top: 20px;">
+
+              <form action="/users/{{user.id}}/scheduled_question?__METHOD_OVERRIDE__=PUT" method="POST" style="margin-top: 20px;">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
-                <input type="hidden" name="sq_id" value="{{sq.id}}">
-                <select name="notification_method">
-                  {% for noti in notifications %}
-                  <option {% if noti == sq.notification_method -%}selected="selected"{%- endif %}>{{ noti }}</option>
-                  {% endfor %}
-                </select>
-                <input type="submit" value="Set notification type">
+                {% set form = ScheduledQuestionForm(obj=sq) %}
+                {{ form.id }}
+                {{ form.hidden_tag() }}
+                {{ form.notification_method }}
+                <div class="btn-group">
+                  <input type="submit" value="Update" class="btn btn-primary">
+                  <a data-action-url="/users/{{user.id}}/scheduled_question?auth_token={{auth_token}}&scheduled_question_id={{sq.id}}"
+                     data-action-method="DELETE"
+                     data-confirm="Are you sure you want to remove this notification?"
+                     class="btn btn-danger">
+                    Remove
+                  </a>
+                </div>
               </form>
-              <a data-action-url="/users/{{user.id}}/notification?auth_token={{auth_token}}&sq_id={{sq.id}}" data-action-method="DELETE" class="btn btn-danger">Remove notification</a>
+
             </td>
           </tr>
           {% endfor %}
@@ -130,7 +135,13 @@ $(function(){
               {{ question.text }}
             </td>
             <td>
-              <button class="btn btn-primary add" data-id="{{ question.id }}">Add</button>
+              <form action="/users/{{user.id}}/scheduled_question?" method="POST" style="margin-top: 20px;">
+                <input type="hidden" name="auth_token" value="{{auth_token}}">
+                {% set form = ScheduledQuestionForm(question_id=question.id, user_id=user.id) %}
+                {{ form.hidden_tag() }}
+                {{ form.notification_method }}
+                <input type="submit" value="Add Notification" class="btn btn-primary">
+              </form>
             </td>
           </tr>
           {% endfor %}
