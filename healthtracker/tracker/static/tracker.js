@@ -3,7 +3,9 @@ $(document).ready(function(){
     createLineChart = function(el){
         var $el = $(el);
 
-        var answers = $el.find($(".answers")).data("answers").answers;
+        var answers = $el.find($(".answers")).data("answers").answers,
+            qmax = parseInt($el.find(".answers").data("qmax")),
+            qmin = parseInt($el.find(".answers").data("qmin"));
 
         if(answers.length < 5){
             console.log('not enough info for this one');
@@ -21,7 +23,7 @@ $(document).ready(function(){
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
         var x = d3.time.scale().range([0, width]),
-            y = d3.scale.linear().domain([5,0]).range([0, height]),
+            y = d3.scale.linear().domain([qmax,qmin]).range([0, height]),
             bisectDate = d3.bisector(function(d) { return d.date; }).left;
         
         var parseDate = d3.time.format("%d-%m-%Y %H:%M").parse;

@@ -25,7 +25,12 @@ def show(user):
     for question in user.questions:
         answers = [{'date':a.created_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}
                    for a in user.answers.filter_by(question=question).order_by('created_at ASC')]
-        questions.append({'name': question.name, 'text': question.text, 'answers': json.dumps({'answers':answers})})
+        questions.append({'name': question.name,
+                          'text': question.text,
+                          'answers': json.dumps({'answers':answers}),
+                          'qmax': question.max_value,
+                          'qmin': question.min_value
+                          })
     return render_template('tracker.html', questions=questions, user=user)
 
 

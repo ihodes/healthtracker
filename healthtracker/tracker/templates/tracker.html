@@ -51,7 +51,9 @@
     <div class="status-report">
       <h3>{{ question['name'] }}</h3>
       <p>{{ question['text'] }}</p>
-      <div class="answers" data-answers='{{ question['answers'] | safe }}'></div>
+      <div class="answers" data-answers='{{ question['answers'] | safe }}'
+           data-qmax="{{ question['qmax'] }}"
+           data-qmin="{{ question['qmin'] }}"></div>
     </div>
     {%- endfor -%}
 
