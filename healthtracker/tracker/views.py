@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import (Blueprint, json, url_for, redirect, render_template, flash, request,
                    current_app)
+from flask.ext.login import login_user
 
 from ..extensions import db
 from ..view_helpers import provide_user_from_auth
@@ -45,6 +46,8 @@ def track(user, question_id=None):
     value = request.args.get("value", None)
     user.answers.append(Answer(user, question, value))
     user.save()
+    login_user(user)
+    flash(u"""You should go to 'Home' and change your password. Once you set your password, you can then log in to Marion Health from the homepage!""", '')
     flash(u"""You've reported a {} out of {} for question '{}'""".format(value, question.max_value, question.name), 'info')
     return redirect(url_for('.show', auth_token=user.auth_token))
 

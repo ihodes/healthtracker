@@ -10,27 +10,18 @@ $(function(){
             data: {auth_token: "{{auth_token}}"}})
           .done(function(){window.location = "";});
   });
-
-
-  $(".update-user").click(function(event){
-    console.log($("form").serialize());
-    $.ajax("/users/{{user.id}}",
-      {
-       type: "PUT",
-       data: $("form").serialize(),
-       success: function () { window.location = ""; },
-      });
-    return false;
-  });
 });
 </script>
 {% endblock %}
 
+{% from 'macros/admin_nav.html' import admin_nav with context %}
 {% block body %}
-<div class="container ">
+<div class="container">
+  {{ admin_nav("") }}
+  {{ flash() }}
   <div class="well">
     <h2>{{ user.name or "" }}{{ " :: " if user.name else "" }}{{ user.email }}</h2>
-    <form class="form-horizontal">
+    <form class="form-horizontal" action="{{ url_for('user.update', __METHOD_OVERRIDE__='PUT', user_id=user.id, next=url_for('user.edit', user_id=user.id)) }}" method="POST">
       <input type="text" name="name" placeholder="full name" value="{{ user.name or "" }}">
       <input type="hidden" name="auth_token" value="{{ auth_token }}">
       <select type="text" name="timezone">

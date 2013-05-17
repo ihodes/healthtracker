@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from functools import wraps
 from flask import redirect, url_for, request, flash, current_app
+from flask.ext.login import login_required, current_user
 
 from .database import User
 
@@ -56,3 +57,15 @@ def register_api(app, view, endpoint, url, pk='id', pk_type='int'):
     app.add_url_rule('%s<%s:%s>' % (url, pk_type, pk), view_func=view_func,
                      methods=['GET', 'PUT', 'DELETE'])
 
+
+
+def admin_required(view):
+    @wraps(view)
+    @login_required
+    def secured_view(*args, **kwargs):
+        if not current_user.is_admin:
+            flash("ERROR: Not administrator.", 'error')
+            return redirect(url_for('frontend.messages'))
+        else:
+            return view(*args, **kwargs)
+    return secured_view

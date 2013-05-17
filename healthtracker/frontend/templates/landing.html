@@ -5,19 +5,17 @@
   <header>
     <div class="logo" title="A Marion berry."></div>
   </header>
-
+  {{ flash(False) }}
   <section class="sign-up">
     <h1>Marion Health</h1>
     <p class="lead">Start feeling better, today.</p>
-    
-      {% include "macros/flash.html" %}
-
       <form action="/users/sign-up" method="post" class="form">
         <label>Your Email</label>
         <input type="text" placeholder="youremail@example.com" name="email" autofocus/>  
         <br>
         <input type="submit" name="submit" 
                value="Start Feeling Better" class="btn btn-success  btn-large"/>
+        <a href="{{ url_for('user.login') }}" class="btn">Login Here</a>
       </form>
   </section>
 
@@ -46,7 +44,7 @@
       These points are just for fun right now, but we hope to add rewards from sponsors in the near future. We'll also be allowing people with different illnesses to compete with one another; who takes the best care of themselves! In the meantime, you can compete against yourself!
     </p>
   </section>
-  
+
   <footer>
     <ul class="pull-right">
       <li><a href="/privacy-policy">Privacy Policy</a></li>
@@ -56,5 +54,6 @@
     </ul>
   </footer>
 </div>
+
 
 {% endblock %}

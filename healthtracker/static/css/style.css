@@ -55,3 +55,12 @@ section.question textarea { width: 480px; }
 
 /* MACROS */
 #admin-nav { margin-top: 7px; }
+
+/* Login */
+.login-container {
+    width: 220px; 
+    margin: 80px auto;
+    padding: 20px 40px;
+    background: #f9f9f9;
+    border-radius: 3px; 
+}

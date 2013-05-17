@@ -4,6 +4,8 @@ from datetime import datetime
 from .utils import random_string
 from .extensions import db
 from sqlalchemy.ext.associationproxy import association_proxy
+from flask.ext.bcrypt import check_password_hash
+from flask.ext.login import UserMixin
 
 
 class ScheduledQuestion(db.Model):
@@ -43,19 +45,21 @@ class Answer(db.Model):
                                              self.question.name)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, db.Sequence('users_id_seq'), primary_key=True)
     email = db.Column(db.String(255), unique=True)
+    encrypted_password = db.Column(db.String(60))
     auth_token = db.Column(db.String, unique=True)
     answers = db.relationship("Answer", backref="user", lazy="dynamic")
+
     is_confirmed = db.Column(db.Boolean, default=False)
     is_approved = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
 
     name = db.Column(db.Text)
     notes = db.Column(db.Text)
-    timezone = db.Column(db.String(255))
+    timezone = db.Column(db.String(60))
 
     scheduled_questions = db.relationship('ScheduledQuestion',  backref='users')
     questions = association_proxy('scheduled_questions', 'question')
@@ -97,10 +101,16 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    # For Flask-Login
+    def get_auth_token(self):
+        return self.id # TK TODO needs to be more secure than this... c.f. https://flask-login.readthedocs.org/en/latest/
+
+    def check_password(self, candidate):
+        return check_password_hash(self.encrypted_password, candidate)
+
     # hack for now
     def wq(self):
         return sum(map(lambda a: float(a.value), self.answers.filter_by(question_id=Question.default().id).order_by('created_at ASC').all()[-7:]))/7
-
     # hack for now
     def last_30_days_str(self):
         return str(map(lambda a: int(a.value), self.answers.filter_by(question_id=Question.default().id).order_by('created_at ASC').all()[-30:]))[1:-1]

@@ -1,0 +1,18 @@
+{% macro user_nav(active) -%}
+<ul class="nav nav-tabs" id="admin-nav">
+  <li class="{{ "active" if active == "home" else "" }}">
+    <a href="{{ url_for('user.home') }}">Home</a>
+  </li>
+  <li class="{{ "active" if active == "tracker" else "" }}">
+    <a href="{{ url_for('tracker.show', auth_token=current_user.auth_token) }}">
+      Tracker
+    </a>
+  </li>
+  <!-- <li> -->
+  <!--   <a href=""></a> -->
+  <!-- </li> -->
+  <li class="pull-right">
+    <a href="{{url_for('user.logout')}}">Logout</a>
+  </li>
+</ul>
+{%- endmacro %}

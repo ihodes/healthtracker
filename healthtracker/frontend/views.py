@@ -3,7 +3,7 @@ from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort, current_app, 
                    json)
 
-
+from ..users.forms import LoginForm
 from ..utils import format_date, is_valid_email
 
 
@@ -13,7 +13,7 @@ frontend = Blueprint('frontend', __name__, template_folder='templates')
 
 @frontend.route('/')
 def landing():
-    return render_template("landing.html")
+    return render_template("landing.html", login_form=LoginForm())
 
 @frontend.route('/learn-more', methods=['POST', 'GET'])
 def learn_more():

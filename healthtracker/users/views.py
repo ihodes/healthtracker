@@ -1,20 +1,46 @@
 # -*- coding: utf-8 -*-
 from flask import (Blueprint, render_template, redirect, url_for, request, flash,
                    current_app)
+from flask.ext.login import login_required, login_user, logout_user, current_user
+from flask.ext.bcrypt import generate_password_hash
 import pytz
 
 from ..database import User, Question, ScheduledQuestion
 from ..extensions import db
 from ..utils import format_date, is_valid_email
 from ..view_helpers import (get_user_by_auth, get_user_by_id,
-                            require_admin, provide_user_from_auth,
+                            admin_required, require_admin, provide_user_from_auth,
                             provide_user_from_id)
 from .. import mailer
 
-from .forms import ScheduledQuestionForm
+from .forms import ScheduledQuestionForm, LoginForm, PasswordForm
 
 
 user = Blueprint('user', __name__, url_prefix='/users', template_folder='templates')
+
+
+@user.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_active(): return redirect(url_for('.home'))
+    form = LoginForm()
+    if request.method == 'POST':
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            current_app.logger.info(form.password.data)
+            if user.check_password(form.password.data):
+                login_user(user)
+                flash("You've been logged in.")
+                return redirect(request.args.get('next') or url_for('.home'))
+        flash(u"Invalid credentials. Please check your email and password.")
+    return render_template('login.html', login_form=form)
+
+
+@user.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("You've been logged out.")
+    return redirect(url_for('frontend.landing'))
 
 
 # User views:
@@ -45,84 +71,6 @@ def subscribe():
     return redirect(url_for('frontend.messages'))
 
 
-@user.route('/confirm-email')
-@provide_user_from_auth
-def confirm_email(user):
-    if user is not None:
-        user.confirm()
-        flash(u"""We've confirmed your email address; you can expect an email
-                  from us after you've been approved.""", 'info')
-    return redirect(url_for('frontend.messages'))
-
-
-
-##############################
-##        Admin views      ## 
-##############################
-
-@user.route('/')
-@provide_user_from_auth
-def admin(admin):
-    if admin is None or not admin.is_admin:
-        mailer.send_admin_login()
-        return "Must be administrator. (Email sent to admin)."
-    users = User.query.all()
-    return render_template('admin.html', users=users, auth_token=admin.auth_token)
-
-
-@user.route('/<user_id>', methods=['PUT'])
-@require_admin
-def update(admin, user_id=None):
-    user = User.query.get(user_id)
-    user.name = request.values['name']
-    user.timezone = request.values['timezone']
-    user.notes = request.values['notes']
-    db.session.add(user)
-    db.session.commit()
-    return ''
-
-
-@user.route('/<user_id>/toggle_approve', methods=['POST'])
-@require_admin
-def toggle_approve(admin, user_id=None):
-    user = User.query.get(user_id)
-    if user.is_approved:
-        user.unapprove()
-    else:
-        if not user.is_confirmed:
-            user.confirm()
-        user.approve()
-        mailer.send_approval_email(user)
-    return redirect(url_for('.admin', auth_token=admin.auth_token))
-
-
-@user.route('/<user_id>/reset_auth', methods=['POST'])
-@require_admin
-def reset_auth(admin, user_id=None):
-    user = User.query.get(user_id)
-    user.reset_auth_token()
-    return redirect(url_for('.admin', auth_token=admin.auth_token))
-
-
-@user.route('/<user_id>', methods=['DELETE'])
-@require_admin
-def delete(admin, user_id=None):
-    user = User.query.get(user_id)
-    db.session.delete(user)
-    db.session.commit()
-    return redirect(url_for('.admin', auth_token=admin.auth_token))
-
-
-@user.route('/<user_id>/send_update_email', methods=['POST'])
-@require_admin
-def update_email(admin, user_id=None):
-    user = User.query.get(user_id)
-    for sq in user.scheduled_questions:
-        if sq.notification_method == 'email': # TK TODO make this right...
-            mailer.send_update_email(user, sq.question)
-    return redirect(url_for('.admin', auth_token=admin.auth_token))
-
-
 @user.route('/unsubscribe')
 @provide_user_from_auth
 def unsubscribe(user):
@@ -134,21 +82,142 @@ def unsubscribe(user):
     return redirect(url_for('frontend.messages'))
 
 
+@user.route('/confirm-email')
+@provide_user_from_auth
+def confirm_email(user):
+    if user is not None:
+        user.confirm()
+        flash(u"""We've confirmed your email address; you can expect an email
+                  from us after you've been approved.""", 'info')
+    return redirect(url_for('frontend.messages'))
+
+
+@user.route('/home')
+@login_required
+def home():
+    user = current_user
+    password_form = PasswordForm()
+    timezones = pytz.country_timezones('US')
+    questions = Question.query.all()
+    return render_template('home.html', user=user, timezones=timezones, questions=questions,
+                           password_form=password_form)
+
+
+@user.route('/feedback', methods=['POST'])
+@login_required
+def feedback():
+    user = current_user
+    feedback = request.values.get('feedback')
+    mailer.send_email(**{'from':user.email, 'subject': "Feedback from {}".format(user.name or user.email),
+                         'text': feedback})
+    flash(u"Feedback sent–Thank you!", 'info')
+    return redirect(request.values.get('next') or url_for('.home'))
+    
+
+@user.route('/<user_id>/password', methods=['PUT', 'POST'])
+@login_required
+def change_password(user_id=None):
+    user = User.query.get(user_id)
+    form = PasswordForm()
+    if current_user.is_admin or current_user == user: # TK TODO should abstract these out into permissions
+        if form.validate_on_submit():
+            user.encrypted_password = generate_password_hash(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash("Your password has been changed.",'info')
+        else:
+            if form.password.errors: 
+                flash(form.password.errors[0], 'error')
+            else:
+                current_app.logger.info(form.errors)
+    return redirect(request.values.get('next') or url_for('.home'))
+    
+
+##############################
+##        Admin views      ## 
+##############################
+
+@user.route('/')
+@admin_required
+def admin():
+    users = User.query.all()
+    return render_template('admin.html', users=users, auth_token=current_user.auth_token)
+
+
+@user.route('/<user_id>', methods=['PUT'])
+@login_required
+def update(user_id=None):
+    user = User.query.get(user_id)
+    if current_user.is_admin or current_user == user:
+        user.name = request.values['name']
+        user.timezone = request.values['timezone']
+        user.notes = request.values['notes']
+        db.session.add(user)
+        db.session.commit()
+        flash("Your profile has been updated.", 'info')
+        return redirect(request.values.get('next') or url_for('.home'))
+    else:
+        flash("Not authorized to edit this user.",'info')
+        return redirect(request.values.get('next') or url_for('.home'))
+    
+
+
+@user.route('/<user_id>/toggle_approve', methods=['POST'])
+@admin_required
+def toggle_approve(admin, user_id=None):
+    user = User.query.get(user_id)
+    if user.is_approved:
+        user.unapprove()
+    else:
+        if not user.is_confirmed:
+            user.confirm()
+        user.approve()
+        mailer.send_approval_email(user)
+    return redirect(url_for('.admin', auth_token=current_user.auth_token))
+
+
+@user.route('/<user_id>/reset_auth', methods=['POST'])
+@admin_required
+def reset_auth(user_id=None):
+    user = User.query.get(user_id)
+    user.reset_auth_token()
+    return redirect(url_for('.admin', auth_token=current_user.auth_token))
+
+
+@user.route('/<user_id>', methods=['DELETE'])
+@admin_required
+def delete(user_id=None):
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('.admin', auth_token=current_user.auth_token))
+
+
+@user.route('/<user_id>/send_update_email', methods=['POST'])
+@admin_required
+def update_email(user_id=None):
+    user = User.query.get(user_id)
+    for sq in user.scheduled_questions:
+        if sq.notification_method == 'email': # TK TODO make this right...
+            mailer.send_update_email(user, sq.question)
+    return redirect(url_for('.admin', auth_token=current_user.auth_token))
+
+
 @user.route('/<user_id>/edit')
-@require_admin
-def edit(admin, user_id=None):
+@admin_required
+def edit(user_id=None):
     user = User.query.filter_by(id=user_id).first()
     questions = Question.query.all()
     timezones = pytz.country_timezones('US')
     NOTIFICATIONS = ['none', 'email']
     return render_template('edit.html', user=user, questions=questions,
-                           auth_token=admin.auth_token, timezones=timezones,
+                           auth_token=current_user.auth_token, timezones=timezones,
                            notifications=NOTIFICATIONS, ScheduledQuestionForm=ScheduledQuestionForm)
 
 
 @user.route('/<user_id>/scheduled_question', methods=['POST', 'PUT', 'DELETE'])
-@require_admin
-def scheduled_question(admin, user_id=None):
+@admin_required
+def scheduled_question(user_id=None):
     user = User.query.get(user_id)
     form = ScheduledQuestionForm()
 
@@ -170,4 +239,4 @@ def scheduled_question(admin, user_id=None):
         db.session.add(scheduled_question)
         db.session.commit()
 
-    return redirect(url_for('.edit', user_id=user_id, auth_token=admin.auth_token))
+    return redirect(url_for('.edit', user_id=user_id, auth_token=current_user.auth_token))

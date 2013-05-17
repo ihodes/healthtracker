@@ -6,7 +6,7 @@ from flask.views import MethodView
 
 from ..database import Question
 from ..extensions import db
-from ..view_helpers import (require_admin, register_api)
+from ..view_helpers import (admin_required, register_api)
 
 from .forms import QuestionForm
 
@@ -17,17 +17,17 @@ question = Blueprint('question', __name__, url_prefix='/questions',
 
 
 class QuestionAPI(MethodView):
-    decorators = [require_admin]
+    decorators = [admin_required]
 
-    def get(self, admin, question_id=None):
+    def get(self, question_id=None):
         form = QuestionForm()
         if question_id:
             question = Question.query.get(question_id)
             return render_template('edit.html', question=question)
         questions = Question.query.all()
-        return render_template('index.html', questions=questions, auth_token=admin.auth_token, form=form)
+        return render_template('index.html', questions=questions, form=form)
 
-    def post(self, admin):
+    def post(self):
         form = QuestionForm()
         if form.validate():
             question = Question()
@@ -35,7 +35,7 @@ class QuestionAPI(MethodView):
             db.session.add(question)
             db.session.commit()
             flash("Created question: {}.".format(question.name), 'info')
-        return redirect(url_for('.question_api', auth_token=admin.auth_token))
+        return redirect(url_for('.question_api'))
 
     def delete(self, admin, question_id=None):
         question = Question.query.get(question_id)

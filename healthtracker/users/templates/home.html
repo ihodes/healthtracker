@@ -1,0 +1,143 @@
+{% extends "layouts/layout.html" %}
+{% block head %}
+<script>
+$(function(){
+
+$('#show-pw-form').on('click', function(){
+  $(this).hide();
+  $('#change-pw-form').fadeIn();
+});
+
+$('#change-pw-form button.close').on('click', function(){
+  $('#show-pw-form').show();
+  $('#change-pw-form').fadeOut();
+});
+
+});
+</script>
+{% endblock %}
+
+{% from 'macros/user_nav.html' import user_nav with context %}
+{% block body %}
+<div class="container">
+  {{ user_nav("home") }}
+  {{ flash() }}
+
+  <div class="row span12">
+    <h2>Welcome back, {{ user.name.split()[0] or user.email }}. <small>{{ "("+user.email+")" if user.name else '' }}</small></h2>
+    <br>
+    <div class="span7">
+      <h3>&nbsp;</h3>
+      <form class="form-horizontal" action="{{ url_for('user.update', __METHOD_OVERRIDE__='PUT', user_id=user.id) }}" method="POST">
+        <div class="control-group">
+          <label class="control-label">Name</label>
+          <div class="controls">
+            <input type="text" name="name" placeholder="Name" value="{{ user.name or "" }}">
+            <span class="help-inline"><i class="icon-user"></i></span>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label">Timezone</label>
+          <div class="controls">
+            <select type="text" name="timezone">
+              <option>~</option>
+              {% for timezone in timezones %}
+              <option {% if timezone == user.timezone -%}selected="selected"{%- endif %}>{{ timezone }}</option>
+              {% endfor %}
+            </select>
+            <span class="help-inline"><i class="icon-time"></i></span>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label">Condition & Dx.</label>
+          <div class="controls">
+            <textarea name="notes" placeholder="notes/condition">{{ user.notes or "" }}</textarea>
+            <span class="help-inline"><i class="icon-heart"></i></span>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <div class="controls">
+            <button class="btn">Update Profile</button>
+            <a id="show-pw-form" style="padding-left: 13px;">Change Password</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="span4">
+      <h3>Feedback</h3>
+      <p class="muted">Your feedback is valuable to us: we read everything you send, and will get back to you within a day or two.</p>
+      <form class="form-vertical" action="{{ url_for('user.feedback') }}" method="POST">
+        <div class="control-group">
+          <div class="controls">
+            <textarea type="text" name="feedback" class="span4" rows=4 placeholder="Enter your feedback here..."></textarea>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <div class="controls">
+            <button class="btn">Send Feedback</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row span12">
+    <h3>Questions</h3>
+    <p class="muted">Questions get sent out via email at <b>9:00PM EST</b>. Soon, you will be able to make your own questions to track, and schedule when and how they get sent out. You'll be able to answer questions via email, text, and a simple web interface. </p>
+    <table id="questions" class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Question</th>
+          <th></th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        {% for sq in user.scheduled_questions %}
+        {% set question = sq.question %}
+        <tr>
+          <td>
+            {{ question.name }}
+          </td>
+          <td>
+            {{ question.text }}
+          </td>
+          <td>Sent via email every day at 9:00 PM EST</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row span12 well" id="change-pw-form" style="display:none; margin-top: 47px; ">
+    <button type="button" class="close">&times;</button>
+    <h3>Change your password</h3>
+    <form action="{{ url_for('user.change_password', user_id=user.id, __METHOD_OVERRIDE__='PUT') }}" method="POST" class="form-vertical">
+      <div class="control-group">
+        <div class="controls">
+          {{ password_form.password(placeholder="new password") }}
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          {{ password_form.confirm(placeholder="confirm password") }}
+        </div>
+      </div>
+      {{ password_form.hidden_tag() }}
+
+      <div class="control-group">
+        <div class="controls">
+          <button class="btn btn-warning"> Confirm Change </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

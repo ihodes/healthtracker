@@ -1,0 +1,29 @@
+{% extends "layouts/layout.html" %}
+
+{% block body %}
+<div class="login-container">
+  <h3>Login to Marion</h3>
+  {{ flash(False) }}
+  <form method="POST" action="{{ url_for('user.login') }}" class="form-vertical">
+    {{ login_form.hidden_tag() }}
+
+    <div class="control-group">
+      <div class="controls">
+        {{ login_form.email(placeholder="email@example.com") }}
+      </div>
+    </div>
+    
+    <div class="control-group">
+      <div class="controls">
+        {{ login_form.password(placeholder="password") }}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        <input type="submit" value="Login" class="btn btn-primary btn-block">
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

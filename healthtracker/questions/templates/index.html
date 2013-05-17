@@ -14,7 +14,7 @@ $(function(){
 {% block body %}
 <div class="container">
   {{ admin_nav("questions") }}
-  {% include "macros/flash.html" %}
+  {{ flash() }}
   <table id="questions" class="table">
     <thead>
       <tr>

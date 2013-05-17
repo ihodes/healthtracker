@@ -38,14 +38,14 @@
 </style>
 {% endblock %}
 
+{% from 'macros/user_nav.html' import user_nav with context %}
 {% block body %}
-
 <div class="container">
-  
+  {{ user_nav("tracker") }}
   <h3>Welcome back, {{ user.name or user.email }}.</h3>
   
   <div class="tracker-holder">
-    {%- include "macros/flash.html" -%}
+    {{ flash() }}
 
     {%- for question in questions -%}
     <div class="status-report">
