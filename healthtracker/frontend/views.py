@@ -4,7 +4,7 @@ from flask import (Blueprint, render_template, current_app, request,
                    json)
 
 from ..users.forms import LoginForm
-from ..utils import format_date, is_valid_email
+from ..utils import is_valid_email
 
 
 

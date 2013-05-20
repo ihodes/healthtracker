@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, current_app
+from flask.ext.login import current_user
 from werkzeug import url_decode
+import pytz
+from datetime import datetime
+
 
 from .extensions import db, lm
 from .middleware import MethodRewriteMiddleware
-from .utils import format_date
+from .utils import localized_date
 from .database import User
 
 # Blueprints
@@ -78,5 +82,9 @@ def _initialize_logging(app):
 
 def _initialize_template_filters(app):
     @app.template_filter()
-    def format_date(value):
-        return pretty_date(value)
+    def fmt_localized_time(dt):
+        tz = current_user.timezone
+        utc = ' GMT' if tz else ''
+        if tz:
+            dt = datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond, tzinfo=pytz.utc)
+        return dt.strftime("%A %B %d, %Y at %I:%M %p"+utc)

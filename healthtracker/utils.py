@@ -10,7 +10,7 @@ def random_string(size=32):
     return ''.join(random.choice(chars) for __ in range(size))
 
 
-def format_date(datetime):
+def localized_date(datetime):
     year = datetime.year
     month = datetime.month
     day = datetime.day

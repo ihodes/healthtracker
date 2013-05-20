@@ -7,7 +7,7 @@ import pytz
 
 from ..database import User, Question, ScheduledQuestion
 from ..extensions import db
-from ..utils import format_date, is_valid_email
+from ..utils import is_valid_email
 from ..view_helpers import (get_user_by_auth, get_user_by_id,
                             admin_required, require_admin, provide_user_from_auth,
                             provide_user_from_id)
@@ -26,7 +26,6 @@ def login():
     if request.method == 'POST':
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            current_app.logger.info(form.password.data)
             if user.check_password(form.password.data):
                 login_user(user)
                 flash("You've been logged in.")
@@ -132,6 +131,7 @@ def change_password(user_id=None):
                 current_app.logger.info(form.errors)
     return redirect(request.values.get('next') or url_for('.home'))
     
+
 
 ##############################
 ##        Admin views      ## 
