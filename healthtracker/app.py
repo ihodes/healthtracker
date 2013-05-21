@@ -82,9 +82,8 @@ def _initialize_logging(app):
 
 def _initialize_template_filters(app):
     @app.template_filter()
-    def fmt_localized_time(dt):
-        tz = current_user.timezone
-        utc = ' GMT' if tz else ''
-        if tz:
-            dt = datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond, tzinfo=pytz.utc)
-        return dt.strftime("%A %B %d, %Y at %I:%M %p"+utc)
+    def fmt_time(dt):
+        now = datetime.now()
+        dt = datetime(now.year, now.month, now.day, dt.hour, dt.minute, dt.second, dt.microsecond)
+        ds = dt.strftime("%I:%M %p")
+        return ds.lstrip('0')

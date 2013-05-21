@@ -91,7 +91,7 @@ $(function(){
             </td>
             <td>
 
-              <form action="/users/{{user.id}}/scheduled_question?__METHOD_OVERRIDE__=PUT" method="POST" style="margin-top: 20px;">
+              <form action="/users/scheduled_question?__METHOD_OVERRIDE__=PUT" method="POST" style="margin-top: 20px;">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 {% set form = ScheduledQuestionForm(obj=sq) %}
                 {{ form.id }}
@@ -99,7 +99,7 @@ $(function(){
                 {{ form.notification_method }}
                 <div class="btn-group">
                   <input type="submit" value="Update" class="btn btn-primary">
-                  <a data-action-url="/users/{{user.id}}/scheduled_question?auth_token={{auth_token}}&scheduled_question_id={{sq.id}}"
+                  <a data-action-url="/users/scheduled_question?auth_token={{auth_token}}&scheduled_question_id={{sq.id}}"
                      data-action-method="DELETE"
                      data-confirm="Are you sure you want to remove this notification?"
                      class="btn btn-danger">
@@ -126,11 +126,12 @@ $(function(){
               {{ question.text }}
             </td>
             <td>
-              <form action="/users/{{user.id}}/scheduled_question?" method="POST" style="margin-top: 20px;">
+              <form action="/users/scheduled_question?" method="POST" style="margin-top: 20px;">
                 <input type="hidden" name="auth_token" value="{{auth_token}}">
                 {% set form = ScheduledQuestionForm(question_id=question.id, user_id=user.id) %}
                 {{ form.hidden_tag() }}
                 {{ form.notification_method }}
+                <input type="time" value="{{ form.scheduled_for.default }}" style="width: 100px" name="scheduled_for">&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="submit" value="Add Notification" class="btn btn-primary">
               </form>
             </td>

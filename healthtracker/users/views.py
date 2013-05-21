@@ -99,7 +99,7 @@ def home():
     timezones = pytz.country_timezones('US')
     questions = Question.query.all()
     return render_template('home.html', user=user, timezones=timezones, questions=questions,
-                           password_form=password_form)
+                           password_form=password_form, ScheduledQuestionForm=ScheduledQuestionForm)
 
 
 @user.route('/feedback', methods=['POST'])
@@ -184,7 +184,7 @@ def reset_auth(user_id=None):
     return redirect(url_for('.admin', auth_token=current_user.auth_token))
 
 
-@user.route('/<user_id>', methods=['DELETE'])
+@user.route('/<int:user_id>', methods=['DELETE'])
 @admin_required
 def delete(user_id=None):
     user = User.query.get(user_id)
@@ -215,21 +215,21 @@ def edit(user_id=None):
                            notifications=NOTIFICATIONS, ScheduledQuestionForm=ScheduledQuestionForm)
 
 
-@user.route('/<user_id>/scheduled_question', methods=['POST', 'PUT', 'DELETE'])
-@admin_required
-def scheduled_question(user_id=None):
-    user = User.query.get(user_id)
+@user.route('/scheduled_question', methods=['POST', 'PUT'])
+@login_required
+def scheduled_question():
     form = ScheduledQuestionForm()
+    user = User.query.get(form.data.get('user_id'))
 
-    if request.method == 'DELETE':
-        sq_id = request.values.get('scheduled_question_id')
-        scheduled_question = ScheduledQuestion.query.get(sq_id)
-        db.session.delete(scheduled_question)
-        db.session.commit()
-        return ''
+    if not (current_user.is_admin or current_user == user):
+        flash("Not authorized.",'error')
+        return redirect(url_for('frontend.messages'))
+
     elif request.method == 'POST' and form.validate():
         scheduled_question = ScheduledQuestion()
         form.populate_obj(scheduled_question)
+        current_app.logger.info(request.form)
+        current_app.logger.info(form.data)
         scheduled_question.id = None
         db.session.add(scheduled_question)
         db.session.commit()
@@ -239,4 +239,22 @@ def scheduled_question(user_id=None):
         db.session.add(scheduled_question)
         db.session.commit()
 
-    return redirect(url_for('.edit', user_id=user_id, auth_token=current_user.auth_token))
+    return redirect(url_for('.home'))
+
+
+# TK SECURE: can this be CSRF'd? How to prevent this since I can't include a csrf token in a DELETE body (evidently?) query string param?
+@user.route('/scheduled_question/<scheduled_question_id>', methods=['POST', 'DELETE'])
+@login_required
+def delete_scheduled_question(scheduled_question_id=None):
+    scheduled_question = ScheduledQuestion.query.get(scheduled_question_id)
+
+    if not (current_user.is_admin or current_user == scheduled_question.user):
+        flash("Not authorized.",'error')
+        return redirect(url_for('frontend.messages'))
+
+    if request.method == 'DELETE':
+        sq_id = request.values.get('scheduled_question_id')
+        db.session.delete(scheduled_question)
+        db.session.commit()
+
+    return redirect(url_for('.home'))

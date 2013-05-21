@@ -14,6 +14,7 @@ class ScheduledQuestionForm(Form):
     notification_method = SelectField('notification_method',
                                       choices=[('none', 'None'), ('email', 'Email')],
                                       validators=[Optional()])
+    scheduled_for = TextField('scheduled_for', default="20:00", validators=[Optional()])
 
 
 class LoginForm(Form):

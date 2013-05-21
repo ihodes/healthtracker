@@ -5,6 +5,54 @@ $(function(){
 $('#change-pw-modal .btn-primary').on('click', function(){
   $('#change-pw-form').submit();
 });
+
+
+$('#edit-profile').on('click', function(){
+  $(this).fadeOut(100, function(){ $('#remove-edit-profile').fadeIn(100);});
+  $('#profile-fields').slideDown();
+});
+
+$('#remove-edit-profile').on('click', function(){
+  $(this).fadeOut(100, function(){ $('#edit-profile').fadeIn(100);});
+  $('#profile-fields').slideUp();
+});
+
+$('#profile-fields .close').on('click', function(){
+  $('#profile-fields').slideUp();
+  $('#edit-profile').fadeIn(100);
+});
+
+$('i').tooltip();
+
+$('.icon-edit').on('click', function(){
+  $('.icon-edit').fadeIn(100);
+  var editTr = $(this).parent().parent().parent().next();
+  $('.edit-scheduled-question').fadeOut(100);
+  $(editTr).show();
+  $(this).fadeOut(100, function(){
+    $(this).parent().siblings('.sq-edit-close').fadeIn(100);
+  });
+});
+
+$('.sq-edit-close').on('click', function(){
+  var editTr = $(this).parent().parent().next();
+  $(editTr).hide();
+  $(this).fadeOut(100, function(){$('.icon-edit').fadeIn(100);});
+  
+});
+
+$('form .icon-remove').on('click', function(){$(this).parent().submit()});
+
+$('#show-add-question').on('click', function(){
+  $(this).fadeOut(100, function(){ $('#remove-add-question').fadeIn(100);});
+  $('#add-question-controls').slideDown();
+});
+
+$('#remove-add-question').on('click', function(){
+  $(this).fadeOut(100, function(){  $('#show-add-question').fadeIn(100);});
+  $('#add-question-controls').slideUp();
+});
+
 });
 </script>
 {% endblock %}
@@ -15,19 +63,29 @@ $('#change-pw-modal .btn-primary').on('click', function(){
   {{ user_nav("home") }}
   {{ flash() }}
   <div class="row span12">
-    <h2>Welcome back, {{ user.name.split()[0] or user.email }}. <small>{{ "("+user.email+")" if user.name else '' }}</small></h2>
-    <br>
-    <div class="span7">
-      <h3>&nbsp;</h3>
-      <form class="form-horizontal" action="{{ url_for('user.update', __METHOD_OVERRIDE__='PUT', user_id=user.id) }}" method="POST">
-        <div class="control-group">
+    <h2>
+      Welcome back, {{ user.name.split()[0] or user.email }}! 
+      <small>{{ "("+user.email+")" if user.name else '' }} <span id="edit-profile">—
+          <a href="#" style="font-size:12px;">Edit your profile</a></span>
+      </small>
+      <small id="remove-edit-profile" style="display: none;">— <a href="#" style="font-size: 12px;">Close</a></small>
+    </h2>
+
+
+
+    <!-- PROFILE -->
+
+    <div id="profile-fields" style="display: none;" class="well row">
+      <form class="form-vertical" action="{{ url_for('user.update', __METHOD_OVERRIDE__='PUT', user_id=user.id) }}" method="POST"
+            style="margin-top: 20px;">
+        <div class="control-group span3">
           <label class="control-label">Name</label>
           <div class="controls">
             <input type="text" name="name" placeholder="Name" value="{{ user.name or "" }}">
           </div>
         </div>
         
-        <div class="control-group">
+        <div class="control-group span3">
           <label class="control-label">Timezone</label>
           <div class="controls">
             <select type="text" name="timezone">
@@ -39,17 +97,18 @@ $('#change-pw-modal .btn-primary').on('click', function(){
           </div>
         </div>
         
-        <div class="control-group">
+        <div class="control-group span3">
           <label class="control-label">Condition & Dx.</label>
           <div class="controls">
-            <textarea name="notes" placeholder="notes/condition">{{ user.notes or "" }}</textarea>
+            <textarea name="notes" placeholder="notes/condition" rows=1>{{ user.notes or "" }}</textarea>
           </div>
         </div>
-        
-        <div class="control-group">
+
+        <div class="control-group span2">
           <div class="controls">
-            <button class="btn">Update Profile</button>
-            <a style="padding-left: 13px;" href="#change-pw-modal" data-toggle="modal">Change Password</a>
+            <button class="btn" style="margin-top: 24px;">Update Profile</button>
+            <br>
+            <a style="display: inline-block; margin-top: 5px;" href="#change-pw-modal" data-toggle="modal">Change Password</a>
           </div>
         </div>
       </form>
@@ -83,34 +142,45 @@ $('#change-pw-modal .btn-primary').on('click', function(){
         <a class="btn btn-primary">Save Password</a>
       </div>
     </div>
-
-    <div class="span4">
-      <h3>Feedback</h3>
-      <p class="muted">Your feedback is valuable to us: we read everything you send, and will get back to you within a day or two.</p>
-      <form class="form-vertical" action="{{ url_for('user.feedback') }}" method="POST">
-        <div class="control-group">
-          <div class="controls">
-            <textarea type="text" name="feedback" class="span4" rows=4 placeholder="Enter your feedback here..."></textarea>
-          </div>
-        </div>
-        
-        <div class="control-group">
-          <div class="controls">
-            <button class="btn">Send Feedback</button>
-          </div>
-        </div>
-      </form>
-    </div>
   </div>
 
+
+
+  <!-- QUESTIONS -->
+
   <div class="row span12">
-    <h3>Questions</h3>
-    <p class="muted">Questions get sent out via email at <b>9:00PM EST</b>. Soon, you will be able to make your own questions to track, and schedule when and how they get sent out. You'll be able to answer questions via email, text, and a simple web interface.</p>
+    <h4>Your Questions 
+      <small id="show-add-question">— <a href="#" style="font-size: 12px;">Add a question</a></small>
+      <small id="remove-add-question" style="display: none;">— <a href="#" style="font-size: 12px;">Close</a></small>
+    </h4>
+    <div id="add-question-controls" style="display:none;margin-left:125px;position: relative;" class="span10">
+      <div class="span5 pull-left">
+        <p class="muted">Do we already have the question you're looking for?</p>
+        <form class="form-search">
+          <div class="input-append">
+            <input type="text" class="span3 search-query">
+            <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
+          </div>
+        </form>
+      </div>
+      <div class="span1 pull-left">
+        <br>
+        <b style="font-size:22px;">OR</b>
+      </div>
+      <div class="span3 pull-left">
+        <p class="muted">Create your own question.</p>
+        <form>
+          <div>
+            <button type="submit" class="btn">Create Question <i class="icon-pencil"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
     <table id="questions" class="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Question</th>
+          <th style="width: 140px;"></th>
+          <th style="width: 450px;"></th>
           <th></th>
         </tr>
       </thead>
@@ -118,6 +188,7 @@ $('#change-pw-modal .btn-primary').on('click', function(){
       <tbody>
         {% for sq in user.scheduled_questions %}
         {% set question = sq.question %}
+        {% set form = ScheduledQuestionForm(obj=sq) %}
         <tr>
           <td>
             {{ question.name }}
@@ -125,9 +196,70 @@ $('#change-pw-modal .btn-primary').on('click', function(){
           <td>
             {{ question.text }}
           </td>
-          <td>Sent via email every day at 9:00 PM EST</td>
+          <td>
+            <span style="display: inline-block; width: 230px;">
+              {% if sq.notification_method != 'none' %}
+              Sending via <b>{{ sq.notification_method }}</b> daily at <b>{{ sq.scheduled_for | fmt_time }}</b>
+              {% else %}
+              No notification scheduled.
+              {% endif %}
+            </span>
+            <form action="/users/scheduled_question/{{ sq.id }}?__METHOD_OVERRIDE__=DELETE" method="POST"
+                  style="display:inline;">
+              <i class="icon-remove" style="margin-left: 20px;" data-confirm="Are you sure you wish to remove this notification? The data associated will be saved. If this notification if annoying you, you could just set the notification type to 'none'."
+                 data-title="Remove this notification." data-toggle="tooltip"></i>
+            </form>
+            <a href="#">
+              <i class="icon-edit" style="margin-left: 3px;" 
+                 data-title="Edit the time and type of notification." data-toggle="tooltip"></i>
+            </a>
+            <a href="#" class="sq-edit-close" style="display: none; font-size: 12px;">close</a>
+          </td>
+        </tr>
+
+        <tr style="display:none;" class="edit-scheduled-question">
+          <td colspan=3 style="background: #eaeaea;">
+            <form class="form-horizontal"
+                  action="/users/scheduled_question?__METHOD_OVERRIDE__=PUT"
+                  method="POST"
+                  style="display:inline; width: 560px; margin-left: 150px;">
+              {{ form.hidden_tag() }}
+              {{ form.id }}
+              Send via &nbsp;&nbsp;&nbsp;&nbsp;
+              {{ form.notification_method(style="width:140px;") }} &nbsp;&nbsp;&nbsp;&nbsp; every day at &nbsp;&nbsp;&nbsp;
+              <input type="time" value="{{ sq.scheduled_for }}" style="width: 100px" name="scheduled_for">&nbsp;&nbsp;&nbsp;&nbsp;
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </td>
         </tr>
         {% endfor %}
+
+        <!-- <tr> -->
+        <!--   <td colspan=3> -->
+        <!--     <form> -->
+        <!--       <input type="text" placeholder="the question name"> -->
+        <!--       <input type="text" class="span5" placeholder="the question text"> -->
+        <!--       <div class="pull-right"> -->
+        <!--         Send via -->
+        <!--         <br> -->
+        <!--         <select> -->
+        <!--           <option>Email</option> -->
+        <!--           <option>Text Message</option> -->
+        <!--           <option>Online Only</option> -->
+        <!--         </select> -->
+        <!--         <br> -->
+        <!--         every day at  -->
+        <!--         <br> -->
+        <!--         <input type="time" value="20:00"> -->
+        <!--         <br> -->
+        <!--       </div> -->
+        <!--       <p class="muted"> -->
+        <!--         Questions you make are private: no one else can see them unless you make them public (you can do that after you create it). -->
+        <!--       </p> -->
+        <!--       <input type="submit" class="btn btn-primary" value="Create Question"> -->
+        <!--     </form> -->
+        <!--   </td> -->
+        <!-- </tr> -->
       </tbody>
     </table>
   </div>
