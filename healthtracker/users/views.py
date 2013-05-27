@@ -226,20 +226,25 @@ def scheduled_question():
     if not (current_user.is_admin or current_user == user):
         flash("Not authorized.",'error')
         return redirect(url_for('frontend.messages'))
+    
 
-    elif request.method == 'POST' and form.validate():
+    if not form.validate():
+        flash('Errors:'+str(form.errors), 'error')
+    elif request.method == 'POST':
         scheduled_question = ScheduledQuestion()
         form.populate_obj(scheduled_question)
-        current_app.logger.info(request.form)
-        current_app.logger.info(form.data)
         scheduled_question.id = None
         db.session.add(scheduled_question)
         db.session.commit()
-    elif request.method == 'PUT' and form.validate():
+    elif request.method == 'PUT':
         scheduled_question = ScheduledQuestion.query.get_or_404(request.form.get('id'))
         form.populate_obj(scheduled_question)
-        db.session.add(scheduled_question)
-        db.session.commit()
+        # TK hack fix
+        if scheduled_question.scheduled_for == '':
+            flash('A question must be scheduled for a certain time (but if you\'d like to stop recieving notifications for a question, you can just click the \'x\' button next to the question to remove it, or set the notification type to \'None\'!)','error')
+        else:
+            db.session.add(scheduled_question)
+            db.session.commit()
 
     return redirect(url_for('.home'))
 

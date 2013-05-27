@@ -49,13 +49,28 @@ def send_update_email(user, question):
     status_update_text = [question.text]
     status_update_links = []
 
-    for value in range(question.min_value, question.max_value+1)[::-1]:
-        tracker_url = status_update_url(user, question, value)
-        status_update_links.append({'text': '{} out of {}'.format(value, question.max_value),
+    # TK HACK  hacky way of having multi dispatch of emails on question type
+    if question.qtype == 'multi_numeric':
+        for value in range(question.min_value, question.max_value+1)[::-1]:
+            tracker_url = status_update_url(user, question, value)
+            status_update_links.append({'text': '{} out of {}'.format(value, question.max_value),
+                                        'link': tracker_url})
+            status_update_text.append("{0}: {1}".format(value, tracker_url))
+    elif question.qtype == 'numeric':
+        tracker_url = status_update_url(user, question, None) # can't update via email... so
+        status_update_links.append({'text': 'Update Status Online',
                                     'link': tracker_url})
-        status_update_text.append("{0}: {1}".format(value, tracker_url))
+        status_update_text.append("Update Status Online: {}".format(tracker_url))
+    elif question.qtyp == 'yesno':
+        for value in ['yes', 'no']:
+            tracker_url = status_update_url(user, question, 0 if value == 'no' else 1)
+            status_update_links.append({'text': '{}'.format(value),
+                                        'link': tracker_url})
+            status_update_text.append("{0}: {1}".format(value, tracker_url))
+    
     status_update_text.append("\n\n\n Unsubscribe: "+unsubscribe_url(user))
     text = "\n\n".join(status_update_text)
+    
 
     html = render_template('emails/status_update.html',
                            question_text=question.text,
@@ -92,9 +107,13 @@ def send_simple_email(subject, message, email):
 
 
 def status_update_url(user, question, value):
-    url_base = "http://{0}/tracker/track/{1}/?auth_token={2}&value={3}"
     auth = user.auth_token
-    return url_base.format(current_app.config['HOST_NAME'], question.id, auth, value)
+    if value is None:
+        url_base = "http://{0}/tracker/?auth_token={1}"
+        return url_base.format(current_app.config['HOST_NAME'], auth)
+    else:
+        url_base = "http://{0}/tracker/track/{1}/?auth_token={2}&value={3}"
+        return url_base.format(current_app.config['HOST_NAME'], question.id, auth, value)
 
 
 def unsubscribe_url(user):

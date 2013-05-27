@@ -3,7 +3,7 @@ import flask
 from flask.ext.wtf import Form
 from wtforms import HiddenField, SelectField, IntegerField, PasswordField, TextField
 from wtforms.widgets import HiddenInput
-from wtforms.validators import Optional, Email, EqualTo, Required
+from wtforms.validators import Optional, Email, EqualTo, Required, Regexp
 
 
 
@@ -14,7 +14,7 @@ class ScheduledQuestionForm(Form):
     notification_method = SelectField('notification_method',
                                       choices=[('none', 'None'), ('email', 'Email')],
                                       validators=[Optional()])
-    scheduled_for = TextField('scheduled_for', default="20:00", validators=[Optional()])
+    scheduled_for = TextField('scheduled_for', default="20:00", validators=[Regexp('\d?\d:\d\d(:\d\d)?', message="Must enter a valid time to schedule question for."), Optional()])
 
 
 class LoginForm(Form):

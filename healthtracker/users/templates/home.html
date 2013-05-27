@@ -386,7 +386,7 @@ $(function(){
             {{ question.text }}
           </td>
           <td>
-            <span style="display: inline-block; width: 230px;">
+            <span style="display: inline-block; width: 240px;">
               {% if sq.notification_method != 'none' %}
               Sending via <b>{{ sq.notification_method }}</b> daily at <b>{{ sq.scheduled_for | fmt_time }}</b>
               {% else %}
@@ -416,7 +416,7 @@ $(function(){
               {{ form.id }}
               Send via &nbsp;&nbsp;&nbsp;&nbsp;
               {{ form.notification_method(style="width:140px;") }} &nbsp;&nbsp;&nbsp;&nbsp; every day at &nbsp;&nbsp;&nbsp;
-              <input type="time" value="{{ sq.scheduled_for }}" style="width: 100px" name="scheduled_for">&nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="time" value="{{ sq.scheduled_for }}" style="width: 100px" name="scheduled_for" step=3600>&nbsp;&nbsp;&nbsp;&nbsp;
               <button type="submit" class="btn btn-primary">Update</button>
             </form>
           </td>
