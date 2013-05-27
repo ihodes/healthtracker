@@ -47,7 +47,6 @@ def track(user, question_id=None):
     user.answers.append(Answer(user, question, value))
     user.save()
     login_user(user)
-    flash(u"You can now go to \"Your Profile\" and change your password. Once you set your password you can log in to Marion Health from the homepage!")
     flash(u"You've reported a {} out of {} for question '{}'".format(value, question.max_value, question.name), 'info')
     return redirect(url_for('.show', auth_token=user.auth_token))
 

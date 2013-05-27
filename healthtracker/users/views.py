@@ -14,6 +14,7 @@ from ..view_helpers import (get_user_by_auth, get_user_by_id,
 from .. import mailer
 
 from .forms import ScheduledQuestionForm, LoginForm, PasswordForm
+from ..questions.forms import QuestionForm
 
 
 user = Blueprint('user', __name__, url_prefix='/users', template_folder='templates')
@@ -97,9 +98,10 @@ def home():
     user = current_user
     password_form = PasswordForm()
     timezones = pytz.country_timezones('US')
-    questions = Question.query.all()
-    return render_template('home.html', user=user, timezones=timezones, questions=questions,
-                           password_form=password_form, ScheduledQuestionForm=ScheduledQuestionForm)
+    questions = Question.query.filter_by(is_public=True).all()
+    private_questions = Question.query.filter_by(is_public=False, created_by=user.id).all()
+    return render_template('home.html', user=user, timezones=timezones, questions=questions, private_questions=private_questions,
+                           password_form=password_form, ScheduledQuestionForm=ScheduledQuestionForm, QuestionForm=QuestionForm)
 
 
 @user.route('/feedback', methods=['POST'])

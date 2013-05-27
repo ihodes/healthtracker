@@ -131,13 +131,17 @@ class User(db.Model, UserMixin):
 class Question(db.Model):
     __tablename__ = "questions"
     id = db.Column(db.Integer, db.Sequence('questions_id_seq'), primary_key=True)
-    name = db.Column(db.String(255), unique=True)
+    name = db.Column(db.String(255))
+    qtype = db.Column(db.String(255))
     text = db.Column(db.Text)
 
     is_default = db.Column(db.Boolean, default=False)
+    is_public = db.Column(db.Boolean, default=False)
 
-    min_value = db.Column(db.Integer, default=0)
-    max_value = db.Column(db.Integer, default=5)
+    min_value = db.Column(db.Integer)
+    max_value = db.Column(db.Integer)
+
+    created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     def __init__(self, name=None, text=None, min_value=0, max_value=5):
         self.name = name

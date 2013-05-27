@@ -3,10 +3,11 @@ import flask
 from flask import (Blueprint, render_template, redirect, url_for, request, flash,
                    current_app)
 from flask.views import MethodView
+from flask.ext.login import current_user
 
 from ..database import Question
 from ..extensions import db
-from ..view_helpers import (admin_required, register_api)
+from ..view_helpers import (login_required, register_api)
 
 from .forms import QuestionForm
 
@@ -17,9 +18,12 @@ question = Blueprint('question', __name__, url_prefix='/questions',
 
 
 class QuestionAPI(MethodView):
-    decorators = [admin_required]
+    decorators = [login_required]
 
     def get(self, question_id=None):
+        if not current_user.is_admin:
+            flash('Cannot access.', 'error')
+            return redirect(url_for('frontend.messages'))
         form = QuestionForm()
         if question_id:
             question = Question.query.get(question_id)
@@ -35,18 +39,23 @@ class QuestionAPI(MethodView):
             db.session.add(question)
             db.session.commit()
             flash("Created question: {}.".format(question.name), 'info')
-        return redirect(url_for('.question_api'))
+        else:
+            flash('Errors: ' + str(form.errors), 'error')
+        return redirect(request.values.get('next') or url_for('.question_api'))
 
     def delete(self, admin, question_id=None):
+        if not current_user.is_admin:
+            flash('Cannot access.', 'error')
+            return redirect(url_for('frontend.messages'))
         question = Question.query.get(question_id)
         db.session.delete(question)
         db.session.commit()
         flash("Deleted question: {}.".format(question.name), 'info')
         return ''
 
-    def put(self, admin, question_id=None):
-        # TK TODO: implement (after WTForms...)
-        pass
+    # def put(self, admin, question_id=None):
+    #     # TK TODO: implement (after WTForms...)
+    #     pass
         
 
 register_api(question, QuestionAPI, 'question_api', '/', pk='question_id')

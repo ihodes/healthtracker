@@ -1,9 +1,8 @@
 /* Landing Page */
 .wrapper { width: 800px; margin: 0 auto; }
 
-header .logo { height: 63px; width: 106px; 
-               background: url('/static/img/marion.png') no-repeat;
-               margin: 13px 0; }
+header .logo { height: 63px; width: 106px; margin: 13px 0;
+               background: url('/static/img/marion.png') no-repeat; }
 
 .wrapper section { margin-top: 63px; height: 250px; position: relative; }
 

@@ -2,57 +2,122 @@
 {% block head %}
 <script>
 $(function(){
-$('#change-pw-modal .btn-primary').on('click', function(){
-  $('#change-pw-form').submit();
-});
 
-
-$('#edit-profile').on('click', function(){
-  $(this).fadeOut(100, function(){ $('#remove-edit-profile').fadeIn(100);});
-  $('#profile-fields').slideDown();
-});
-
-$('#remove-edit-profile').on('click', function(){
-  $(this).fadeOut(100, function(){ $('#edit-profile').fadeIn(100);});
-  $('#profile-fields').slideUp();
-});
-
-$('#profile-fields .close').on('click', function(){
-  $('#profile-fields').slideUp();
-  $('#edit-profile').fadeIn(100);
-});
-
-$('i').tooltip();
-
-$('.icon-edit').on('click', function(){
-  $('.icon-edit').fadeIn(100);
-  var editTr = $(this).parent().parent().parent().next();
-  $('.edit-scheduled-question').fadeOut(100);
-  $(editTr).show();
-  $(this).fadeOut(100, function(){
-    $(this).parent().siblings('.sq-edit-close').fadeIn(100);
+  $('#change-pw-modal .btn-primary').on('click', function(){
+    $('#change-pw-form').submit();
   });
-});
-
-$('.sq-edit-close').on('click', function(){
-  var editTr = $(this).parent().parent().next();
-  $(editTr).hide();
-  $(this).fadeOut(100, function(){$('.icon-edit').fadeIn(100);});
   
-});
+  $('#edit-profile').on('click', function(){
+    $(this).fadeOut(100, function(){ $('#remove-edit-profile').fadeIn(100);});
+    $('#profile-fields').slideDown();
+  });
+  
+  $('#remove-edit-profile').on('click', function(){
+    $(this).fadeOut(100, function(){ $('#edit-profile').fadeIn(100);});
+    $('#profile-fields').slideUp();
+  });
+  
+  $('#profile-fields .close').on('click', function(){
+    $('#profile-fields').slideUp();
+    $('#edit-profile').fadeIn(100);
+  });
+  
+  $('i').tooltip();
+  
+  $('.icon-edit').on('click', function(){
+    var thisTr = $(this).parent().parent().parent()
+    var editTr = $(thisTr).next();
+    $('.icon-edit').fadeIn(100);
+    $('.edit-scheduled-question').fadeOut(100);
+    $(editTr).show();
+    $(this).fadeOut(100, function(){
+      $(this).parent().siblings('.sq-edit-close').fadeIn(100);
+    });
+  });
+  
+  $('.sq-edit-close').on('click', function(){
+    var editTr = $(this).parent().parent().next();
+    $(editTr).hide();
+    $(this).fadeOut(100, function(){$('.icon-edit').fadeIn(100);});
+  });
+  
+  $('form .icon-remove').on('click', function(){$(this).parent().parent().submit()});
+  
+  $('#show-add-question').on('click', function(){
+    $(this).fadeOut(100, function(){ $('#remove-add-question').fadeIn(100);});
+    $('#add-question-controls').slideDown();
+  });
+  
+  $('#remove-add-question').on('click', function(){
+    $(this).fadeOut(100, function(){  $('#show-add-question').fadeIn(100);});
+    $('#add-question-controls').slideUp();
+  });
 
-$('form .icon-remove').on('click', function(){$(this).parent().submit()});
 
-$('#show-add-question').on('click', function(){
-  $(this).fadeOut(100, function(){ $('#remove-add-question').fadeIn(100);});
-  $('#add-question-controls').slideDown();
-});
+  $('#question-search').on('keyup', function(){
+    var searchTerm = $(this).val().toLowerCase();
+    var shown = 0;
 
-$('#remove-add-question').on('click', function(){
-  $(this).fadeOut(100, function(){  $('#show-add-question').fadeIn(100);});
-  $('#add-question-controls').slideUp();
-});
+    $('#question-table tr td.text').each(function(idx, el){
+      var row = $(el).parent();
+      var qtext = $(el).text().toLowerCase();
+      var qname = $(el).prev().text().toLowerCase();
+      if((qtext.indexOf(searchTerm) + qname.indexOf(searchTerm)) != -2){
+        row.show();
+        shown += 1;
+      } else {
+        row.hide();
+      }
+    });
 
+    if(shown > 0) {
+      $('#question-table').show();
+      $('#no-questions-notify').hide();
+    } else {
+      $('#no-questions-notify').show();
+      $('#question-table').hide();
+      $('#question-table tr').hide()
+    }
+
+    if(searchTerm.length == 0) {
+      $('#question-table').hide();
+    }
+  });
+
+  // schedule additional question
+  $('form .icon-plus').on('click', function(){$(this).parent().parent().submit()});
+
+
+    ///////////////////////////////////////////////////////////////////
+   //                 Create Question Modal Code                    //
+  ///////////////////////////////////////////////////////////////////
+  $('#add-question-modal .btn-primary').on('click', function(){
+    $('#add-question-form').submit();
+  });
+
+  $('#add-question-modal a.btn').on('click', function(){
+    var active = this.id == 'numeric-button'
+    if(active) {
+      if($('#add-question-modal #unlimited-checkbox').prop('checked')){
+        $('#add-question-modal input[name="qtype"]').val('numeric');
+      } else {
+        $('#add-question-modal input[name="qtype"]').val('multi_numeric');
+      }
+      $('#numeric-options').slideDown();
+    } else {
+      $('#add-question-modal input[name="qtype"]').val('yesno');
+      $('#numeric-options').slideUp();
+    }
+  });
+
+  $('#add-question-modal #unlimited-checkbox').on('click', function(){
+    if($(this).prop('checked')){
+      $('#add-question-modal input[name="qtype"]').val('numeric');
+    } else {
+      $('#add-question-modal input[name="qtype"]').val('multi_numeric');
+    }
+    $('.minmax-input').slideToggle();
+  });
 });
 </script>
 {% endblock %}
@@ -68,7 +133,7 @@ $('#remove-add-question').on('click', function(){
       <small>{{ "("+user.email+")" if user.name else '' }} <span id="edit-profile">—
           <a href="#" style="font-size:12px;">Edit your profile</a></span>
       </small>
-      <small id="remove-edit-profile" style="display: none;">— <a href="#" style="font-size: 12px;">Close</a></small>
+      <small id="remove-edit-profile" style="display: none;">— <a href="#" style="font-size: 12px;">close</a></small>
     </h2>
 
 
@@ -151,31 +216,155 @@ $('#remove-add-question').on('click', function(){
   <div class="row span12">
     <h4>Your Questions 
       <small id="show-add-question">— <a href="#" style="font-size: 12px;">Add a question</a></small>
-      <small id="remove-add-question" style="display: none;">— <a href="#" style="font-size: 12px;">Close</a></small>
+      <small id="remove-add-question" style="display: none;">— <a href="#" style="font-size: 12px;">close</a></small>
     </h4>
-    <div id="add-question-controls" style="display:none;margin-left:125px;position: relative;" class="span10">
-      <div class="span5 pull-left">
+    <div id="add-question-controls" style="display:none;" class="row well">
+
+      <div style="text-align:center;margin-top:10px;margin-bottom: 17px;">
         <p class="muted">Do we already have the question you're looking for?</p>
-        <form class="form-search">
+        <div class="form-search">
           <div class="input-append">
-            <input type="text" class="span3 search-query">
-            <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
+            <input type="text" class="span3 search-query" placeholder="Search for a question..." id="question-search">
+            <a class="btn"><i class="icon-search"></i> Search</a>
           </div>
-        </form>
+        </div>
+
+        <p style="display:none;margin-top:13px;" class="muted" id="no-questions-notify">
+          There are no questions matching your query. You can make one, though!
+        </p>
+
+        <table class="table" id="question-table" style="display:none;margin-top:13px;">
+          {% for q in questions %}
+          {% set form = ScheduledQuestionForm(user_id=user.id, question_id=q.id) %}
+          <tr style="display:none;">
+            <td style="width: 140px; text-align: left;">{{ q.name }}</td>
+            <td style="width: 850px; text-align: left;" class="text">{{ q.text }}</td>
+            <td style="text-align: right;">
+              <form action="/users/scheduled_question" method="POST"
+                    style="display:inline;">
+                {{ form.hidden_tag() }}
+                <input type="hidden" name="notification_method" value="none">
+                <input type="hidden" name="scheduled_for" value="20:00">
+                <a href="#">
+                  <i class="icon-plus" data-toggle="tooltip"
+                     data-title="Schedule this question. You will be able to edit the time and type of notification."></i>
+                </a>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% for q in private_questions %}
+          {% set form = ScheduledQuestionForm(user_id=user.id, question_id=q.id) %}
+          <tr style="display:none;">
+            <td style="width: 140px; text-align: left;">{{ q.name }} <span class="badge">Private</span></td>
+            <td style="width: 850px; text-align: left;" class="text">{{ q.text }}</td>
+            <td style="text-align: right;">
+              <form action="/users/scheduled_question" method="POST"
+                    style="display:inline;">
+                {{ form.hidden_tag() }}
+                <input type="hidden" name="notification_method" value="none">
+                <input type="hidden" name="scheduled_for" value="20:00">
+                <a href="#">
+                  <i class="icon-plus" data-toggle="tooltip"
+                     data-title="Schedule this question. You will be able to edit the time and type of notification."></i>
+                </a>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
       </div>
-      <div class="span1 pull-left">
-        <br>
-        <b style="font-size:22px;">OR</b>
+
+      <div style="text-align:center;margin-top:39px;">
+        <b style="font-size:26px;">OR</b>
       </div>
-      <div class="span3 pull-left">
+
+      <div style="text-align:center;margin-top: 30px;">
         <p class="muted">Create your own question.</p>
-        <form>
-          <div>
-            <button type="submit" class="btn">Create Question <i class="icon-pencil"></i></button>
+        <a class="btn btn-large" href="#add-question-modal" data-toggle="modal">Create Question <i class="icon-pencil"></i></a>
+
+        <div class="modal hide fade" id="add-question-modal" style="text-align:left;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Add a Question</h3>
           </div>
-        </form>
+          <div class="modal-body">
+            {% set question_form = QuestionForm(created_by=user.id) %}
+            <form action="/questions/?next=users%2Fhome"
+                  method="POST" class="form-horizontal" id="add-question-form">
+              {{ question_form.hidden_tag() }}
+              <div class="control-group">
+                <label class="control-label">Question Name:</label>
+                <div class="controls">
+                  {{ question_form.name(placeholder="Question Name") }}
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">Question Text:</label>
+                <div class="controls">
+                  <textarea name="text" placeholder="What question should we ask?" rows=5></textarea>
+                </div>
+              </div>
+              <br>
+
+              <div class="control-group" style="margin-left:187px;">
+                <p>What sort of question is this?</p>
+                <div class="btn-group" data-toggle="buttons-radio">
+                  <a class="btn active" id="yesno-button"> Yes/No </a>
+                  <a class="btn" id="numeric-button"> Numeric </a>
+                </div>
+              </div>
+
+              <div id="numeric-options" style="display:none;">
+              <div class="control-group">
+                <div class="controls">
+                  <label class="checkbox">
+                    {{ question_form.unlimited_number(default=True, id='unlimited-checkbox') }} Any number.
+                    <i class="icon-question-sign"
+                       data-toggle="tooltip"
+                       data-title="If checked, you can enter any numbers as your answer. You will not, however, be able to answer this question via email.">
+                    </i>
+                  </label>
+                </div>
+              </div>
+
+              <div class="control-group minmax-input" style="display: none;">
+                <label class="control-label">Minimum Answer:</label>
+                <div class="controls">
+                  {{ question_form.min_value(pattern="\d*") }}
+                </div>
+              </div>
+
+              <div class="control-group minmax-input" style="display: none;">
+                <label class="control-label">Maximum Answer:</label>
+                <div class="controls">
+                  {{ question_form.max_value(pattern="\d*") }}
+                </div>
+              </div>
+              </div>
+              
+              <div class="control-group">
+                <div class="controls">
+                  <label class="checkbox">
+                    {{ question_form.is_public(default=True) }} Make question public?
+                    <i class="icon-question-sign"
+                       data-toggle="tooltip"
+                       data-title="If checked, anyone will be able to search for this question and use it."></i>
+                  </label>
+                </div>
+              </div>
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">Cancel</a>
+            <a class="btn btn-primary">Create Question</a>
+          </div>
+        </div>
       </div>
+
     </div>
+
     <table id="questions" class="table">
       <thead>
         <tr>
@@ -206,8 +395,8 @@ $('#remove-add-question').on('click', function(){
             </span>
             <form action="/users/scheduled_question/{{ sq.id }}?__METHOD_OVERRIDE__=DELETE" method="POST"
                   style="display:inline;">
-              <i class="icon-remove" style="margin-left: 20px;" data-confirm="Are you sure you wish to remove this notification? The data associated will be saved. If this notification if annoying you, you could just set the notification type to 'none'."
-                 data-title="Remove this notification." data-toggle="tooltip"></i>
+              <a href="#"><i class="icon-remove" style="margin-left: 20px;" data-confirm="Are you sure you wish to remove this notification? The data associated will be saved. If this notification if annoying you, you could just set the notification type to 'none'."
+                             data-title="Remove this notification." data-toggle="tooltip"></i></a>
             </form>
             <a href="#">
               <i class="icon-edit" style="margin-left: 3px;" 
