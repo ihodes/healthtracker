@@ -10,6 +10,9 @@ API_ENDPOINT = "https://api.mailgun.net/v2/healthtracker.mailgun.org/messages"
 DEFAULT_FROM = "Marion Health <hello@getmarion.com>"
 
 
+YES, NO = 0, 1
+
+
 def send_email(**kwargs):
     admin_email = current_app.config['ADMIN_EMAIL']
     data = {'to': kwargs.get('to', admin_email),
@@ -63,7 +66,7 @@ def send_update_email(user, question):
         status_update_text.append("Update Status Online: {}".format(tracker_url))
     elif question.qtyp == 'yesno':
         for value in ['yes', 'no']:
-            tracker_url = status_update_url(user, question, 0 if value == 'no' else 1)
+            tracker_url = status_update_url(user, question, YES if value == 'yes' else NO)
             status_update_links.append({'text': '{}'.format(value),
                                         'link': tracker_url})
             status_update_text.append("{0}: {1}".format(value, tracker_url))
@@ -109,7 +112,7 @@ def send_simple_email(subject, message, email):
 def status_update_url(user, question, value):
     auth = user.auth_token
     if value is None:
-        url_base = "http://{0}/tracker/?auth_token={1}"
+        url_base = "http://{0}/tracker/?auth_token={1}&value=__TRK__" # lets the controller know the render the tracking form instead of submitting
         return url_base.format(current_app.config['HOST_NAME'], auth)
     else:
         url_base = "http://{0}/tracker/track/{1}/?auth_token={2}&value={3}"

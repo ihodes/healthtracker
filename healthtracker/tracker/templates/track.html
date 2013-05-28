@@ -1,0 +1,17 @@
+{% extends "layouts/layout.html" %}
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<!-- right now only works for qtype numeric questions -->
+<div class="container">
+  <h4>{{ question.name }}</h4>
+  <p>{{ question.text }}</p>
+  <form action="." method="GET" class="form">
+    <input type="hidden" value="{{user.auth_token}}" name="auth_token">
+    <input type="text" pattern="\d+" name="value" placeholder="value to track">
+    <br>
+    <button class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}

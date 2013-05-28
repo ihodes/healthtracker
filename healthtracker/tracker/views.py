@@ -24,13 +24,25 @@ def show(user):
 
     questions = []
     for question in user.questions:
+        ans = user.answers.filter_by(question=question).order_by('created_at ASC')
         answers = [{'date':a.created_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}
-                   for a in user.answers.filter_by(question=question).order_by('created_at ASC')]
+                   for a in ans]
+        # TK hacky multi dispatch
+        if question.qtype == 'multi_numeric':
+            qmax = question.max_value
+            qmin = question.min_value
+        elif question.qtype == 'yesno':
+            qmax = 1
+            qmin = 0
+        elif question.qtype == 'numeric':
+            qmax = max(int(a.value) for a in ans)
+            qmin = min(int(a.value) for a in ans)
+
         questions.append({'name': question.name,
                           'text': question.text,
                           'answers': json.dumps({'answers':answers}),
-                          'qmax': question.max_value,
-                          'qmin': question.min_value
+                          'qmax': qmax,
+                          'qmin': qmin
                           })
     return render_template('tracker.html', questions=questions, user=user)
 
@@ -38,15 +50,25 @@ def show(user):
 @tracker.route("/track/<question_id>/")
 @provide_user_from_auth
 def track(user, question_id=None):
-    question = Question.query.get(question_id)
+    question = Question.query.get_or_404(question_id)
     if user is None:
-        flash(u"""You can't update your status; use the newest email from us,
+        flash(u"""You can't update your status; use the newest email from us (this one has expired)
               or sign up for an account if you don't have one.""", 'error')
         return redirect(url_for("frontend.messages"))
     value = request.args.get("value", None)
-    user.answers.append(Answer(user, question, value))
-    user.save()
-    login_user(user)
-    flash(u"You've reported a {} out of {} for question '{}'".format(value, question.max_value, question.name), 'info')
-    return redirect(url_for('.show', auth_token=user.auth_token))
+    if value == "__TRK__":
+        return render_template('track.html', question=question, user=user)
+    else:
+        user.answers.append(Answer(user, question, value))
+        user.save()
+        login_user(user)
+
+        # TK hacky multi dispatch again
+        if question.qtype == 'multi_numeric':
+            flash(u"You've reported a {} out of {} for question '{}'".format(value, question.max_value, question.name), 'info')
+        elif question.qtype == 'numeric':
+            flash(u"You've reported a {} for question '{}'".format(value, question.name), 'info')
+        elif question.qtype == 'yesno':
+            flash(u"You've reported a {} for question '{}'".format('yes' if value == '0' else 'no', question.name), 'info')
+        return redirect(url_for('.show', auth_token=user.auth_token))
 
