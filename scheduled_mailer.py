@@ -14,7 +14,12 @@ if __name__ == '__main__':
             user.reset_auth_token()
             time_now = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute,
                                          tzinfo=pytz.timezone('UTC'))
-            adj_time_now = time_now.astimezone(pytz.timezone(user.timezone)) # UTC -> user's timezone
+            try:
+                user_tz = pytz.timezone(user.timezone)
+            except pytz.exceptions.UnknownTimeZoneError:
+                app.logger.info('\tNo timezone for user, assuming UTC')
+                user_tz = pytz.timezone('UTC')
+            adj_time_now = time_now.astimezone(user_tz) # UTC -> user's timezone
 
             for sq in user.scheduled_questions:
                 if sq.scheduled_for == adj_time_now:
