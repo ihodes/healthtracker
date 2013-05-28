@@ -24,7 +24,7 @@ def show(user):
 
     questions = []
     for question in user.questions:
-        ans = user.answers.filter_by(question=question).order_by('created_at ASC')
+        ans = user.answers.filter_by(question=question).order_by('created_at ASC').all()
         answers = [{'date':a.created_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}
                    for a in ans]
         # TK hacky multi dispatch
@@ -35,8 +35,8 @@ def show(user):
             qmax = 1
             qmin = 0
         elif question.qtype == 'numeric':
-            qmax = max(int(a.value) for a in ans)
-            qmin = min(int(a.value) for a in ans)
+            qmax = max(int(a.value) for a in ans) if len(ans) > 0 else 0
+            qmin = min(int(a.value) for a in ans) if len(ans) > 0 else 0
 
         questions.append({'name': question.name,
                           'text': question.text,

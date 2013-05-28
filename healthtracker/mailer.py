@@ -112,8 +112,8 @@ def send_simple_email(subject, message, email):
 def status_update_url(user, question, value):
     auth = user.auth_token
     if value is None:
-        url_base = "http://{0}/tracker/?auth_token={1}&value=__TRK__" # lets the controller know the render the tracking form instead of submitting
-        return url_base.format(current_app.config['HOST_NAME'], auth)
+        url_base = "http://{0}/tracker/track/{1}/?auth_token={2}&value=__TRK__" # lets the controller know the render the tracking form instead of submitting
+        return url_base.format(current_app.config['HOST_NAME'], question.id, auth)
     else:
         url_base = "http://{0}/tracker/track/{1}/?auth_token={2}&value={3}"
         return url_base.format(current_app.config['HOST_NAME'], question.id, auth, value)
