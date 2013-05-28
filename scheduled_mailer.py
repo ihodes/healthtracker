@@ -17,7 +17,7 @@ if __name__ == '__main__':
             adj_time_now = time_now.astimezone(pytz.timezone(user.timezone)) # UTC -> user's timezone
 
             for sq in user.scheduled_questions:
-                if sq.scheduled_for.time() == adj_time_now:
+                if sq.scheduled_for == adj_time_now:
                     if sq.notification_method == 'email':
                         mailer.send_update_email(user, sq.question)
                         app.logger.info("Emailed <Question::{}> to {}.".format(sq.question.name, user.email))
