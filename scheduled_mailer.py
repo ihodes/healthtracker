@@ -19,7 +19,7 @@ if __name__ == '__main__':
             except pytz.exceptions.UnknownTimeZoneError:
                 app.logger.info('\tNo timezone for user, assuming UTC')
                 user_tz = pytz.timezone('UTC')
-            adj_time_now = time_now.astimezone(user_tz) # UTC -> user's timezone
+            adj_time_now = datetime.time(time_now.astimezone(user_tz).hour) # UTC -> user's timezone
 
             for sq in user.scheduled_questions:
                 if sq.scheduled_for == adj_time_now:

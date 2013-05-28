@@ -64,7 +64,7 @@ def send_update_email(user, question):
         status_update_links.append({'text': 'Update Status Online',
                                     'link': tracker_url})
         status_update_text.append("Update Status Online: {}".format(tracker_url))
-    elif question.qtyp == 'yesno':
+    elif question.qtype == 'yesno':
         for value in ['yes', 'no']:
             tracker_url = status_update_url(user, question, YES if value == 'yes' else NO)
             status_update_links.append({'text': '{}'.format(value),
