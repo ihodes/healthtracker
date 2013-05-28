@@ -14,7 +14,7 @@ if __name__ == '__main__':
             user.reset_auth_token()
             time_now = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute,
                                          tzinfo=pytz.timezone('UTC'))
-            adj_time_now = time_now.astimzone(pytz.timezone(user.timezone)) # UTC -> user's timezone
+            adj_time_now = time_now.astimezone(pytz.timezone(user.timezone)) # UTC -> user's timezone
 
             for sq in user.scheduled_questions:
                 if sq.scheduled_for.time() == adj_time_now:
