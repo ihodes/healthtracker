@@ -76,11 +76,12 @@ $(function(){
     } else {
       $('#no-questions-notify').show();
       $('#question-table').hide();
-      $('#question-table tr').hide()
+      $('#question-table tr').hide();
     }
 
     if(searchTerm.length == 0) {
-      $('#question-table').hide();
+      $('#question-table').show();
+      $('#question-table tr').show();
     }
   });
 
@@ -233,10 +234,10 @@ $(function(){
           There are no questions matching your query. You can make one, though!
         </p>
 
-        <table class="table" id="question-table" style="display:none;margin-top:13px;">
+        <table class="table" id="question-table" style="margin-top:13px;">
           {% for q in questions %}
           {% set form = ScheduledQuestionForm(user_id=user.id, question_id=q.id) %}
-          <tr style="display:none;">
+          <tr>
             <td style="width: 140px; text-align: left;">{{ q.name }}</td>
             <td style="width: 850px; text-align: left;" class="text">{{ q.text }}</td>
             <td style="text-align: right;">
@@ -255,7 +256,7 @@ $(function(){
           {% endfor %}
           {% for q in private_questions %}
           {% set form = ScheduledQuestionForm(user_id=user.id, question_id=q.id) %}
-          <tr style="display:none;">
+          <tr>
             <td style="width: 140px; text-align: left;">{{ q.name }} <span class="badge">Private</span></td>
             <td style="width: 850px; text-align: left;" class="text">{{ q.text }}</td>
             <td style="text-align: right;">

@@ -5,7 +5,9 @@ from flask import (Blueprint, render_template, redirect, url_for, request, flash
 from flask.views import MethodView
 from flask.ext.login import current_user
 
-from ..database import Question
+import datetime
+
+from ..database import Question, ScheduledQuestion
 from ..extensions import db
 from ..view_helpers import (login_required, register_api)
 
@@ -38,6 +40,15 @@ class QuestionAPI(MethodView):
             form.populate_obj(question)
             db.session.add(question)
             db.session.commit()
+            # TK HACK
+            sq = ScheduledQuestion()
+            sq.user_id = current_user.id
+            sq.question_id = question.id
+            sq.scheduled_for = datetime.time(20)
+            sq.notification_method = 'none'
+            db.session.add(sq)
+            db.session.commit()
+            # /hack
             flash("Created question: {}.".format(question.name), 'info')
         else:
             flash('Errors: ' + str(form.errors), 'error')
