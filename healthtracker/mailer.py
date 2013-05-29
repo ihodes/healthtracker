@@ -96,7 +96,7 @@ If you didn't signed up for getMarion.com, please ignore this email""".format(cu
 
 def send_approval_email(user):
     subject = "Marion Health Account Approval "
-    text = """You've been approved to join the Marion Health alpha test! Thank you for your patience. You will be recieving an email from us today or tomorrow asking for your first status update.
+    text = """You've been approved to join the Marion Health alpha test! Thank you for your patience. You will be recieving an email from us today or tomorrow asking for your first status update, and from there you will be able to set a password and log in whenever you would like!
 
 Sincerely, 
 Isaac Hodes

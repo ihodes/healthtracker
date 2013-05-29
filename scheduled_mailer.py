@@ -11,8 +11,8 @@ if __name__ == '__main__':
 
     with app.test_request_context():
         for user in User.query.filter_by(is_confirmed=True, is_approved=True).all():
-            user.reset_auth_token()
-            time_now = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute,
+            time_now = datetime.datetime(year=now.year, month=now.month,
+                                         day=now.day, hour=now.hour, minute=now.minute,
                                          tzinfo=pytz.timezone('UTC'))
             try:
                 user_tz = pytz.timezone(user.timezone)

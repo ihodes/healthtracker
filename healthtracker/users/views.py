@@ -166,7 +166,7 @@ def update(user_id=None):
 
 @user.route('/<user_id>/toggle_approve', methods=['POST'])
 @admin_required
-def toggle_approve(admin, user_id=None):
+def toggle_approve(user_id=None):
     user = User.query.get(user_id)
     if user.is_approved:
         user.unapprove()
@@ -175,7 +175,7 @@ def toggle_approve(admin, user_id=None):
             user.confirm()
         user.approve()
         mailer.send_approval_email(user)
-    return redirect(url_for('.admin', auth_token=current_user.auth_token))
+    return redirect(url_for('.admin'))
 
 
 @user.route('/<user_id>/reset_auth', methods=['POST'])
@@ -200,7 +200,7 @@ def delete(user_id=None):
 def update_email(user_id=None):
     user = User.query.get(user_id)
     for sq in user.scheduled_questions:
-        if sq.notification_method == 'email': # TK TODO make this right...
+        if sq.notification_method == 'email': # TK TODO hacky mutli dispatch make this right...
             mailer.send_update_email(user, sq.question)
     return redirect(url_for('.admin', auth_token=current_user.auth_token))
 
