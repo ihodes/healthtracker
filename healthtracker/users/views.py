@@ -17,7 +17,7 @@ from .forms import ScheduledQuestionForm, LoginForm, PasswordForm
 from ..questions.forms import QuestionForm
 
 
-user = Blueprint('user', __name__, url_prefix='/users', template_folder='templates')
+user = Blueprint('user', __name__, url_prefix='/users', template_folder='templates', static_folder='static')
 
 
 @user.route('/login', methods=['GET', 'POST'])
