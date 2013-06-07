@@ -2,7 +2,7 @@
 import requests
 from flask import render_template, current_app
 
-from .database import User
+from .database import User, Answer
 
 
 
@@ -47,40 +47,56 @@ def send_login_email(user):
     send_email(text=text, to=user.email, subject=subject)
 
 
-def send_update_email(user, question):
-    subject = "Update Your Health Today [{}]".format(question.name)    
-    status_update_text = [question.text]
-    status_update_links = []
+def send_update_email(user, questions):
+    subject = "Update Marion [{}]".format(','.join(q.name for q in questions))
+    processed_questions = []
+    email_text = ["Hello from Marion Health! We hope you're feeling well today."]
 
-    # TK HACK  hacky way of having multi dispatch of emails on question type
-    if question.qtype == 'multi_numeric':
-        for value in range(question.min_value, question.max_value+1)[::-1]:
-            tracker_url = status_update_url(user, question, value)
-            status_update_links.append({'text': '{} out of {}'.format(value, question.max_value),
-                                        'link': tracker_url})
-            status_update_text.append("{0}: {1}".format(value, tracker_url))
-    elif question.qtype == 'numeric':
-        tracker_url = status_update_url(user, question, None) # can't update via email... so
-        status_update_links.append({'text': 'Update Status Online',
-                                    'link': tracker_url})
-        status_update_text.append("Update Status Online: {}".format(tracker_url))
-    elif question.qtype == 'yesno':
-        for value in ['yes', 'no']:
-            tracker_url = status_update_url(user, question, YES if value == 'yes' else NO)
-            status_update_links.append({'text': '{}'.format(value),
-                                        'link': tracker_url})
-            status_update_text.append("{0}: {1}".format(value, tracker_url))
-    
-    status_update_text.append("\n\n\n Unsubscribe: "+unsubscribe_url(user))
-    text = "\n\n".join(status_update_text)
-    
+    for question in questions:
+        Answer.pend(user, question)
+        status_update_links = []
+        email_text.append("\n\n")
+        email_text.append(question.text)
 
+        # TK HACK  hacky way of having multi dispatch of emails on question type
+        if question.qtype == 'multi_numeric':
+            for value in range(question.min_value, question.max_value+1)[::-1]:
+                tracker_url = status_update_url(user, question, value)
+                status_update_links.append({'text': '{} out of {}'.format(value, question.max_value),
+                                            'link': tracker_url})
+                email_text.append("{0}: {1}".format(value, tracker_url))
+        elif question.qtype == 'numeric':
+            tracker_url = status_update_url(user, question, None) # can't update via email... so
+            status_update_links.append({'text': 'Update Status Online',
+                                        'link': tracker_url})
+            email_text.append("Update Status Online: {}".format(tracker_url))
+        elif question.qtype == 'yesno':
+            for value in ['yes', 'no']:
+                tracker_url = status_update_url(user, question, YES if value == 'yes' else NO)
+                status_update_links.append({'text': '{}'.format(value),
+                                            'link': tracker_url})
+                email_text.append("{0}: {1}".format(value, tracker_url))
+    
+        processed_questions.append({'text': question.text,
+                                    'status_update_links': status_update_links})
+
+
+    email_text.append("\n\n\n Unsubscribe: "+unsubscribe_url(user))
+    text = '\n\n'.join(email_text)
     html = render_template('emails/status_update.html',
-                           question_text=question.text,
-                           status_update_links=status_update_links,
+                           questions=processed_questions,
                            unsubscribe_link=unsubscribe_url(user))
 
-    send_email(text=text, to=user.email, subject=subject, html=html)
+    send_email(text=text,
+               to=user.email,
+               subject=subject,
+               html=html)
+
+
+def ask(user, questions):
+    for question in questions:
+        Answer.pend(user, question)
+    send_update_email(user, questions)
 
 
 def send_confirmation_email(user):

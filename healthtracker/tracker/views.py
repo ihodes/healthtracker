@@ -7,6 +7,8 @@ from ..extensions import db
 from ..view_helpers import provide_user_from_auth
 from ..database import Answer, Question
 
+import datetime
+
 
 
 tracker = Blueprint('tracker', __name__,
@@ -24,8 +26,10 @@ def show(user):
 
     questions = []
     for question in user.questions:
-        ans = user.answers.filter_by(question=question).order_by('created_at ASC').all()
-        answers = [{'date':a.created_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}
+        current_app.logger.info(question)
+        ans = user.answers.filter_by(question=question,
+                                     state='answered').order_by('answered_at ASC').all()
+        answers = [{'date':a.answered_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}
                    for a in ans]
         # TK hacky multi dispatch
         if question.qtype == 'multi_numeric':
@@ -55,20 +59,34 @@ def track(user, question_id=None):
         flash(u"""You can't update your status; use the newest email from us (this one has expired)
               or sign up for an account if you don't have one.""", 'error')
         return redirect(url_for("frontend.messages"))
+
+    pending_answer = Answer.query.filter_by(state='pending', question=question, user=user)
+    if not pending_answer:
+        # then check to see if they really want to record again within the
+        #   same cycle (figure out wording)
+        pass
+
     value = request.args.get("value", None)
     if value == "__TRK__":
         return render_template('track.html', question=question, user=user)
-    else:
-        user.answers.append(Answer(user, question, value))
-        user.save()
-        login_user(user)
 
-        # TK hacky multi dispatch again
-        if question.qtype == 'multi_numeric':
-            flash(u"You've reported a {} out of {} for question '{}'".format(value, question.max_value, question.name), 'info')
-        elif question.qtype == 'numeric':
-            flash(u"You've reported a {} for question '{}'".format(value, question.name), 'info')
-        elif question.qtype == 'yesno':
-            flash(u"You've reported a {} for question '{}'".format('yes' if value == '0' else 'no', question.name), 'info')
-        return redirect(url_for('.show', auth_token=user.auth_token))
+    answer = pending_answer[0]
+    answer.value = value
+    answer.state = 'answered'
+    answer.answered_at = datetime.datetime.now()
+    db.session.add(answer)
+    db.session.commit()
+    login_user(user)
+
+    # TK hacky multi dispatch again
+    if question.qtype == 'multi_numeric':
+        flash(u"You've reported a {} out of {} for question '{}'".format(value,
+                                                                         question.max_value,
+                                                                         question.name), 'info')
+    elif question.qtype == 'numeric':
+        flash(u"You've reported a {} for question '{}'".format(value, question.name), 'info')
+    elif question.qtype == 'yesno':
+        flash(u"You've reported a {} for question '{}'".format('yes' if value == '0' else 'no',
+                                                               question.name), 'info')
+    return redirect(url_for('.show', auth_token=user.auth_token))
 

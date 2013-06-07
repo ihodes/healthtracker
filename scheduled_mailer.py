@@ -25,4 +25,5 @@ if __name__ == '__main__':
                 if sq.scheduled_for == adj_time_now:
                     if sq.notification_method == 'email':
                         mailer.send_update_email(user, sq.question)
-                        app.logger.info("Emailed <Question::{}> to {}.".format(sq.question.name, user.email))
+                        app.logger.info("Emailed <Question::{}> to {}.".format(sq.question.name,
+                                                                               user.email))

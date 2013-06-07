@@ -27,22 +27,33 @@ class Answer(db.Model):
     __tablename__ = "answers"
     id = db.Column(db.Integer, db.Sequence('answers_id_seq'), primary_key=True)
     value = db.Column(db.Text)
-
+    state = db.Column(db.String(255), default="pending")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     question_id = db.Column(db.Integer, db.ForeignKey("questions.id"))
     question = db.relationship("Question", backref=db.backref('answers', lazy='dynamic'))
+    asked_at = db.Column(db.DateTime, default=datetime.utcnow)
+    answered_at = db.Column(db.DateTime)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __init__(self, user, question, value):
+    def __init__(self, user, question):
         self.user_id = user.id
         self.question_id = question.id
-        self.value = value
 
     def __repr__(self):
         return "<Answer({}::{}::{})>".format(self.user.email,
                                              self.value,
                                              self.question.name)
+
+    @classmethod
+    def pend(klass, user, question):
+        current = user.answers.filter_by(state='pending', question=question).all()
+        if len(current) > 0:
+            for answer in current:
+                answer.state = 'unanswered'
+                db.session.add(answer)
+        answer = klass(user, question)
+        db.session.add(answer)
+        db.session.commit()
+        
 
 
 class User(db.Model, UserMixin):
@@ -110,10 +121,10 @@ class User(db.Model, UserMixin):
 
     # hack for now
     def wq(self):
-        return sum(map(lambda a: float(a.value), self.answers.filter_by(question_id=Question.default().id).order_by('created_at ASC').all()[-7:]))/7
+        return sum(map(lambda a: float(a.value), self.answers.filter_by(question_id=Question.default().id, state='answered').order_by('answered_at ASC').all()[-7:]))/7
     # hack for now
     def last_30_days_str(self):
-        return str(map(lambda a: int(a.value), self.answers.filter_by(question_id=Question.default().id).order_by('created_at ASC').all()[-30:]))[1:-1]
+        return str(map(lambda a: int(a.value), self.answers.filter_by(question_id=Question.default().id, state='answered').order_by('answered_at ASC').all()[-30:]))[1:-1]
 
     @staticmethod
     def create(email):
