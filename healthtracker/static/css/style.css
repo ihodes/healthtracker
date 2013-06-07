@@ -1,3 +1,6 @@
+/*  All  -- customize bootstrap the hacky way */
+a { color: rgb(90, 33, 157); }
+
 /* Landing Page */
 .wrapper { width: 800px; margin: 0 auto; }
 
