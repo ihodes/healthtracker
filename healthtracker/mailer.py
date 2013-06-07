@@ -94,9 +94,10 @@ def send_update_email(user, questions):
 
 
 def ask(user, questions):
-    for question in questions:
-        Answer.pend(user, question)
-    send_update_email(user, questions)
+    if questions:
+        for question in questions:
+            Answer.pend(user, question)
+        send_update_email(user, questions)
 
 
 def send_confirmation_email(user):
