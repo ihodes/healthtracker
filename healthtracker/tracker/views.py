@@ -26,7 +26,6 @@ def show(user):
 
     questions = []
     for question in user.questions:
-        current_app.logger.info(question)
         ans = user.answers.filter_by(question=question,
                                      state='answered').order_by('answered_at ASC').all()
         answers = [{'date':a.answered_at.strftime("%d-%m-%Y %H:%M"), 'value':a.value}

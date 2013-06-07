@@ -48,7 +48,7 @@ def send_login_email(user):
 
 
 def send_update_email(user, questions):
-    subject = "Update Marion [{}]".format(','.join(q.name for q in questions))
+    subject = "Update Marion [{}]".format(', '.join(q.name for q in questions))
     processed_questions = []
     email_text = ["Hello from Marion Health! We hope you're feeling well today."]
 
