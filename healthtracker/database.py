@@ -39,9 +39,10 @@ class Answer(db.Model):
         self.question_id = question.id
 
     def __repr__(self):
-        return "<Answer({}::{}::{})>".format(self.user.email,
+        return "<Answer({}::{}::{}:{})>".format(self.user.email,
                                              self.value,
-                                             self.question.name)
+                                             self.question.name,
+                                             self.question.id)
 
     @classmethod
     def pend(klass, user, question):
@@ -162,7 +163,7 @@ class Question(db.Model):
         self.max_value = 5 if max_value == '' else int(max_value)
 
     def __repr__(self):
-        return "<Question::{}>".format(self.name)
+        return "<Question({})::{}>".format(self.id, self.name)
 
     @classmethod
     def default(cls):

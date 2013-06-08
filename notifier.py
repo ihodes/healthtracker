@@ -10,6 +10,7 @@ from healthtracker.extensions import db
 import healthtracker.mailer as mailer
 
 
+
 def to_utc(timestamp):
     return datetime.datetime(year=timestamp.year, month=timestamp.month,
                              day=timestamp.day, hour=timestamp.hour,
@@ -47,8 +48,9 @@ def main():
         adj_time_now = datetime.time(now.astimezone(user_tz).hour)
         scheduled_questions = ScheduledQuestion.query.filter_by(user=user,
                                                                 scheduled_for=adj_time_now).all()
-        questions = dict(it.groupby(scheduled_questions,
-                                    lambda sq: sq.notification_method))
+        questions = collections.defaultdict(list)
+        for sq in scheduled_questions:
+            questions[sq.notification_method].append(sq.question)
         notify(user, questions)
 
     ctx.pop()
