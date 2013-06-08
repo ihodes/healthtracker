@@ -48,7 +48,7 @@ def main():
         scheduled_questions = ScheduledQuestion.query.filter_by(user=user,
                                                                 scheduled_for=adj_time_now).all()
         questions = dict(it.groupby(scheduled_questions,
-                                    lambda sq: sq.get('notification_method')))
+                                    lambda sq: sq.notification_method)))
         notify(user, questions)
 
     ctx.pop()
