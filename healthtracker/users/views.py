@@ -199,9 +199,8 @@ def delete(user_id=None):
 @admin_required
 def update_email(user_id=None):
     user = User.query.get(user_id)
-    for sq in user.scheduled_questions:
-        if sq.notification_method == 'email': # TK TODO hacky mutli dispatch make this right...
-            mailer.send_update_email(user, sq.question)
+    questions = [q for q in user.questions where q.notification_method == 'email']
+    mailer.send_update_email(user, questions)
     return redirect(url_for('.admin', auth_token=current_user.auth_token))
 
 

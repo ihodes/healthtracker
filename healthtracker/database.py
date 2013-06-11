@@ -44,6 +44,11 @@ class Answer(db.Model):
                                              self.question.name,
                                              self.question.id)
 
+    def answer(self, value):
+        answer.value = value
+        answer.state = 'answered'
+        answer.answered_at = datetime.datetime.now()
+
     @classmethod
     def pend(klass, user, question):
         current = user.answers.filter_by(state='pending', question=question).all()
@@ -127,6 +132,11 @@ class User(db.Model, UserMixin):
     def last_30_days_str(self):
         return str(map(lambda a: int(a.value), self.answers.filter_by(question_id=Question.default().id, state='answered').order_by('answered_at ASC').all()[-30:]))[1:-1]
 
+    def last_asked_questions(self, method='text'):
+        """Looks in redis to see the last questions asked by a given method,
+        sorted by age."""
+        return []
+
     @staticmethod
     def create(email):
         if User.query.filter_by(email=email).first() is None:
@@ -168,3 +178,9 @@ class Question(db.Model):
     @classmethod
     def default(cls):
         return cls.query.filter_by(is_default=True)[0]
+
+    def validate(self, answer): 
+        """TK TODO
+        Return whether or not the answer is valid (based on question's qtype)
+        """
+        return True
