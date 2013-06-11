@@ -97,13 +97,13 @@ def online_track(user, question_id=None):
         # then check to see if they really want to record again within the
         #   same cycle (figure out wording)
         flash(u"It appears as though you've already answered this question for today! Wait until your next email arrives, and then you can record again!")
-        redirect(url_for('.show'))
+        return redirect(url_for('.show', auth_token=user.auth_token))
 
     value = request.args.get("value", None)
     if value == "__TRK__":
         return render_template('track.html', question=question, user=user)
 
-    answer = pending_answer[0]
+    answer = pending_answer
     answer.value = value
     answer.state = 'answered'
     answer.answered_at = datetime.datetime.now()
