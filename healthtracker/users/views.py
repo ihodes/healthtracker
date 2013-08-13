@@ -199,7 +199,11 @@ def delete(user_id=None):
 @admin_required
 def update_email(user_id=None):
     user = User.query.get(user_id)
-    questions = [sq.question for sq in user.scheduled_questions if sq.notification_method == 'email']
+    questions = []
+    for sq in user.scheduled_questions:
+        if sq.notification_method == 'email':
+            questions.append(sq.question)
+        
     mailer.send_update_email(user, questions)
     return redirect(url_for('.admin', auth_token=current_user.auth_token))
 
