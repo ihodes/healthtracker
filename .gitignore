@@ -1,4 +1,4 @@
-init/
+env/
 *.pyc
 .env
 .DS_STORE

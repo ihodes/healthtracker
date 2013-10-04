@@ -46,7 +46,8 @@ def show(user):
                           'text'   : question.text,
                           'answers': json.dumps({'answers':answers}),
                           'qmax'   : qmax,
-                          'qmin'   : qmin})
+                          'qmin'   : qmin,
+                          'qtype'  : question.qtype})
     return render_template('tracker.html', questions=questions, user=user)
 
 

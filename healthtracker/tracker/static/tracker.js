@@ -1,8 +1,21 @@
 $(document).ready(function(){
 
-    createLineChart = function(el){
-        var $el = $(el);
+    var width = 600,
+        height = 100,
+        margin = {top: 20, right: 20, bottom: 30, left: 50};
 
+    var makeChart = function (el) {
+        var chart = d3.select(el).append("svg:svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        return chart;
+    }
+
+    var createLineChart = function(el){
+        var $el = $(el);
+        
         var answers = $el.find($(".answers")).data("answers").answers,
             qmax = parseInt($el.find(".answers").data("qmax")),
             qmin = parseInt($el.find(".answers").data("qmin"));
@@ -11,16 +24,8 @@ $(document).ready(function(){
             console.log('not enough info for this one');
             return false;
         }
-
-        var width = 600,
-            height = 100,
-            margin = {top: 20, right: 20, bottom: 30, left: 50};
-        
-        var chart = d3.select(el).append("svg:svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+       
+        var chart = makeChart(el);
         
         var x = d3.time.scale().range([0, width]),
             y = d3.scale.linear().domain([qmax,qmin]).range([0, height]),
@@ -60,7 +65,7 @@ $(document).ready(function(){
         chart.append("g")
             .attr("class", "y axis")
             .call(yAxis)
-            .append("text")
+          .append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", ".71em")
@@ -110,7 +115,93 @@ $(document).ready(function(){
         return true;
     }
 
+var createYesNoChart = function(el){
+    var $el = $(el);
+    
+    var chart = makeChart(el)
+
+    var answers = $el.find($(".answers")).data("answers").answers,
+        qmax = parseInt($el.find(".answers").data("qmax")),
+        qmin = parseInt($el.find(".answers").data("qmin"));
+
+    if(answers.length < 5){
+        console.log('not enough info for this one');
+        return false;
+    }
+
+    var parseDate = d3.time.format("%d-%m-%Y %H:%M").parse;
+
+    $.each(answers, function(i,d) {
+        d.date = parseDate(d.date);
+        d.value = +d.value;
+    });
+        
+    var lastAnswer = answers[answers.length - 1];
+    var x = d3.time.scale()
+        .domain(d3.extent(answers, function(d) { return d.date; }))
+        .range([0, width]);
+     
+    var y = d3.scale.ordinal().range(['steelblue', 'darkorchid']).domain([0, 1]),
+        bisectDate = d3.bisector(function(d) { return d.date; }).left;
+    
+    chart.selectAll("rect").data(answers).enter()
+      .append("rect")
+        .style("fill", function (d)     { return y(d.value); } )
+        .attr("x",     function(d, i)   { return x(d.date); } )
+        .attr("y", 0)
+        .attr("height", height)
+        .attr("width", ((width-margin.left)/answers.length));
+
+
+         ///////////////////////////
+        /// AXES //////////////////
+       ///////////////////////////
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .ticks(d3.time.months, 1)
+            .tickSize(0)
+            .orient("bottom");
+        
+        chart.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+
+
+    /// info text
+
+        var focusText = chart.append("g")
+            .attr("class", "focusText")
+            .attr("display", null);
+
+        focusText.append("text")
+            .attr("x", 0)
+            .attr("dy", "-.4em")
+            .style("font", "12px sans-serif");
+
+        chart.append("rect")
+            .attr("class", "overlay")
+            .attr("width", width+margin.right)
+            .attr("height", height)
+            .on("mouseover", function() { focusText.style("display", null); })
+            .on("mouseout", function()  { focusText.style("display", "none"); })
+            .on("mousemove", mousemove);
+
+        f = d3.time.format("%a, %b %-d %Y");
+
+        function mousemove() {
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(answers, x0, 1),
+                d = answers[i],
+                dname = (d.value == 0) ? 'yes' : 'no';
+            focusText.select("text").text("You reported a " + dname + " on " + f(d.date));
+        }
+    }
+
     $('.status-report').each(function(i, el){
-        if(!createLineChart(el)) $(el).hide();
+        if($(el).hasClass('yesno')) createYesNoChart(el);
+        else if(!createLineChart(el)) $(el).hide();
+//        if(!createLineChart(el)) $(el).hide();
     });
 });
