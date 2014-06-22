@@ -12,3 +12,19 @@
   {% endif %}
 {% endwith %}
 {%- endmacro %}
+
+{% macro navbar(active) -%}
+<ul class="nav nav-tabs" id="admin-nav">
+  <li class="{{ "active" if active == "papers" else "" }}">
+    <a href="{{ url_for('user.home') }}">Your Papers</a>
+  </li>
+  <li class="{{ "active" if active == "activity" else "" }}">
+    <a href="{{ url_for('tracker.show', auth_token=current_user.auth_token) }}">
+      Activity
+    </a>
+  </li>
+  <li class="pull-right">
+    <a href="{{url_for('user.logout')}}">Logout</a>
+  </li>
+</ul>
+{%- endmacro %}

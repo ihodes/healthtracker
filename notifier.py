@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import datetime 
-import pytz 
+import datetime
+import pytz
 import collections
 import itertools as it
 

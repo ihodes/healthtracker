@@ -33,7 +33,7 @@ def create_app():
     _initialize_error_handlers(app)
     _initialize_logging(app)
     _initialize_template_filters(app)
-    
+
     return app
 
 

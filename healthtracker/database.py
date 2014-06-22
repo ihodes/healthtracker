@@ -18,7 +18,7 @@ class ScheduledQuestion(db.Model):
 
     question = db.relationship('Question', backref=db.backref('scheduling_user_assocs', lazy='dynamic'))
     user = db.relationship('User', backref='scheduled_question_assocs')
-    
+
     def __repr__(self):
         return "<ScheduledQuestion({}::{}::{})>".format(self.user.name, self.question.name, self.notification_method)
 
@@ -59,7 +59,7 @@ class Answer(db.Model):
         answer = klass(user, question)
         db.session.add(answer)
         db.session.commit()
-        
+
 
 
 class User(db.Model, UserMixin):
@@ -179,7 +179,7 @@ class Question(db.Model):
     def default(cls):
         return cls.query.filter_by(is_default=True)[0]
 
-    def validate(self, answer): 
+    def validate(self, answer):
         """TK TODO
         Return whether or not the answer is valid (based on question's qtype)
         """

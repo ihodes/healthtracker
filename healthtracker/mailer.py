@@ -53,7 +53,6 @@ def send_update_email(user, questions):
     email_text = ["Hello from Marion Health! We hope you're feeling well today."]
 
     for question in questions:
-        Answer.pend(user, question)
         status_update_links = []
         email_text.append("\n\n")
         email_text.append(question.text)
@@ -76,7 +75,7 @@ def send_update_email(user, questions):
                 status_update_links.append({'text': '{}'.format(value),
                                             'link': tracker_url})
                 email_text.append("{0}: {1}".format(value, tracker_url))
-    
+
         processed_questions.append({'text': question.text,
                                     'status_update_links': status_update_links})
 
@@ -104,7 +103,7 @@ def send_confirmation_email(user):
     subject = "Marion Health Email Confirmation "
     text = """
 Thank you for signing up to Marion Health! Please confirm that this is your email address, and we'll try to approve you as soon as possible. We're in early Alpha right now, so we're letting people in very slowly for now.
-                 
+
 Click to confirm your email address: http://{0}/users/confirm-email?auth_token={1}
 
 If you didn't signed up for getMarion.com, please ignore this email""".format(current_app.config['HOST_NAME'], user.auth_token)
@@ -115,7 +114,7 @@ def send_approval_email(user):
     subject = "Marion Health Account Approval "
     text = """You've been approved to join the Marion Health alpha test! Thank you for your patience. You will be recieving an email from us today or tomorrow asking for your first status update, and from there you will be able to set a password and log in whenever you would like!
 
-Sincerely, 
+Sincerely,
 Isaac Hodes
 
 Founder, Marion Health""".format(current_app.config['HOST_NAME'], user.auth_token)
