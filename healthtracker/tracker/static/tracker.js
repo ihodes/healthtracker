@@ -4,14 +4,14 @@ $(document).ready(function(){
         height = 100,
         margin = {top: 20, right: 20, bottom: 30, left: 50};
 
-    var makeChart = function(el) {
-        var chart = d3.select(el).append("svg:svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        return chart;
-    }
+  var makeChart = function(el, ht) {
+    var chart = d3.select(el).append("svg:svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", ht || height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    return chart;
+  }
 
     var createLineChart = function(el) {
         var $el = $(el);
@@ -116,11 +116,11 @@ $(document).ready(function(){
     }
 
   var createBinaryYearChart = function(el) {
-    var $el = $(el);
-
-    var chart = makeChart(el);
-
-    var cellSize = 15;
+    var $el = $(el),
+        answers = $el.find($(".answers")).data("answers").answers,
+        chart = makeChart(el, height * 4),
+        cellSize = 10,
+        parseDate = d3.time.format("%d-%m-%Y %H:%M").parse;
 
     var day = d3.time.format("%w"),
         week = d3.time.format("%U"),
@@ -131,10 +131,18 @@ $(document).ready(function(){
         .domain([0, 1])
         .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
-    var answers = $el.find($(".answers")).data("answers").answers;
+    chart = chart.selectAll(".year")
+        .data(d3.range(2013, 2016))
+      .enter().append("g")
+        .attr("width", width)
+        .attr("height", height*3)
+        .attr("class", "year")
+        .attr("transform", function(d, i) {
+          return "translate(" + ((width - cellSize * 53) / 2) + "," + ((height * (i+1)) - cellSize * 7 - 1) + ")"
+        });
 
     var rect = chart.selectAll(".day")
-        .data(d3.time.days(new Date(2014, 0, 1), new Date(2015, 0, 1)))
+        .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
       .enter().append("rect")
         .attr("class", "day")
         .attr("width", cellSize)
@@ -143,7 +151,6 @@ $(document).ready(function(){
         .attr("y", function(d) { return day(d) * cellSize; })
       .datum(format);
 
-    var parseDate = d3.time.format("%d-%m-%Y %H:%M").parse;
     var yesses = answers.filter(function(a) {
       if (!a.value) {
         return a;
@@ -155,21 +162,24 @@ $(document).ready(function(){
       return a.date.split(' ')[0];
     });
 
-    window.a = yesses;
-
-    var parseDate2 = d3.time.format("%d-%m-%Y").parse;
     rect.filter(function(d) {
-      var isYes = yesses.indexOf(d) >= 0;
-      return isYes;
-    })
-      .attr("class", function(d) { return "day yes"; })
+      return yesses.indexOf(d) > -1;
+    }).attr("class", function(d) { return "day yes"; })
       .style('fill', 'rgb(153, 55, 19)');
 
     chart.selectAll(".month")
-        .data(d3.time.months(new Date(2014, 0, 1), new Date(2015, 0, 1)))
+      .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
       .enter().append("path")
         .attr("class", "month")
         .attr("d", monthPath);
+
+    rect.attr("title", function(d) { return d; });
+
+    chart.append("text")
+      .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+      .style("text-anchor", "middle")
+      .style("fill", "black")
+      .text(function(d) { return d; });
 
     function monthPath(t0) {
       var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
@@ -181,20 +191,13 @@ $(document).ready(function(){
         + "H" + (w1 + 1) * cellSize + "V" + 0
         + "H" + (w0 + 1) * cellSize + "Z";
     }
-
-    chart.selectAll(".month")
-        .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-      .enter().append("path")
-        .attr("class", "month")
-      .style('color', 'white')
-        .attr("d", monthPath);
   }
 
 
 var createYesNoChart = function(el) {
     var $el = $(el);
 
-    var chart = makeChart(el);
+    var chart = makeChart(el, height * 3);
 
     var answers = $el.find($(".answers")).data("answers").answers,
         qmax = parseInt($el.find(".answers").data("qmax")),
